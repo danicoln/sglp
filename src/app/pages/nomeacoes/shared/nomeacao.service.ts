@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Nomeacao } from './nomeacao.model';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +35,20 @@ export class NomeacaoService {
     .append('Content-Type', 'application/json');
 
     return firstValueFrom(this.http.post<Nomeacao>(this.url, nomeacao, { headers }));
+  }
+
+  atualizar(nomeacao: Nomeacao): Observable<Nomeacao> {
+    const headers = new HttpHeaders()
+    .set('Authorization', this.chave)
+    .set('Content-Type', 'application/json');
+
+    return this.http.put<Nomeacao>(`${this.url}/${nomeacao.id}`, nomeacao, { headers });
+  }
+
+
+  excluir(codigo: string): Promise<void> {
+    const headers = new HttpHeaders().set('Authorization', this.chave);
+    return firstValueFrom(this.http.delete<void>(`${this.url}/${codigo}`, { headers }));
   }
 
 

@@ -14,6 +14,10 @@ import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { ProcessoModule } from '../processos/processo.module';
 import { FieldsetModule } from 'primeng/fieldset';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { ToolbarModule } from 'primeng/toolbar';
+import { TableModule } from 'primeng/table';
 
 
 @NgModule({
@@ -22,6 +26,9 @@ import { FieldsetModule } from 'primeng/fieldset';
     NomeacaoListComponent
   ],
   imports: [
+    ToastModule,
+    ToolbarModule,
+    TableModule,
     ReactiveFormsModule,
     FormsModule,
     CommonModule,
@@ -34,6 +41,7 @@ import { FieldsetModule } from 'primeng/fieldset';
     DialogModule,
     CalendarModule,
     FieldsetModule,
+    ConfirmDialogModule,
 
     ProcessoModule
   ],

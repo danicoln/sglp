@@ -1,5 +1,5 @@
 <form [formGroup]="formGroup" (ngSubmit)="submitForm()">
-  <p-card header="Nomeações">
+  <p-card header="Nova Nomeação">
 
     <div class="grid">
       <div class="col-6">
@@ -31,8 +31,6 @@
         <input class="flex col-3" placeholder="Informe se aceitou a nomeação" pInputText type="text" formControlName="aceite" />
       </div>
 
-
-
       <p-button type="submit" pRipple label="Salvar" severity="success mr-2" [disabled]="!formGroup.valid">
       </p-button>
       <p-button pRipple label="Cancelar" [outlined]="false" severity="secondary mr-2" [disabled]="!formGroup.valid"
@@ -40,6 +38,7 @@
       </p-button>
     </div>
 
+    <a href="/nomeacoes" style="text-decoration: none;"><p>Consultar nomeações</p></a>
   </p-card>
 
 </form>
