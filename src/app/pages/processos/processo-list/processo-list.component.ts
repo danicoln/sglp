@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ErrorHandlerService } from '../../../core/error-handler.service';
 import { Processo } from '../shared/processo.model';
@@ -22,8 +21,6 @@ export class ProcessoListComponent implements OnInit {
   submitted: boolean = false;
 
   constructor(
-    private router: Router,
-    private route: ActivatedRoute,
     private processoService: ProcessoService,
     private error: ErrorHandlerService,
     private confirmacaoService: ConfirmationService,

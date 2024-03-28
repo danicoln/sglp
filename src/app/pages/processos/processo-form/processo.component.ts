@@ -13,7 +13,7 @@ import { ErrorHandlerService } from '../../../core/error-handler.service';
 export class ProcessoComponent implements OnInit {
 
   processo: Processo = new Processo();
-  formGroup!: FormGroup;
+  @Input() formGroup!: FormGroup;
 
   constructor(
     private processoService: ProcessoService,
@@ -87,17 +87,6 @@ export class ProcessoComponent implements OnInit {
       ];
     }
 
-/**
- *
-salvar(form: NgForm) {
-  if(this.editando) {
-    this.atualizarDadosProcesso(form);
-  } else {
-    this.salvarDadosProcesso(form);
-  }
-}
- *
- */
 
   atualizarDadosProcesso(form: NgForm){
 
