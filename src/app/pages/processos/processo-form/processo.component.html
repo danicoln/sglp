@@ -1,13 +1,7 @@
 <form [formGroup]="formGroup" (ngSubmit)="submitForm()">
-
-  <div class="card flex-column md:block-row md:justify-content-between">
+  <p-card header="Novo Processo">
+    
     <div class="grid">
-      <div class="col-12">
-        <h2 class="titulo">
-          Dados do Processo
-        </h2>
-
-      </div>
       <div class="col-12">
         <b>Vara: </b>
         <input placeholder="Vara" pInputText type="text" formControlName="vara" />
@@ -48,6 +42,8 @@
         (onClick)="cancelar()">
       </p-button>
     </div>
-  </div>
+    <a href="/processos" style="text-decoration: none;"><p>Consultar processos</p></a>
+
+  </p-card>
 
 </form>
