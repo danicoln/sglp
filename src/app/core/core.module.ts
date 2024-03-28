@@ -6,7 +6,7 @@ import { ErrorHandlerService } from './error-handler.service';
 import { LaudoPericialService } from '../pages/laudo-pericial/shared/laudo-pericial.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ParteService } from '../services/parte.service';
-import { ProcessoService } from '../components/processo/shared/processo.service';
+import { ProcessoService } from '../pages/processos/shared/processo.service';
 
 
 @NgModule({

@@ -14,12 +14,16 @@ import { ObjetivoComponent } from '../components/objetivo/objetivo.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { DropdownComponent } from '../components/dropdown/dropdown.component';
 
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { ProcessoAutocompleteComponent } from '../components/autocompletes/processo-autocomplete/processo-autocomplete.component';
 
 
 @NgModule({
   declarations: [
     ObjetivoComponent,
     DropdownComponent,
+    ProcessoAutocompleteComponent
+
   ],
   imports: [
 
@@ -35,12 +39,13 @@ import { DropdownComponent } from '../components/dropdown/dropdown.component';
     ButtonModule,
     InputTextModule,
     DropdownModule,
-
+    AutoCompleteModule,
 
   ],
   exports: [
     ObjetivoComponent,
     DropdownComponent,
+    ProcessoAutocompleteComponent
   ]
 })
 export class SharedModule { }

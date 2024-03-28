@@ -1,0 +1,46 @@
+<form [formGroup]="formGroup" (ngSubmit)="submitForm()">
+  <p-card header="Nomeações">
+
+    <div class="grid">
+      <div class="col-6">
+        <app-processo-autocomplete
+          title="Número do processo"
+          formControlName="processo"
+          >
+        </app-processo-autocomplete>
+        <a href="/processos/novo" pButton label="Novo" style="text-decoration: none;"><i style="cursor: pointer;" class="pi pi-plus mr-1"></i></a>
+      </div>
+
+      <div class="col-12">
+        <b>Data da Nomeação</b>
+        <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" class="flex col-4" placeholder="Data da nomeação" formControlName="dataNomeacao"></p-calendar>
+      </div>
+
+      <div class="col-12">
+        <b>Data do Aceite</b>
+        <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" class="flex col-4" placeholder="Data do Aceite" formControlName="dataAceite"></p-calendar>
+      </div>
+
+      <div class="col-12">
+        <b>Prazo</b>
+        <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" class="flex col-4" placeholder="Prazo" formControlName="prazo"></p-calendar>
+      </div>
+
+      <div class="col-12">
+        <b>Aceite</b>
+        <input class="flex col-3" placeholder="Informe se aceitou a nomeação" pInputText type="text" formControlName="aceite" />
+      </div>
+
+
+
+      <p-button type="submit" pRipple label="Salvar" severity="success mr-2" [disabled]="!formGroup.valid">
+      </p-button>
+      <p-button pRipple label="Cancelar" [outlined]="false" severity="secondary mr-2" [disabled]="!formGroup.valid"
+        (onClick)="cancelar()">
+      </p-button>
+    </div>
+
+  </p-card>
+
+</form>
+

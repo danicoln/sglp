@@ -82,25 +82,13 @@ export class SidebarComponent implements OnInit {
         items: [
           {
             label: 'Novo',
-            icon: 'pi pi-fw pi-user-plus'
-          },
-          {
-            label: 'Excluir',
-            icon: 'pi pi-fw pi-user-minus'
+            icon: 'pi pi-fw pi-plus-circle',
+            routerLink: '/nomeacoes/novo'
           },
           {
             label: 'Consultar',
-            icon: 'pi pi-fw pi-search',
-            items: [
-              {
-                label: 'Filtrar',
-                icon: 'pi pi-fw pi-filter'
-              },
-              {
-                label: 'Listar',
-                icon: 'pi pi-fw pi-bars'
-              }
-            ]
+            icon: 'pi pi-fw pi-list',
+            routerLink: '/nomeacoes'
           }
         ]
       },

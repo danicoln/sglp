@@ -20,7 +20,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { LaudoListComponent } from './laudo-list/laudo-list.component';
 import { SharedModule } from '../../shared/shared.module';
-import { ProcessoModule } from '../../components/processo/processo.module';
+import { ProcessoModule } from '../processos/processo.module';
 
 
 @NgModule({
