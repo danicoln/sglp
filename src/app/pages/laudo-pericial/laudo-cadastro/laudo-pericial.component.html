@@ -1,75 +1,79 @@
 <form  (ngSubmit)="salvarLaudo()">
 
+  <div class="container">
+    <!--Dados do processo -->
+    <div>
+      <app-processo-autocomplete
+        title="Número do processo"
+        >
+      </app-processo-autocomplete>
 
+    </div>
+  </div>
 </form>
+
 <div class="container">
 
-  <div class="grid">
-    <!--Dados do processo -->
-    <div class="col-12">
-      <app-processo></app-processo>
-    </div>
 
-    <!--Objetivo da Perícia-->
-    <app-objetivo></app-objetivo>
+
+  <!--Objetivo da Perícia-->
+  <app-objetivo></app-objetivo>
 
 
 
-    <!--Objeto do Laudo-->
-    <p-card class="col-12 md:col-12" header="Componente: Obj do Laudo">
+  <!--Objeto do Laudo-->
+  <p-card class="col-12 md:col-12" header="Componente: Obj do Laudo">
 
-    </p-card>
+  </p-card>
 
-    <!--Metodologia Aplicada-->
-    <p-card class="col-12 md:col-6">
-      <p-fieldset legend="Metodologia Aplicada" [toggleable]="true">
-        <div class="flex justify-content-center">
-          <textarea pKeyFilter="int" rows="5" cols="60" pInputTextarea [(ngModel)]="metodologia"></textarea>
-        </div>
-      </p-fieldset>
-    </p-card>
+  <!--Metodologia Aplicada-->
+  <p-card class="col-12 md:col-6">
+    <p-fieldset legend="Metodologia Aplicada" [toggleable]="true">
+      <div class="flex justify-content-center">
+        <textarea pKeyFilter="int" rows="5" cols="60" pInputTextarea [(ngModel)]="metodologia"></textarea>
+      </div>
+    </p-fieldset>
+  </p-card>
 
-    <!--Exame da Matéria-->
-    <p-card class="col-12 md:col-12" header="Componente: Exame da Matéria">
+  <!--Exame da Matéria-->
+  <p-card class="col-12 md:col-12" header="Componente: Exame da Matéria">
 
-    </p-card>
+  </p-card>
 
-    <!--Histórico-->
-    <p-card class="col-12 md:col-6">
-      <p-fieldset legend="Histórico" [toggleable]="true">
-        <div class="flex justify-content-center">
-          <textarea pKeyFilter="int" rows="5" cols="60" pInputTextarea [(ngModel)]="historico"></textarea>
-        </div>
-      </p-fieldset>
-    </p-card>
+  <!--Histórico-->
+  <p-card class="col-12 md:col-6">
+    <p-fieldset legend="Histórico" [toggleable]="true">
+      <div class="flex justify-content-center">
+        <textarea pKeyFilter="int" rows="5" cols="60" pInputTextarea [(ngModel)]="historico"></textarea>
+      </div>
+    </p-fieldset>
+  </p-card>
 
-    <!--Quesitos-->
-    <p-card class="col-12 md:col-12" header="Componente: Quesitos">
+  <!--Quesitos-->
+  <p-card class="col-12 md:col-12" header="Componente: Quesitos">
 
-    </p-card>
+  </p-card>
 
-    <!--Conclusão-->
-    <p-card class="col-12 md:col-6">
-      <p-fieldset legend="Conclusão" [toggleable]="true">
-        <div class="flex justify-content-center">
-          <textarea pKeyFilter="int" rows="5" cols="60" pInputTextarea [(ngModel)]="conclusao"></textarea>
-        </div>
-      </p-fieldset>
-    </p-card>
+  <!--Conclusão-->
+  <p-card class="col-12 md:col-6">
+    <p-fieldset legend="Conclusão" [toggleable]="true">
+      <div class="flex justify-content-center">
+        <textarea pKeyFilter="int" rows="5" cols="60" pInputTextarea [(ngModel)]="conclusao"></textarea>
+      </div>
+    </p-fieldset>
+  </p-card>
 
-    <!--Introdução-->
-    <p-card class="col-12 md:col-6">
-      <p-fieldset legend="Introdução" [toggleable]="true">
-        <div class="flex justify-content-center">
-          <textarea pKeyFilter="int" rows="5" cols="60" pInputTextarea [(ngModel)]="introducao"></textarea>
-        </div>
-      </p-fieldset>
-    </p-card>
+  <!--Introdução-->
+  <p-card class="col-12 md:col-6">
+    <p-fieldset legend="Introdução" [toggleable]="true">
+      <div class="flex justify-content-center">
+        <textarea pKeyFilter="int" rows="5" cols="60" pInputTextarea [(ngModel)]="introducao"></textarea>
+      </div>
+    </p-fieldset>
+  </p-card>
 
-    <p-card class=" col-6 md:col-3" header="Data do Laudo">
+  <p-card class=" col-6 md:col-3" header="Data do Laudo">
 
-    </p-card>
-
-  </div>
+  </p-card>
 </div>
 

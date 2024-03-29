@@ -33,9 +33,24 @@ export class LaudoPericialComponent implements OnInit {
       this.carregarLaudoPericial(codigoLaudo);
     }
   }
+
   carregarLaudoPericial(codigoLaudo: string) {
     //TODO: Implementar o restante do método
     alert('Laudo Pericial')
+  }
+
+  adicionar(laudoForm: NgForm) {
+    this.laudoPericialService.adicionar(this.laudoPericial)
+    .then(() => {
+      //implementar mensagem toast
+
+      this.laudoPericial = new LaudoPericial();
+      })
+      .catch(erro => this.error.handle(erro));
+  }
+
+  atualizar(laudoForm: NgForm) {
+    throw new Error('Method not implemented.');
   }
 
   salvarLaudo() {
@@ -45,18 +60,6 @@ export class LaudoPericialComponent implements OnInit {
       this.adicionar(this.laudoForm);
       this.laudoForm.reset();
     }
-  }
-  adicionar(laudoForm: NgForm) {
-    this.laudoPericialService.adicionar(this.laudoPericial)
-      .then(() => {
-        //implementar mensagem toast
-
-        this.laudoPericial = new LaudoPericial();
-      })
-      .catch(erro => this.error.handle(erro));
-  }
-  atualizar(laudoForm: NgForm) {
-    throw new Error('Method not implemented.');
   }
 
   get editando() {
