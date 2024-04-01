@@ -1,15 +1,15 @@
 <form [formGroup]="formGroup" (ngSubmit)="submitForm()">
-  <p-card header="Nova Nomeação">
+  <p-toast></p-toast>
+  
+  <div class="container">
+    <h2>Cadastro de Nomeação</h2>
 
-    <div class="grid">
-      <div class="col-6">
-        <app-processo-autocomplete
-          title="Número do processo"
-          formControlName="processo"
-          >
-        </app-processo-autocomplete>
-        <a href="/processos/novo" pButton label="Novo" style="text-decoration: none;"><i style="cursor: pointer;" class="pi pi-plus mr-1"></i></a>
-      </div>
+    <app-processo-autocomplete
+        title="Número do processo"
+        formControlName="processo"
+        >
+      </app-processo-autocomplete>
+    <p-card>
 
       <div class="col-12">
         <b>Data da Nomeação</b>
@@ -17,13 +17,13 @@
       </div>
 
       <div class="col-12">
-        <b>Data do Aceite</b>
-        <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" class="flex col-4" placeholder="Data do Aceite" formControlName="dataAceite"></p-calendar>
+        <b>Prazo</b>
+        <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" class="flex col-4" placeholder="Prazo" formControlName="prazo"></p-calendar>
       </div>
 
       <div class="col-12">
-        <b>Prazo</b>
-        <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" class="flex col-4" placeholder="Prazo" formControlName="prazo"></p-calendar>
+        <b>Data do Aceite</b>
+        <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" class="flex col-4" placeholder="Data do Aceite" formControlName="dataAceite"></p-calendar>
       </div>
 
       <div class="col-12">
@@ -36,10 +36,11 @@
       <p-button pRipple label="Cancelar" [outlined]="false" severity="secondary mr-2" [disabled]="!formGroup.valid"
         (onClick)="cancelar()">
       </p-button>
-    </div>
+      <a href="/nomeacoes" style="text-decoration: none;"><p>Consultar nomeações</p></a>
 
-    <a href="/nomeacoes" style="text-decoration: none;"><p>Consultar nomeações</p></a>
-  </p-card>
+    </p-card>
+
+  </div>
 
 </form>
 

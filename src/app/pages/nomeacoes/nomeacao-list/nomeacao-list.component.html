@@ -70,7 +70,7 @@
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
         <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
-        <th pSortableColumn="processo.numero">Número<p-sortIcon field="processo.numero"></p-sortIcon></th>
+          <th pSortableColumn="nomeacao.processo?.numero">Processo<p-sortIcon field="nomeacao.processo?.numero"></p-sortIcon></th>
         <th pSortableColumn="dataNomeacao">Data da Nomeação<p-sortIcon field="dataNomeacao"></p-sortIcon></th>
         <th pSortableColumn="prazo">Prazo<p-sortIcon field="prazo"></p-sortIcon></th>
         <th pSortableColumn="dataAceite">Data do Aceite<p-sortIcon field="dataAceite"></p-sortIcon></th>
@@ -86,10 +86,10 @@
           <p-tableCheckbox [value]="nomeacao"></p-tableCheckbox>
         </td>
         <td>{{ nomeacao.id }}</td>
-        <td>{{ nomeacao.processo.numero }}</td>
-        <td>{{ nomeacao.dataNomeacao }}</td>
-        <td>{{ nomeacao.prazo }}</td>
-        <td>{{ nomeacao.dataAceite }}</td>
+        <td>{{ nomeacao.processo?.numero }}</td>
+        <td>{{ nomeacao.dataNomeacao | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ nomeacao.prazo | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ nomeacao.dataAceite | date: 'dd/MM/yyyy' }}</td>
         <td>{{ nomeacao.aceite }}</td>
         <td>
           <a (click)="editar(nomeacao)"><i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i></a>
@@ -109,6 +109,9 @@
 
   <p-dialog [(visible)]="nomeacaoDialog" [style]="{ 'width': '550px','margin':'30px' }" header="Detalhes da Nomeação" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
+
+      <!--
+
         <div class="field">
             <app-processo-autocomplete
             title="Número do processo"
@@ -117,8 +120,8 @@
             >
           </app-processo-autocomplete>
           <small class="p-error" *ngIf="submitted && !nomeacao.processo?.numero">Número é obrigatório.</small>
-          <a class="col-4" href="/processos/novo" pButton label="Novo" style="text-decoration: none;"><i style="cursor: pointer;" class="pi pi-plus mr-1"></i></a>
         </div>
+      -->processo: {{nomeacao.processo?.numero}}
 
         <div class="field">
           <label for="dataNomeacao">Data da Nomeação</label>
@@ -126,7 +129,7 @@
             [showButtonBar]="true"
             dateFormat="dd/mm/yy"
             [readonlyInput]="true"
-            class="flex col-6"
+            class="flex"
             placeholder="Data da nomeação"
             [(ngModel)]="nomeacao.dataNomeacao"
             >
@@ -136,12 +139,27 @@
 
         <div class="field">
           <label for="prazo">Prazo</label>
-          <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" class="flex col-6" placeholder="Prazo" [(ngModel)]="nomeacao.prazo"></p-calendar>
+          <p-calendar
+            dateFormat="dd/mm/yy"
+            [readonlyInput]="true"
+            class="flex"
+            placeholder="Prazo"
+            [(ngModel)]="nomeacao.prazo"
+            >
+          </p-calendar>
           <small class="p-error" *ngIf="submitted && !nomeacao.prazo">Prazo é obrigatório.</small>
         </div>
+
         <div class="field">
           <label for="dataAceite">Data do Aceite</label>
-          <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" class="flex col-6" placeholder="Data do Aceite" [(ngModel)]="nomeacao.dataAceite"></p-calendar>
+          <p-calendar
+            dateFormat="dd/mm/yy"
+            [readonlyInput]="true"
+            class="flex"
+            placeholder="Data do Aceite"
+            [(ngModel)]="nomeacao.dataAceite"
+            >
+          </p-calendar>
         </div>
 
         <div class="field">

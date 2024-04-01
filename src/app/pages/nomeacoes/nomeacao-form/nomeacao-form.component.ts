@@ -4,6 +4,7 @@ import { ErrorHandlerService } from '../../../core/error-handler.service';
 import { Nomeacao } from '../shared/nomeacao.model';
 import { NomeacaoService } from './../shared/nomeacao.service';
 import { Processo } from '../../processos/shared/processo.model';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-nomeacao-form',
@@ -20,9 +21,10 @@ export class NomeacaoFormComponent implements OnInit {
   submitted: boolean = false;
 
   constructor(
-    private NomeacaoService: NomeacaoService,
+    private nomeacaoService: NomeacaoService,
     private formBuilder: FormBuilder,
-    private error: ErrorHandlerService
+    private error: ErrorHandlerService,
+    private msgService: MessageService
   ) { }
 
 
@@ -37,62 +39,59 @@ export class NomeacaoFormComponent implements OnInit {
       prazo: [null, Validators.required],
       dataAceite: [null],
       aceite: [''],
-      processo: ['']
-
-      /*
-      this.formGroup = this.formBuilder.group({
-        processo: this.formBuilder.group({
-          id: [null],
-          numero: ['', Validators.required],
-          comarca: [''],
-          vara: [''],
-          assunto: [''],
-          nomeAutor: [''],
-          nomeReu: [''],
-          parteAutora: [''],
-          parteReu: ['']
-        })
-      });
-
-      */
+      processo: [null]
     });
   }
 
   submitForm() {
     if (this.formGroup && this.formGroup.valid) {
+
       const dadosFormulario = this.formGroup.value;
 
-      const dadosProcesso = this.formGroup.get('processo')?.value;
+      const processo = dadosFormulario.processo.processo;
+      if (processo) {
 
-      console.log('Formulário: Nomeação: ', dadosFormulario);
-      console.log('Formulário: Dados Processo: ', dadosProcesso);
+        this.nomeacao = {
+          aceite: dadosFormulario.aceite,
+          dataAceite: dadosFormulario.dataAceite,
+          dataNomeacao: dadosFormulario.dataNomeacao,
+          prazo: dadosFormulario.prazo,
+          processo: processo
+        };
 
-      this.formGroup.get('processo')?.setValue(dadosFormulario.processo?.value);
-      this.nomeacao = {
-        dataNomeacao: dadosFormulario.dataNomeacao,
-        prazo: dadosFormulario.prazo,
-        dataAceite: dadosFormulario.dataAceite,
-        aceite: dadosFormulario.aceite
-      };
-      this.salvarDados(this.nomeacao);
+        this.salvarDados(this.nomeacao);
+
+      } else {
+        console.error('O ID do processo não está definido.');
+
+      }
+
     } else {
       this.formGroup?.markAllAsTouched();
     }
   }
 
   salvarDados(nomeacao: Nomeacao) {
-    this.NomeacaoService.salvar(nomeacao)
+    this.nomeacaoService.salvar(nomeacao)
       .then(() => {
         console.log('TOAST: Nomeação salva! ', nomeacao);
+        this.msgService.add(
+          { severity: 'success', summary: 'Sucesso!', detail: 'Nomeação Salva', life: 3000 });
+
         this.nomeacao = new Nomeacao();
         this.formGroup?.reset();
       })
-      .catch(erro => this.error.handle(erro));
+      .catch(erro => {
+        this.error.handle(erro);
+        this.msgService.add(
+          { severity: 'error', summary: 'Erro!', detail: 'Erro ao Salvar', life: 3000 }
+        )
+      });
+
   }
 
   cancelar() {
     this.formGroup?.reset();
   }
 
- 
 }
