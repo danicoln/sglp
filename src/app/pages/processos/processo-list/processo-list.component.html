@@ -102,9 +102,9 @@
   <p-dialog [(visible)]="processoDialog" [style]="{ width: '450px' }" header="Detalhes do Processo" [modal]="true" styleClass="p-fluid">
     <ng-template pTemplate="content">
         <div class="field">
-            <label for="numero">Número</label>
-            <input type="text" pInputText id="numero" [(ngModel)]="processo.numero" required autofocus />
-            <small class="p-error" *ngIf="submitted && !processo.numero">Número é obrigatório.</small>
+          <label for="numero">Número</label>
+          <input type="text" pInputText id="numero" [(ngModel)]="processo.numero" required autofocus />
+          <small class="p-error" *ngIf="submitted && !processo.numero">Número é obrigatório.</small>
         </div>
         <div class="field">
           <label for="assunto">Assunto</label>

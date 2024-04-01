@@ -68,7 +68,7 @@ export class NomeacaoListComponent implements OnInit {
   deletar(nomeacao: Nomeacao) {
 
     this.confirmacaoService.confirm({
-      message: 'Você tem certeza que quer deletar a nomeação referente processo nº ' + nomeacao.processo?.numero + '?',
+      message: 'Você tem certeza que quer deletar a nomeação referente processo de ID: ' + nomeacao.processo + '?',
       header: 'Confirmar',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sim',

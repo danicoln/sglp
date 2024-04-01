@@ -1,4 +1,3 @@
-import { Parte } from "../../../model/parte";
 
 export class Processo {
 
