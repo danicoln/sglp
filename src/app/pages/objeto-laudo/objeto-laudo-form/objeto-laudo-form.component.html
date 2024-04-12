@@ -1,0 +1,120 @@
+<form [formGroup]="resourceForm" (ngSubmit)="submitForm()">
+
+  <h2 class="title">Objeto do Laudo Pericial</h2>
+
+  <p-card>
+
+    <p-fieldset
+      [collapsed]="true"
+      legend="Documento" [toggleable]="true">
+
+      <button *ngIf="!exibirFormularioNovoDocumento"
+        type="button"
+        (click)="inserirDocumento()"
+        pButton
+        class="p-button"
+        label="Novo Documento"
+        style="text-decoration: none;"
+        >
+        <i style="cursor: pointer;" class="pi pi-plus mr-1"></i>
+      </button>
+
+      <div *ngIf="exibirFormularioNovoDocumento" class="form-documentos">
+        <div formGroupName="documento">
+          <input
+          class="col-4"
+          placeholder="Nome do Documento"
+          pInputText
+          type="text"
+          formControlName="nomeTitulo"
+          >
+          <textarea
+          class="col-12"
+          pInputTextarea
+          rows="5" cols="30"
+          type="text"
+          formControlName="descricao"
+          >
+          </textarea>
+
+          <p-calendar
+            class="flex col-4"
+            dateFormat="dd/mm/yy" [readonlyInput]="true"
+            placeholder="Data do Documento"
+            formControlName="data"
+            >
+          </p-calendar>
+
+          <div class="btn-submit mt-3">
+            <button
+              icon="pi pi-save"
+              pRipple
+              class="btn-salvar p-button-success"
+              type="submit"
+              pButton
+              label=" Salvar"
+              >
+            </button>
+          </div>
+          <!--
+
+            <p-button
+              (click)="adicionarDocumento()"
+              pButton
+              class="p-button col-3 btn-adicionar"
+              label="Adicionar"
+              >
+            </p-button>
+          -->
+        </div>
+
+      </div>
+    </p-fieldset>
+
+    <!--Lista algo do tipo abaixo-->
+    <div *ngFor=" let doc of listaDeDocumentos; let i = index">
+      <app-objeto-laudo-list titulo="doc?.nomeTitulo"></app-objeto-laudo-list>
+    </div>
+
+    <!-- Loop para exibir documentos existentes -->
+    <!-- Estamos nesta parte do codigo. A adição dos documentos na lista
+      está funcionando. Precisa agora implementar a listagem usando panel.
+
+      Parece que o *ngFor abaixo, de alguma forma não está funcionando
+
+      <div *ngFor="let documento of listarDocumentos(); let i = index">
+
+        <p-panel [header]="documento.get('nomeTitulo')?.value" [toggleable]="true" [collapsed]="true">
+          <p>{{documento.get('descricao')?.value}}</p>
+          <p>{{documento.get('data')?.value | date: 'dd/MM/yyyy' }}</p>
+
+          <button
+            pButton
+            (click)="removerDocumento(i)"
+            icon="pi pi-trash">
+          </button>
+
+        </p-panel>
+      </div>
+    -->
+
+    <!--
+          <div *ngFor=" let doc of listaDeDocumentos; let i = index" >
+              <p-panel [header]="doc.nomeTitulo" [toggleable]="true" [collapsed]="true">
+                <p>{{doc.descricao}}</p>
+                <p>{{doc.data| date: 'dd/MM/yyyy' }}</p>
+
+                <button
+                  pButton
+                  (click)="removerDocumento(i)"
+                  icon="pi pi-trash">
+                </button>
+
+              </p-panel>
+            </div>
+        -->
+
+  </p-card>
+</form>
+
+

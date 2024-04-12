@@ -21,6 +21,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { LaudoListComponent } from './laudo-list/laudo-list.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ProcessoModule } from '../processos/processo.module';
+import { ObjetoLaudoModule } from '../objeto-laudo/objeto-laudo.module';
 
 
 @NgModule({
@@ -29,6 +30,7 @@ import { ProcessoModule } from '../processos/processo.module';
     LaudoListComponent
   ],
   imports: [
+    SharedModule,
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
@@ -46,10 +48,9 @@ import { ProcessoModule } from '../processos/processo.module';
     RatingModule,
     DialogModule,
     ConfirmDialogModule,
-    SharedModule,
 
     ProcessoModule,
-
+    ObjetoLaudoModule,
     LaudoPericialRoutingModule
   ],
   exports: [

@@ -7,7 +7,6 @@ const routes: Routes = [
   { path: 'laudos', component: LaudoListComponent },
   { path: 'laudos/novo', component: LaudoPericialComponent },
   { path: 'laudos/:id', component: LaudoPericialComponent }
-
 ]
 
 @NgModule({

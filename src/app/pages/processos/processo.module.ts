@@ -19,6 +19,7 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 
 @NgModule({
@@ -27,12 +28,12 @@ import { DialogModule } from 'primeng/dialog';
     ProcessoListComponent
   ],
   imports: [
+    SharedModule,
     ToastModule,
     ToolbarModule,
     TableModule,
     ConfirmDialogModule,
     DialogModule,
-    SharedModule,
     CommonModule,
     HttpClientModule,
     ReactiveFormsModule,
@@ -45,6 +46,7 @@ import { DialogModule } from 'primeng/dialog';
     ButtonModule,
     InputTextModule,
     DropdownModule,
+    AutoCompleteModule,
 
     ProcessoRoutingModule
   ],
