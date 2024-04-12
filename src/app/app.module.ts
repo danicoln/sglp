@@ -24,6 +24,8 @@ import { CoreModule } from './core/core.module';
 import { LaudoPericialModule } from './pages/laudo-pericial/laudo-pericial.module';
 import { ProcessoModule } from './pages/processos/processo.module';
 import { NomeacoesModule } from './pages/nomeacoes/nomeacoes.module';
+import { DocumentosModule } from './pages/documentos/documentos.module';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [
@@ -50,10 +52,12 @@ import { NomeacoesModule } from './pages/nomeacoes/nomeacoes.module';
     FieldsetModule,
     RouterModule,
     FileUploadModule,
+    CalendarModule,
 
     LaudoPericialModule,
     ProcessoModule,
-    NomeacoesModule
+    NomeacoesModule,
+    DocumentosModule
 
   ],
   providers: [],

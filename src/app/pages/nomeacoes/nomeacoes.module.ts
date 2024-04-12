@@ -26,6 +26,7 @@ import { TableModule } from 'primeng/table';
     NomeacaoListComponent
   ],
   imports: [
+    SharedModule,
     ToastModule,
     ToolbarModule,
     TableModule,
@@ -33,7 +34,6 @@ import { TableModule } from 'primeng/table';
     FormsModule,
     CommonModule,
     NomeacoesRoutingModule,
-    SharedModule,
     ButtonModule,
     InputTextModule,
     CardModule,
