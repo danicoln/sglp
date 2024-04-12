@@ -31,7 +31,6 @@ export class ObjetoLaudoFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.listarObjetos();
     this.baseResourceForm();
   }
 
@@ -65,46 +64,34 @@ export class ObjetoLaudoFormComponent implements OnInit {
 
       }
     } else {
-      this.resourceForm.markAllAsTouched();
+      this.resourceForm?.markAllAsTouched();
     }
   }
 
-  private salvarDados(objeto: ObjetoLaudo) {
+  salvarDados(objeto: ObjetoLaudo) {
     this.objetoService.salvar(objeto)
       .then(() => {
+        console.log('TOAST: Objeto salvo! ', objeto);
         this.msgService.add(
-          { severity: 'success', summary: 'Sucesso', detail: 'Objeto Salvo', life: 3000 }
-
-          )
-          this.objeto = new ObjetoLaudo();
-          this.resourceForm.reset();
-
+          { severity: 'success', summary: 'Sucesso', detail: 'Objeto Salvo', life: 3000 });
+        this.objeto = new ObjetoLaudo();
+        this.resourceForm?.reset();
+      })
+      .catch(erro => {
+        this.erro.handle(erro);
+        this.msgService.add(
+          { severity: 'error', summary: 'Erro!', detail: 'Erro ao Salvar', life: 3000 }
+        )
       });
 
   }
 
-  adicionarDocumento() {
-    this.novoDocumento = this.resourceForm.get('documento')?.value;
-    this.listaDeDocumentos.push(this.novoDocumento);
-    this.exibirFormularioNovoDocumento = false;
-
-    this.resourceForm.reset();
-
+  cancelar() {
+    this.resourceForm?.reset();
   }
 
   inserirDocumento() {
     this.exibirFormularioNovoDocumento = !this.exibirFormularioNovoDocumento;
-  }
-
-  listarObjetos() {
-    return this.objetoService.listar().subscribe(
-      (objetos: ObjetoLaudo[]) => {
-        this.objetos = objetos;
-      },
-      (error) => {
-        console.error('Erro ao listar objetos: ', error);
-      }
-    );
   }
 
   removerDocumento(index: number) {

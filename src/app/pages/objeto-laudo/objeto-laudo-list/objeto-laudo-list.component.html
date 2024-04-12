@@ -1,7 +1,116 @@
-<p>objeto-laudo-list works!</p>
+<p-card header="Lista de Objetos do Laudo">
+  <p-toast></p-toast>
 
-<div class="titulo">
-  <p-panel header="{{titulo}}">
+  <p-toolbar styleClass="mb-4 gap-2">
 
-  </p-panel>
-</div>
+    <!--Botões de Criar e Deletar-->
+
+    <ng-template pTemplate="left">
+      <a href="/objetos/novo">
+        <p-button
+          pRipple
+          label="Novo"
+          icon="pi pi-plus"
+          severity="success mr-2"
+          >
+        </p-button>
+      </a>
+
+      <p-button
+        pRipple
+        label="Deletar"
+        icon="pi pi-trash"
+        severity="danger"
+        (click)="deletarObjetosSelecionados()"
+        [disabled]="!objetosSelecionados || !objetosSelecionados.length"
+        >
+      </p-button>
+    </ng-template>
+
+  </p-toolbar>
+
+  <!--Tabela de Objetos-->
+
+  <p-table
+    #tabela
+    [value]="objetos"
+    [rows]="10"
+    [paginator]="true"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [(selection)]="objetosSelecionados"
+    [rowHover]="true"
+    dataKey="id"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+    [showCurrentPageReport]="true"
+    [globalFilterFields]="[
+      'documento.nomeTitulo', 'objeto.documento?.nomeTitulo',
+      'documento.descricao', 'objeto.documento?.descricao',
+      'documento.data', 'objeto.documento?.data',
+
+      ]"
+
+    > <!--em globalFilterFields: analisar acima o que vai na tabela-->
+
+    <ng-template pTemplate="caption">
+      <div class="flex align-items-center justify-content-between">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <!-- filtro -> erro no $event.target.value -->
+          <input pInputText type="text" (input)="applyFilterGlobal($event)" placeholder="Buscar..." />
+        </span>
+      </div>
+    </ng-template>
+
+    <!--Header Table-->
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width:4rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
+          <th pSortableColumn=" objeto.documento?.nomeTitulo">Título<p-sortIcon field=" objeto.documento?.nomeTitulo"></p-sortIcon></th>
+          <th pSortableColumn="objeto.documento?.descricao">Descrição<p-sortIcon field="objeto.documento?.descricao"></p-sortIcon></th>
+          <th pSortableColumn="objeto.documento?.data">Data<p-sortIcon field="objeto.documento?.data"></p-sortIcon></th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <!--
+
+    -->
+
+    <!--Body Table-->
+    <ng-template pTemplate="body" let-objeto>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="objeto"></p-tableCheckbox>
+        </td>
+        <td>{{ objeto.id }}</td>
+        <td>{{ objeto.documento?.nomeTitulo }}</td>
+        <td>{{ objeto.documento?.descricao }}</td>
+        <td>{{ objeto.documento?.data | date: 'dd/MM/yyyy' }}</td>
+        <td>
+          <a (click)="editar(objeto)"><i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i></a>
+          <i (click)="deletar(objeto)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!--
+
+    -->
+
+    <ng-template pTemplate="summary">
+      <div class="flex align-items-center justify-content-between">Total de {{ objetos ? objetos.length : 0 }} objetos do laudo.</div>
+    </ng-template>
+  </p-table>
+
+</p-card>
+
+<!--
+  <div class="titulo">
+    <p-panel header="{{titulo}}">
+
+    </p-panel>
+  </div>
+-->
