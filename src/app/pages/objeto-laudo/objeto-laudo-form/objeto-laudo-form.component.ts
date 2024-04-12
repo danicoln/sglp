@@ -31,7 +31,6 @@ export class ObjetoLaudoFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.listarObjetos();
     this.baseResourceForm();
   }
 
@@ -87,28 +86,12 @@ export class ObjetoLaudoFormComponent implements OnInit {
 
   }
 
-  adicionarDocumento() {
-    this.novoDocumento = this.resourceForm.get('documento')?.value;
-    this.listaDeDocumentos.push(this.novoDocumento);
-    this.exibirFormularioNovoDocumento = false;
-
-    this.resourceForm.reset();
-
+  cancelar() {
+    this.resourceForm?.reset();
   }
 
   inserirDocumento() {
     this.exibirFormularioNovoDocumento = !this.exibirFormularioNovoDocumento;
-  }
-
-  listarObjetos() {
-    return this.objetoService.listar().subscribe(
-      (objetos: ObjetoLaudo[]) => {
-        this.objetos = objetos;
-      },
-      (error) => {
-        console.error('Erro ao listar objetos: ', error);
-      }
-    );
   }
 
   removerDocumento(index: number) {
