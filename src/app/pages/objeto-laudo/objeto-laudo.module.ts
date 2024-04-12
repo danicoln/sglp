@@ -15,6 +15,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ObjetoLaudoListComponent } from './objeto-laudo-list/objeto-laudo-list.component';
 import { ToastModule } from 'primeng/toast';
+import { ToolbarModule } from 'primeng/toolbar';
+import { TableModule } from 'primeng/table';
 
 
 @NgModule({
@@ -26,6 +28,8 @@ import { ToastModule } from 'primeng/toast';
     ToastModule,
     ReactiveFormsModule,
     FormsModule,
+    ToolbarModule,
+    TableModule,
     RouterModule,
     SharedModule,
     CommonModule,
@@ -40,7 +44,8 @@ import { ToastModule } from 'primeng/toast';
     ObjetoLaudoRoutingModule,
   ],
   exports: [
-    ObjetoLaudoFormComponent
+    ObjetoLaudoFormComponent,
+    ObjetoLaudoListComponent
   ]
 })
 export class ObjetoLaudoModule { }
