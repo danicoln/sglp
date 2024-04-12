@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, firstValueFrom, from } from 'rxjs';
 import { ObjetoLaudo } from './objeto-laudo.model';
-import { Documento } from '../../documentos/shared/documento.model';
 
 @Injectable({
   providedIn: 'root'

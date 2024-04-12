@@ -1,5 +1,6 @@
 <form [formGroup]="resourceForm" (ngSubmit)="submitForm()">
-
+  <p-toast></p-toast>
+  
   <h2 class="title">Objeto do Laudo Pericial</h2>
 
   <p-card>
@@ -53,6 +54,7 @@
               type="submit"
               pButton
               label=" Salvar"
+              severity="success mr-2"
               >
             </button>
           </div>

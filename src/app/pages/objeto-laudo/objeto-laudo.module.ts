@@ -14,6 +14,7 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ObjetoLaudoListComponent } from './objeto-laudo-list/objeto-laudo-list.component';
+import { ToastModule } from 'primeng/toast';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { ObjetoLaudoListComponent } from './objeto-laudo-list/objeto-laudo-list.
     ObjetoLaudoListComponent
   ],
   imports: [
+    ToastModule,
     ReactiveFormsModule,
     FormsModule,
     RouterModule,

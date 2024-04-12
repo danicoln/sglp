@@ -135,7 +135,9 @@ export class ProcessoAutocompleteComponent implements ControlValueAccessor, OnDe
   }
 
   ngOnDestroy() {
+    if(this.onChange && typeof this.onChange.unsubscribe === 'function'){
       this.onChange.unsubscribe();
+    }
   }
 
   setDisabledState(isDisabled: boolean): void {
