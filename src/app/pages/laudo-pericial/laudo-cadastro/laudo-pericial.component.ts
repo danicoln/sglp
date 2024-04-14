@@ -58,7 +58,6 @@ export class LaudoPericialComponent implements OnInit {
       this.atualizar(this.laudoForm);
     } else {
       this.adicionar(this.laudoForm);
-      this.laudoForm.reset();
     }
   }
 

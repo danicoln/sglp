@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ErrorHandlerService } from './error-handler.service';
@@ -25,7 +25,9 @@ import { ProcessoService } from '../pages/processos/shared/processo.service';
     MessageService,
     ConfirmationService,
     ParteService,
-    ProcessoService
+    ProcessoService,
+
+    DatePipe
   ]
 })
 export class CoreModule { }
