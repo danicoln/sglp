@@ -17,6 +17,8 @@ import { ObjetoLaudoListComponent } from './objeto-laudo-list/objeto-laudo-list.
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 
 @NgModule({
@@ -40,6 +42,8 @@ import { TableModule } from 'primeng/table';
     InputTextModule,
     InputTextareaModule,
     PanelModule,
+    DialogModule,
+    ConfirmDialogModule,
 
     ObjetoLaudoRoutingModule,
   ],

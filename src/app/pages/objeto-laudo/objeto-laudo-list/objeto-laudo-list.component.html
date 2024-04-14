@@ -96,21 +96,59 @@
       </tr>
     </ng-template>
 
-    <!--
-
-    -->
-
     <ng-template pTemplate="summary">
       <div class="flex align-items-center justify-content-between">Total de {{ objetos ? objetos.length : 0 }} objetos do laudo.</div>
     </ng-template>
   </p-table>
 
+   <!--=============================================================================-->
+  <!--==Caixa de diálogo de edição==-->
+
+  <p-dialog
+    header="Detalhes do Objeto"
+    [(visible)]="objetoDialog"
+    [style]="{'width': '550px', 'margin': '30px'}"
+    [modal]="true"
+    styleClass="p-fluid"
+    >
+
+    <ng-template pTemplate="content">
+      <div class="field">
+        <label for="nomeTitulo">Título</label>
+          <input type="text" pInputText id="nomeTitulo" [(ngModel)]="objeto.documento!.nomeTitulo"/>
+        <small class="p-error" *ngIf="submitted && !objeto.documento!.nomeTitulo">Título é obrigatório.</small>
+      </div>
+      <div class="field">
+        <label for="descricao">Descrição</label>
+          <textarea
+            class="col-12"
+            pInputTextarea
+            rows="5" cols="30"
+            type="text"
+            [(ngModel)]="objeto.documento!.descricao"
+            >
+          </textarea>
+      </div>
+
+      <div class="field">
+        <label for="data">Data do Documento</label>
+        <p-calendar
+          dateFormat="dd/mm/yy"
+          [readonlyInput]="true"
+          class="flex"
+          placeholder="Data do Documento"
+          [(ngModel)]="objeto.documento!.data"
+          >
+        </p-calendar>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+      <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="esconderDialog()"></button>
+      <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="salvarEdicao()"></button>
+    </ng-template>
+
+  </p-dialog>
+  <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 </p-card>
 
-<!--
-  <div class="titulo">
-    <p-panel header="{{titulo}}">
-
-    </p-panel>
-  </div>
--->
