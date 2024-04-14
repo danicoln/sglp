@@ -56,7 +56,23 @@ export class ObjetoLaudoListComponent implements OnInit {
       acceptLabel: 'Sim',
       rejectLabel: 'Não',
       accept: () => {
-        this.objetos = this.objetos.filter((value) => !this.objetosSelecionados?.includes(value));
+        this.objetosSelecionados?.forEach(objeto => {
+          const objetoId = typeof objeto.id === 'string' ? objeto.id : '';
+
+          if (objetoId) {
+            this.objetoService.excluir(objetoId)
+              .then(() => {
+                this.objetos = this.objetos.filter((value) => !this.objetosSelecionados?.includes(value));
+                this.objetos = [...this.objetos];
+              })
+              .catch(error => {
+                console.error('Erro ao excluir objeto: ', error);
+              });
+          } else {
+            console.error('ID inválido: ', objeto.id);
+          }
+        });
+
         this.objetosSelecionados = [];
         this.msgService.add({ severity: 'success', summary: 'Sucesso', detail: 'Objetos apagados', life: 3000 });
       }
@@ -103,7 +119,15 @@ export class ObjetoLaudoListComponent implements OnInit {
   }
 
   editar(obj: ObjetoLaudo) {
-    this.objeto = { ...obj };
+    if(obj.documento?.data){
+      const dataFormatada = new Date(obj.documento!.data).toLocaleDateString('pt-BR');
+      const dataObjeto = new Date(dataFormatada);
+
+      this.objeto = { ...obj, documento: {...obj.documento, data: dataObjeto} };
+    } else {
+      this.objeto = {...obj };
+    }
+
     this.objetoDialog = true;
   }
 
