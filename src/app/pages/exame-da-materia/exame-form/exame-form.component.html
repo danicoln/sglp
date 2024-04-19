@@ -1,0 +1,79 @@
+<form [formGroup]="resourceForm" (ngSubmit)="submitForm()">
+  <p-toast></p-toast>
+
+  <p-card>
+
+    <p-fieldset
+      [collapsed]="true"
+      legend="Exame da Matéria" [toggleable]="true" [collapsed]="false">
+
+        <!-- Campos do Exame -->
+        <div class="form-group">
+          <label for="descricao">Descrição:</label>
+            <textarea
+              class="form-control col-12"
+              pInputTextarea
+              rows="5" cols="30"
+              type="text"
+              formControlName="descricao"
+              >
+            </textarea>
+        <div *ngIf="resourceForm.get('descricao')?.invalid && resourceForm.get('descricao')?.touched">
+          <small class="text-danger">Descrição é obrigatória</small>
+        </div>
+      </div>
+
+      <!-- Lista de Objetos de Laudo -->
+      <div formArrayName="objetos">
+        <div *ngFor="let objLaudo of getObjetoFormArray(); let i = index">
+          <app-objeto-laudo-form
+            [formGroupName]="i"
+            [objetos]="objetos()"
+            [novaSecao]="novoObjeto()"
+            >
+          </app-objeto-laudo-form>
+
+
+          <button
+          icon="pi pi-trash"
+          pRipple
+          class="p-button-danger"
+          (click)="removeObjeto(i)"
+          pButton
+          severity="success mr-2"
+          >
+        </button>
+      </div>
+      <a
+        icon="pi pi-plus"
+        pRipple
+        class="p-button-info"
+        (click)="addObjeto()"
+        pButton
+        label="Objeto"
+        severity="info mr-2"
+        >
+      </a>
+
+    </div>
+
+
+
+    </p-fieldset>
+
+    <div class="btn-salvar">
+      <button
+        icon="pi pi-save"
+        pRipple
+        class="p-button-success"
+        type="submit"
+        pButton
+        label=" Salvar"
+        severity="success mr-2"
+        >
+      </button>
+    </div>
+
+  </p-card>
+
+</form>

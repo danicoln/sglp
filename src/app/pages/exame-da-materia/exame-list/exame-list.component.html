@@ -1,0 +1,98 @@
+<p-card header="Lista de Exames dos Laudos">
+  <p-toast></p-toast>
+
+  <!--Botões de Criar e Deletar-->
+  <p-toolbar styleClass="mb-4 gap-2">
+    <ng-template pTemplate="left">
+      <a href="/exames/novo">
+        <p-button
+          pRipple
+          label="Novo"
+          icon="pi pi-plus"
+          severity="success mr-2"
+          >
+        </p-button>
+      </a>
+
+      <p-button
+        pRipple
+        label="Deletar"
+        icon="pi pi-trash"
+        severity="danger"
+        (click)="deletarExamesSelecionados()"
+        [disabled]="!objetosSelecionados || !objetosSelecionados.length"
+        >
+      </p-button>
+    </ng-template>
+  </p-toolbar>
+
+    <!--Tabela-->
+
+    <p-table
+      #tabela
+      [value]="exames"
+      [rows]="10"
+      [paginator]="true"
+      [tableStyle]="{ 'min-width': '75rem' }"
+      [(selection)]="objetosSelecionados"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+      [showCurrentPageReport]="true"
+      [globalFilterFields]="[
+        'id', 'exame.id',
+        'documento.descricao', 'objeto.documento?.descricao',
+        ]"
+
+      >
+
+    <ng-template pTemplate="caption">
+      <div class="flex align-items-center justify-content-between">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText type="text" (input)="applyFilterGlobal($event)" placeholder="Buscar..." />
+        </span>
+      </div>
+    </ng-template>
+
+    <!--Header Table-->
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width:4rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
+          <th pSortableColumn="exame.objetos.length">Qtde. de Objetos<p-sortIcon field="exame.objetos.length"></p-sortIcon></th>
+          <th pSortableColumn="exame.descricao">Descrição<p-sortIcon field="exame.descricao"></p-sortIcon></th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <!--
+
+    -->
+
+    <!--Body Table-->
+    <ng-template pTemplate="body" let-exame>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="exame"></p-tableCheckbox>
+        </td>
+        <td>{{ exame.id }}</td>
+        <td>{{ exame.objetos.length }}</td>
+        <td>{{ exame.descricao }}</td>
+        <td>
+          <a href="exames/edit/{{exame.id}}"><i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i></a>
+          <i (click)="deletar(exame)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="summary">
+      <div class="flex align-items-center justify-content-between">Total de {{ exames ? exames.length : 0 }} exames do laudo.</div>
+    </ng-template>
+  </p-table>
+
+  <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+</p-card>

@@ -17,7 +17,6 @@ export class ObjetoLaudoListComponent implements OnInit {
   @Input() titulo: string = 'Título Exemplo';
 
   objeto = new ObjetoLaudo();
-  documento = new Documento();
 
   objetos!: ObjetoLaudo[];
   objetosSelecionados!: ObjetoLaudo[] | null;

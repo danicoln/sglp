@@ -4,7 +4,7 @@ import { Documento } from '../../documentos/shared/documento.model';
 import { ErrorHandlerService } from '../../../core/error-handler.service';
 import { MessageService } from 'primeng/api';
 import { ObjetoLaudoService } from '../shared/objeto-laudo.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-objeto-laudo-form',
@@ -15,13 +15,17 @@ export class ObjetoLaudoFormComponent implements OnInit {
 
   resourceForm!: FormGroup;
 
+  @Input() objetos!: FormArray;
+  @Input() obj!: FormGroup;
+  @Input() novaSecao!: FormGroup;
+  @Input() index!: number;
+
   exibirFormularioNovoDocumento: boolean = false;
 
   listaDeDocumentos: Documento[] = []; // talvez n precise
   novoDocumento: Documento = new Documento(); // talvez n precise
 
   objeto: ObjetoLaudo = new ObjetoLaudo();
-  objetos: ObjetoLaudo[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -94,8 +98,35 @@ export class ObjetoLaudoFormComponent implements OnInit {
     this.exibirFormularioNovoDocumento = !this.exibirFormularioNovoDocumento;
   }
 
-  removerDocumento(index: number) {
-    this.listaDeDocumentos.at(index)
+  removerDocumento(documento: Documento) {
+    const index = this.listaDeDocumentos.indexOf(documento);
+    if(index !== -1) {
+      this.listaDeDocumentos.splice(index, 1);
+    }
   }
 
+  get documento(): FormGroup {
+    return this.resourceForm?.get('documento') as FormGroup;
+  }
+
+  // ===========================================================================
+  // implementação para acesso de outros componentes
+
+  removerObjeto() {
+    this.objetos.removeAt(this.index);
+  }
+
+  sections(): FormArray {
+    return this.objetos
+    .at(this.index) as FormArray;
+  }
+
+  addSecao() {
+    this.sections().push(this.novaSecao);
+  }
+
+  adicionarObjeto() {
+    this.objeto = this.resourceForm.value;
+    this.objetos.push(this.objeto);
+  }
 }

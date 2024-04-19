@@ -26,6 +26,7 @@ import { ProcessoModule } from './pages/processos/processo.module';
 import { NomeacoesModule } from './pages/nomeacoes/nomeacoes.module';
 import { DocumentosModule } from './pages/documentos/documentos.module';
 import { CalendarModule } from 'primeng/calendar';
+import { ExameDaMateriaModule } from './pages/exame-da-materia/exame-da-materia.module';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { CalendarModule } from 'primeng/calendar';
     LaudoPericialModule,
     ProcessoModule,
     NomeacoesModule,
-    DocumentosModule
+    DocumentosModule,
+    ExameDaMateriaModule
 
   ],
   providers: [],
