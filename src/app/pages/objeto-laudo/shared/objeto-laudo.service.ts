@@ -44,10 +44,4 @@ export class ObjetoLaudoService {
     return firstValueFrom(this.http.delete<void>(`${this.url}/${codigo}`, { headers }));
   }
 
-  /*
-  listarDocumentos(objId: string): Observable<Documento[]> {
-    const headers = new HttpHeaders().set('Authorization', this.chave);
-    return this.http.get<Documento[]>(`${this.url}/${objId}/documentos`, {headers});
-  }
-*/
 }

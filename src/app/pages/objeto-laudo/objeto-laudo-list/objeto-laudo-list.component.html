@@ -47,13 +47,12 @@
       'documento.descricao', 'objeto.documento?.descricao',
       ]"
 
-    > <!--em globalFilterFields: analisar acima o que vai na tabela-->
+    >
 
     <ng-template pTemplate="caption">
       <div class="flex align-items-center justify-content-between">
         <span class="p-input-icon-left">
           <i class="pi pi-search"></i>
-          <!-- filtro -> erro no $event.target.value -->
           <input pInputText type="text" (input)="applyFilterGlobal($event)" placeholder="Buscar..." />
         </span>
       </div>
