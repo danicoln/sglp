@@ -13,11 +13,15 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SharedModule } from '../../shared/shared.module';
 import { DropdownModule } from 'primeng/dropdown';
+import { QuesitoListComponent } from './quesito-list/quesito-list.component';
+import { ToolbarModule } from 'primeng/toolbar';
+import { TableModule } from 'primeng/table';
 
 
 @NgModule({
   declarations: [
-    QuesitoFormComponent
+    QuesitoFormComponent,
+    QuesitoListComponent
   ],
   imports: [
     SharedModule,
@@ -32,11 +36,14 @@ import { DropdownModule } from 'primeng/dropdown';
     DialogModule,
     ConfirmDialogModule,
     ToastModule,
-    DropdownModule
+    DropdownModule,
+    ToolbarModule,
+    TableModule
   ],
 
   exports: [
-    QuesitoFormComponent
+    QuesitoFormComponent,
+    QuesitoListComponent
   ]
 })
 export class QuesitoModule { }
