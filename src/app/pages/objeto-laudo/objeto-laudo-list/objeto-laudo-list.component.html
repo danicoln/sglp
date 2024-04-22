@@ -66,12 +66,13 @@
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
         <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
-          <th pSortableColumn=" objeto.documento?.nomeTitulo">Título<p-sortIcon field=" objeto.documento?.nomeTitulo"></p-sortIcon></th>
-          <th pSortableColumn="objeto.documento?.descricao">Descrição<p-sortIcon field="objeto.documento?.descricao"></p-sortIcon></th>
-          <th pSortableColumn="objeto.documento?.data">Data<p-sortIcon field="objeto.documento?.data"></p-sortIcon></th>
-          <th></th>
-        </tr>
-      </ng-template>
+        <th pSortableColumn=" objeto.documento?.nomeTitulo">Título<p-sortIcon field=" objeto.documento?.nomeTitulo"></p-sortIcon></th>
+        <th pSortableColumn="objeto.documento?.descricao">Descrição<p-sortIcon field="objeto.documento?.descricao"></p-sortIcon></th>
+        <th pSortableColumn="objeto.documento?.data">Data<p-sortIcon field="objeto.documento?.data"></p-sortIcon></th>
+        <th></th>
+      </tr>
+    </ng-template>
+
       <!--
 
     -->
@@ -82,6 +83,7 @@
         <td>
           <p-tableCheckbox [value]="objeto"></p-tableCheckbox>
         </td>
+
         <td>{{ objeto.id }}</td>
         <td>{{ objeto.documento?.nomeTitulo }}</td>
         <td>{{ objeto.documento?.descricao }}</td>

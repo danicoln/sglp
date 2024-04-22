@@ -1,10 +1,11 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { ObjetoLaudo } from '../shared/objeto-laudo.model';
 import { Documento } from '../../documentos/shared/documento.model';
 import { ErrorHandlerService } from '../../../core/error-handler.service';
 import { MessageService } from 'primeng/api';
 import { ObjetoLaudoService } from '../shared/objeto-laudo.service';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, UntypedFormArray, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-objeto-laudo-form',
@@ -13,12 +14,17 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class ObjetoLaudoFormComponent implements OnInit {
 
+  @Output() objetoAdicionado: EventEmitter<ObjetoLaudo> = new EventEmitter<ObjetoLaudo>();
+  @Output() objetoSalvo: EventEmitter<ObjetoLaudo> = new EventEmitter<ObjetoLaudo>();
+
   resourceForm!: FormGroup;
 
   @Input() objetos!: FormArray;
   @Input() obj!: FormGroup;
   @Input() novaSecao!: FormGroup;
   @Input() index!: number;
+  @Input() exameId!: string;
+  @Input() listaObjetos!: ObjetoLaudo[];
 
   exibirFormularioNovoDocumento: boolean = false;
 
@@ -31,14 +37,18 @@ export class ObjetoLaudoFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private objetoService: ObjetoLaudoService,
     private erro: ErrorHandlerService,
+    private route: ActivatedRoute,
     private msgService: MessageService
   ) { }
 
   ngOnInit(): void {
-    this.baseResourceForm();
+    this.route.params.subscribe(params => {
+      this.exameId = params['exameId'];
+      this.buildResourceForm();
+    });
   }
 
-  private baseResourceForm() {
+  private buildResourceForm() {
     this.resourceForm = this.formBuilder.group({
       documento: this.formBuilder.group({
         id: [''],
@@ -51,17 +61,19 @@ export class ObjetoLaudoFormComponent implements OnInit {
 
   submitForm() {
     if (this.resourceForm && this.resourceForm.valid) {
-
       const dadosFormulario = this.resourceForm.value;
 
       const documento = dadosFormulario.documento;
       if (documento) {
 
-        this.objeto = {
+        const objeto: ObjetoLaudo = {
+          exameDaMateriaId: this.exameId,
           documento: documento
         };
 
-        this.salvarDados(this.objeto);
+        this.salvarDados(objeto);
+        this.objetoAdicionado.emit(objeto);
+
 
       } else {
         console.error('O ID do documento não está definido');
@@ -73,13 +85,12 @@ export class ObjetoLaudoFormComponent implements OnInit {
   }
 
   salvarDados(objeto: ObjetoLaudo) {
-    this.objetoService.salvar(objeto)
+    this.objetoService.salvar(this.exameId, objeto)
       .then(() => {
         console.log('TOAST: Objeto salvo! ', objeto);
         this.msgService.add(
           { severity: 'success', summary: 'Sucesso', detail: 'Objeto Salvo', life: 3000 });
-        this.objeto = new ObjetoLaudo();
-        this.resourceForm?.reset();
+
       })
       .catch(erro => {
         this.erro.handle(erro);
@@ -100,7 +111,7 @@ export class ObjetoLaudoFormComponent implements OnInit {
 
   removerDocumento(documento: Documento) {
     const index = this.listaDeDocumentos.indexOf(documento);
-    if(index !== -1) {
+    if (index !== -1) {
       this.listaDeDocumentos.splice(index, 1);
     }
   }
@@ -118,7 +129,7 @@ export class ObjetoLaudoFormComponent implements OnInit {
 
   sections(): FormArray {
     return this.objetos
-    .at(this.index) as FormArray;
+      .at(this.index) as FormArray;
   }
 
   addSecao() {
@@ -126,7 +137,30 @@ export class ObjetoLaudoFormComponent implements OnInit {
   }
 
   adicionarObjeto() {
-    this.objeto = this.resourceForm.value;
-    this.objetos.push(this.objeto);
+
+    if (this.resourceForm && this.resourceForm.valid) {
+      const dadosFormulario = this.resourceForm.value;
+
+      const documento = dadosFormulario.documento;
+
+      if (documento) {
+        const objeto: ObjetoLaudo = {
+          exameDaMateriaId: this.exameId,
+          documento: documento
+        };
+
+        this.objetoAdicionado.emit(objeto);
+
+        this.objeto = new ObjetoLaudo();
+        this.resourceForm?.reset();
+      } else {
+        console.error('O ID do documento não está definido');
+
+      }
+    } else {
+      this.resourceForm?.markAllAsTouched();
+    }
   }
+
+
 }
