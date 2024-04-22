@@ -16,10 +16,17 @@ export class ExameDaMateriaService {
     private http: HttpClient
   ) { }
 
-  listar(): Observable<ExameDaMateria[]> {
+  async listar(): Promise<ExameDaMateria[]> {
     const headers = new HttpHeaders().set('Authorization', this.chave);
-   return from(this.http.get<ExameDaMateria[]>(this.url, {headers}));
 
+    try{
+      const response = await this.http.get<ExameDaMateria[]>(this.url, {headers})
+        .toPromise();
+      return response || [];
+    } catch(erro) {
+      console.error('Erro ao listar os exames: ', erro);
+      throw erro;
+    }
   }
 
   salvar(exame: ExameDaMateria): Promise<ExameDaMateria> {

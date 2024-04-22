@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, UntypedFormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ErrorHandlerService } from '../../../core/error-handler.service';
-import { ExameDaMateriaService } from '../shared/exame.service';
 import { ObjetoLaudo } from '../../objeto-laudo/shared/objeto-laudo.model';
 import { ExameDaMateria } from '../shared/exame.model';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ExameDaMateriaService } from '../shared/exame.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-exame-form',
@@ -16,13 +16,14 @@ export class ExameFormComponent implements OnInit {
 
   resourceForm!: FormGroup;
 
-  exibirFormulario: boolean = false;
+  formularioAberto: boolean = false;
   exibirFormObjeto: boolean = false;
 
   exame = new ExameDaMateria();
-  listaDeObjetos!: ObjetoLaudo[];
+  objetos: ObjetoLaudo[] = [];
   objeto!: ObjetoLaudo;
 
+  exameId: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -34,10 +35,14 @@ export class ExameFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.baseResourceForm();
+    this.route.params.subscribe(params => {
+    this.exameId = params['exameId'];
+    this.buildResourceForm();
+
+  });
   }
 
-  private baseResourceForm() {
+  private buildResourceForm() {
     //const exame: ExameDaMateria = this.route.snapshot.data['exame'];
     this.resourceForm = this.formBuilder.group({
       id: [''],
@@ -46,52 +51,21 @@ export class ExameFormComponent implements OnInit {
     });
   }
 
-
-  private obterObjetos(exame: ExameDaMateria) {
-    const objetos = [];
-    if (exame?.objetos) {
-      exame.objetos.forEach(obj => objetos.push(this.criarObjeto(obj)));
-    } else {
-      objetos.push(this.criarObjeto());
-    }
-
-    return objetos;
+  private getObjetos(): ObjetoLaudo[] {
+    return this.objetos;
   }
 
-  private criarObjeto(obj: ObjetoLaudo = { id: '', documento: null || undefined }) {
-    const objeto = this.formBuilder.group({
-      id: [obj.id],
-      documento: this.formBuilder.group({
-        id: [obj.documento?.id],
-        nomeTitulo: [obj.documento?.nomeTitulo],
-        descricao: [obj.documento?.descricao],
-        data: [obj.documento?.data]
-      })
-    });
-    return objeto;
-  }
-
-  abrirFormulario() {
-    this.exibirFormObjeto = !this.exibirFormObjeto;
-  }
 
   submitForm() {
     if (this.resourceForm && this.resourceForm.valid) {
-      const formulario =  this.resourceForm.value;
+      const formulario = this.resourceForm.value;
 
-      const objetosLaudo = formulario.objetos.map((objeto: any) => ({
-        ...objeto
-      }));
-
-      const novoExame: ExameDaMateria = {
-        id: formulario.id,
+      this.exame = {
         descricao: formulario.descricao,
-        objetos: objetosLaudo
-      }
+          objetos: this.getObjetos()
+      };
 
-      this.salvarExame(novoExame);
-      console.log(novoExame);
-      console.log('Objetos: ', novoExame.objetos);
+      this.salvarExame(this.exame);
 
     } else {
       console.error('Erro ao salvar exame');
@@ -103,57 +77,28 @@ export class ExameFormComponent implements OnInit {
 
   salvarExame(exame: ExameDaMateria) {
     this.exameService.salvar(exame)
-    .then(() => {
+      .then((exameSalvo) => {
+
         this.messageService.add(
           { severity: 'success', summary: 'Sucesso', detail: 'Exame Salvo', life: 3000 }
-          )
-        //exame = new ExameDaMateria();
-        //this.resourceForm?.reset();
+        )
+
+        this.exame = new ExameDaMateria();
+        this.resourceForm?.reset();
+        this.objetos = [];
       })
       .catch(erro => {
         this.erro.handle(erro);
         this.messageService.add(
           { severity: 'error', summary: 'Erro!', detail: 'Erro ao Salvar', life: 3000 }
-          )
-        });
-      }
-
-  getObjetoFormArray() {
-    return (<UntypedFormArray>this.resourceForm.get('objetos')).controls;
+        )
+      });
   }
 
-  objetos(): FormArray {
-    return this.resourceForm.get('objetos') as FormArray;
+  adicionarObjeto(objeto: ObjetoLaudo) {
+    objeto.exameDaMateriaId = this.exameId;
+    this.objetos.push(objeto);
   }
 
-  novoObjeto() {
-    return this.formBuilder.group({
-      documento: this.formBuilder.group({
-        id: [''],
-        nomeTitulo: [''],
-        descricao: [''],
-        data: ['']
-      })
-    });
-  }
-
-  addObjeto() {
-    this.objetos().push(this.novoObjeto());
-  }
-
-  removeObjeto(index: number) {
-    this.objetos().removeAt(index);
-  }
-
-  private preencherObjetoForm(obj: FormGroup, objeto: ObjetoLaudo) {
-    obj.patchValue({
-      id: objeto.id,
-      documento: {
-        id: objeto.documento?.id,
-        nomeTitulo: objeto.documento?.nomeTitulo,
-        descricao: objeto.documento?.descricao,
-        data: objeto.documento?.data
-      }
-    });
-  }
 }
+

@@ -20,7 +20,7 @@
         icon="pi pi-trash"
         severity="danger"
         (click)="deletarExamesSelecionados()"
-        [disabled]="!objetosSelecionados || !objetosSelecionados.length"
+        [disabled]="!examesSelecionados || !examesSelecionados.length"
         >
       </p-button>
     </ng-template>
@@ -34,7 +34,7 @@
       [rows]="10"
       [paginator]="true"
       [tableStyle]="{ 'min-width': '75rem' }"
-      [(selection)]="objetosSelecionados"
+      [(selection)]="examesSelecionados"
       [rowHover]="true"
       dataKey="id"
       currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"

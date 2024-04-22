@@ -3,7 +3,6 @@ import { ObjetoLaudo } from '../shared/objeto-laudo.model';
 import { ErrorHandlerService } from '../../../core/error-handler.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ObjetoLaudoService } from '../shared/objeto-laudo.service';
-import { Documento } from '../../documentos/shared/documento.model';
 
 @Component({
   selector: 'app-objeto-laudo-list',
@@ -15,6 +14,7 @@ export class ObjetoLaudoListComponent implements OnInit {
   @ViewChild('tabela') tabela!: any;
 
   @Input() titulo: string = 'Título Exemplo';
+  @Input() exameId: string = '';
 
   objeto = new ObjetoLaudo();
 
@@ -36,7 +36,7 @@ export class ObjetoLaudoListComponent implements OnInit {
   }
 
   listar() {
-    this.objetoService.listar()
+    this.objetoService.listar(this.exameId)
       .subscribe(
         (objetos: ObjetoLaudo[]) => {
           this.objetos = objetos;
@@ -59,7 +59,7 @@ export class ObjetoLaudoListComponent implements OnInit {
           const objetoId = typeof objeto.id === 'string' ? objeto.id : '';
 
           if (objetoId) {
-            this.objetoService.excluir(objetoId)
+            this.objetoService.excluir(this.exameId, objetoId)
               .then(() => {
                 this.objetos = this.objetos.filter((value) => !this.objetosSelecionados?.includes(value));
                 this.objetos = [...this.objetos];
@@ -96,12 +96,12 @@ export class ObjetoLaudoListComponent implements OnInit {
 
         if (obj.id !== undefined) {
 
-          this.objetoService.excluir(obj.id)
+          this.objetoService.excluir(this.exameId, obj.id)
             .then(() => {
               this.objetos = this.objetos.filter((value) => value.id !== obj.id);
               this.objeto = {};
               this.msgService.add({
-                severity: 'success', summary: 'Sucesso', detail: 'Nomeação apagada', life: 3000
+                severity: 'success', summary: 'Sucesso', detail: 'Objeto apagado', life: 3000
               });
             })
             .catch((erro) => {
@@ -145,7 +145,7 @@ export class ObjetoLaudoListComponent implements OnInit {
   salvarEdicao() {
     this.submitted = true;
 
-    this.objetoService.atualizar(this.objeto).subscribe(
+    this.objetoService.atualizar(this.exameId, this.objeto).subscribe(
       (objetoAtualizado: ObjetoLaudo) => {
         const index = this.objetos.findIndex(obj => obj.id === objetoAtualizado.id);
 

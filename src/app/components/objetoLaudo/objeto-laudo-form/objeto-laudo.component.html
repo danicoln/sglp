@@ -1,0 +1,56 @@
+<p-card>
+  <div class="form-documentos">
+    <div>
+      <input
+        class="col-4"
+        placeholder="Nome do Documento"
+        pInputText
+        type="text"
+        [(ngModel)]="nomeTitulo"
+        >
+      <textarea
+        class="col-12"
+        pInputTextarea
+        rows="5" cols="30"
+        type="text"
+        [(ngModel)]="descricao"
+        >
+      </textarea>
+
+      <p-calendar
+        class="flex col-4"
+        dateFormat="dd/mm/yy" [readonlyInput]="true"
+        placeholder="Data do Documento"
+        [(ngModel)]="data"
+        >
+      </p-calendar>
+
+    </div>
+
+  </div>
+
+  <div class="mt-3">
+    <button
+      icon="pi pi-save"
+      pRipple
+      class="btn-salvar p-button-success"
+      type="button"
+      pButton
+      label=" Salvar"
+      severity="success mr-2"
+      >
+    </button>
+
+    <p-button
+      (click)="cancelar()"
+      pRipple
+      class="col-3 btn-cancelar"
+      label="Cancelar"
+      severity="danger mr-2"
+      >
+    </p-button>
+  </div>
+
+</p-card>
+
+

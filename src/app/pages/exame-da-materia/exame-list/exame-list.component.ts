@@ -14,7 +14,7 @@ export class ExameListComponent implements OnInit {
   @ViewChild('tabela') tabela!: any;
   objetoDialog: boolean = false;
   submitted: boolean = false;
-  objetosSelecionados!: ExameDaMateria[] | null;
+  examesSelecionados!: ExameDaMateria[] | null;
   exames!: ExameDaMateria[];
   exame = new ExameDaMateria();
 
@@ -30,17 +30,11 @@ export class ExameListComponent implements OnInit {
       this.listar();
     }
 
-  listar() {
-    this.exameService.listar()
-    .subscribe(
-        (exames: ExameDaMateria[]) => {
-          this.exames = exames;
-        },
-        erro => {
-          this.handleError(erro);
-        }
-        );
-      }
+    listar() {
+      this.exameService.listar()
+        .then((dados) => this.exames = dados)
+        .catch(erro => this.error.handle(erro));
+    }
 
       deletar(obj: ExameDaMateria) {
         this.confirmacaoService.confirm({
@@ -82,13 +76,13 @@ export class ExameListComponent implements OnInit {
       acceptLabel: 'Sim',
       rejectLabel: 'Não',
       accept: () => {
-        this.objetosSelecionados?.forEach(exame => {
+        this.examesSelecionados?.forEach(exame => {
           const exameId = typeof exame.id === 'string' ? exame.id : '';
 
           if (exameId) {
             this.exameService.excluir(exameId)
               .then(() => {
-                this.exames = this.exames.filter((value) => !this.objetosSelecionados?.includes(value));
+                this.exames = this.exames.filter((value) => !this.examesSelecionados?.includes(value));
                 this.exames = [...this.exames];
               })
               .catch(error => {
@@ -99,7 +93,7 @@ export class ExameListComponent implements OnInit {
           }
         });
 
-        this.objetosSelecionados = [];
+        this.examesSelecionados = [];
         this.msgService.add({ severity: 'success', summary: 'Sucesso', detail: 'Exames apagados', life: 3000 });
       }
     });

@@ -23,43 +23,55 @@
         </div>
       </div>
 
-      <!-- Lista de Objetos de Laudo -->
-      <div formArrayName="objetos">
-        <div *ngFor="let objLaudo of getObjetoFormArray(); let i = index">
-          <app-objeto-laudo-form
-            [formGroupName]="i"
-            [objetos]="objetos()"
-            [novaSecao]="novoObjeto()"
-            >
-          </app-objeto-laudo-form>
 
 
-          <button
-          icon="pi pi-trash"
+      <!--
+        <div formArrayName="objetos">
+          <div *ngFor="let objLaudo of objetos; let i = index">
+            <app-objeto-laudo
+              [formGroupName]="i"
+              (objetoAtualizado)="atualizarObjeto($event)"
+              >
+            </app-objeto-laudo>
+
+        </div>
+        <a *ngIf="!formularioAberto"
+          (click)="abrirCamposObjeto()"
+          icon="pi pi-plus"
           pRipple
-          class="p-button-danger"
-          (click)="removeObjeto(i)"
+          class="p-button-info"
           pButton
-          severity="success mr-2"
+          label="Objeto"
+          severity="info mr-2"
           >
-        </button>
+        </a>
+
       </div>
-      <a
-        icon="pi pi-plus"
-        pRipple
-        class="p-button-info"
-        (click)="addObjeto()"
-        pButton
-        label="Objeto"
-        severity="info mr-2"
+      -->
+      <app-objeto-laudo-form
+        (objetoAdicionado)="adicionarObjeto($event)"
         >
-      </a>
+      </app-objeto-laudo-form>
 
-    </div>
+      <ul>
+        <li *ngFor="let objeto of objetos">
+          {{objeto.documento?.nomeTitulo}}
+        </li>
+      </ul>
 
 
 
-    </p-fieldset>
+  </p-fieldset>
+  <!-- Lista de Objetos de Laudo
+  <div *ngFor="let obj of objetos; let i = index">
+
+    <p-panel [header]="obj.documento?.nomeTitulo" [toggleable]="true" [collapsed]="true">
+      <p>{{obj.documento?.descricao}}</p>
+      <p>{{obj.documento?.data | date: 'dd/MM/yyyy' }}</p>
+
+    </p-panel>
+  </div> -->
+  <!-- Fim da Lista de Objetos de Laudo -->
 
     <div class="btn-salvar">
       <button
