@@ -79,7 +79,7 @@
           <p-tableCheckbox [value]="exame"></p-tableCheckbox>
         </td>
         <td>{{ exame.id }}</td>
-        <td>{{ exame.objetos.length }}</td>
+        <td>{{ exame.objetos?.length }}</td>
         <td>{{ exame.descricao }}</td>
         <td>
           <a href="exames/edit/{{exame.id}}"><i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i></a>
