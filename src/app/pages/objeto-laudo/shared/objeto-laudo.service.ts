@@ -10,7 +10,7 @@ export class ObjetoLaudoService {
 
   chave: string = '';
 
-  url = "http://localhost:8080/api/exames/{exameId}/objetos";
+  apiUrl = "http://localhost:8080/api/exames";
 
   constructor(
     private http: HttpClient
@@ -18,7 +18,7 @@ export class ObjetoLaudoService {
 
   listar(exameId: string): Observable<ObjetoLaudo[]> {
     const headers = new HttpHeaders().set('Authorization', this.chave);
-    const url = `http://localhost:8080/api/exames/${exameId}/objetos`;
+    const url = `${this.apiUrl}/${exameId}/objetos`;
 
    return from(this.http.get<ObjetoLaudo[]>(url, {headers}));
   }
@@ -27,7 +27,7 @@ export class ObjetoLaudoService {
     const headers = new HttpHeaders()
     .set('Authorization', this.chave)
     .set('Content-Type', 'application/json');
-    const url = `http://localhost:8080/api/exames/${exameId}/objetos`;
+    const url = `${this.apiUrl}/${exameId}/objetos`;
 
     return firstValueFrom(this.http.post<ObjetoLaudo>(url, objetoLaudo, { headers }));
   }
@@ -36,7 +36,7 @@ export class ObjetoLaudoService {
     const headers = new HttpHeaders()
     .set('Authorization', this.chave)
     .set('Content-Type', 'application/json');
-    const url = `http://localhost:8080/api/exames/${exameId}/objetos`;
+    const url = `${this.apiUrl}/${exameId}/objetos`;
 
     return this.http.put<ObjetoLaudo>(`${url}/${objetoLaudo.id}`, objetoLaudo, { headers });
   }
@@ -44,7 +44,7 @@ export class ObjetoLaudoService {
 
   excluir(exameId: String, objetoId: string): Promise<void> {
     const headers = new HttpHeaders().set('Authorization', this.chave);
-    const url = `http://localhost:8080/api/exames/${exameId}/objetos`;
+    const url = `${this.apiUrl}/${exameId}/objetos`;
 
     return firstValueFrom(this.http.delete<void>(`${url}/${objetoId}`, { headers }));
   }

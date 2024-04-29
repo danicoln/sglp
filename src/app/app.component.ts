@@ -11,6 +11,7 @@ export class AppComponent implements OnInit {
   constructor(private config: PrimeNGConfig){}
 
   ngOnInit(): void {
+    this.updateFavicon();
     this.config.setTranslation({
       accept: 'Sim',
       reject: 'Não',
@@ -26,5 +27,21 @@ export class AppComponent implements OnInit {
     });
   }
 
+   // Verifica se o tema do navegador é escuro
+   isDarkMode(): boolean {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  // Retorna o caminho do favicon com base no tema do navegador
+  getFaviconPath(): string {
+    return this.isDarkMode() ? 'src/assets/favicon.ico' : 'favicon.ico';
+  }
+
+  updateFavicon(): void {
+    const favicon = document.querySelector('link[rel="icon"]');
+    if (favicon) {
+      favicon.setAttribute('href', this.getFaviconPath());
+    }
+  }
 
 }

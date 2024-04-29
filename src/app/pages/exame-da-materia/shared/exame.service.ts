@@ -46,9 +46,27 @@ export class ExameDaMateriaService {
   }
 
 
-  excluir(codigo: string): Promise<void> {
+  excluir(exameId: string): Promise<void> {
     const headers = new HttpHeaders().set('Authorization', this.chave);
-    return firstValueFrom(this.http.delete<void>(`${this.url}/${codigo}`, { headers }));
+    return firstValueFrom(this.http.delete<void>(`${this.url}/${exameId}`, { headers }));
   }
+
+  buscarPorId(exameId: string): Promise<ExameDaMateria> {
+    const headers = new HttpHeaders()
+    .set('Authorization', this.chave);
+
+  return this.http.get(`${this.url}/${exameId}`, { headers })
+    .toPromise()
+    .then((response: any) => {
+      const processo = response as ExameDaMateria;
+
+      return processo;
+    })
+    .catch((error: any) => {
+      console.error('Erro ao buscar exame pelo ID: ', error);
+      throw error;
+    });
+  }
+
 
 }

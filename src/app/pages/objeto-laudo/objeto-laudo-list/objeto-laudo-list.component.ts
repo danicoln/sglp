@@ -18,7 +18,7 @@ export class ObjetoLaudoListComponent implements OnInit {
 
   objeto = new ObjetoLaudo();
 
-  objetos!: ObjetoLaudo[];
+  @Input() objetos!: ObjetoLaudo[];
   objetosSelecionados!: ObjetoLaudo[] | null;
 
   objetoDialog: boolean = false;
