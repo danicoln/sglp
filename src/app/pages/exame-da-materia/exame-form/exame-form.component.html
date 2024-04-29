@@ -24,54 +24,10 @@
       </div>
 
 
-
-      <!--
-        <div formArrayName="objetos">
-          <div *ngFor="let objLaudo of objetos; let i = index">
-            <app-objeto-laudo
-              [formGroupName]="i"
-              (objetoAtualizado)="atualizarObjeto($event)"
-              >
-            </app-objeto-laudo>
-
-        </div>
-        <a *ngIf="!formularioAberto"
-          (click)="abrirCamposObjeto()"
-          icon="pi pi-plus"
-          pRipple
-          class="p-button-info"
-          pButton
-          label="Objeto"
-          severity="info mr-2"
-          >
-        </a>
-
-      </div>
-      -->
       <app-objeto-laudo-form
-        (objetoAdicionado)="adicionarObjeto($event)"
-        >
-      </app-objeto-laudo-form>
-
-      <ul>
-        <li *ngFor="let objeto of objetos">
-          {{objeto.documento?.nomeTitulo}}
-        </li>
-      </ul>
-
-
-
-  </p-fieldset>
-  <!-- Lista de Objetos de Laudo
-  <div *ngFor="let obj of objetos; let i = index">
-
-    <p-panel [header]="obj.documento?.nomeTitulo" [toggleable]="true" [collapsed]="true">
-      <p>{{obj.documento?.descricao}}</p>
-      <p>{{obj.documento?.data | date: 'dd/MM/yyyy' }}</p>
-
-    </p-panel>
-  </div> -->
-  <!-- Fim da Lista de Objetos de Laudo -->
+      (objetoAdicionado)="adicionarObjeto($event)"
+      >
+    </app-objeto-laudo-form>
 
     <div class="btn-salvar">
       <button
@@ -86,6 +42,17 @@
       </button>
     </div>
 
-  </p-card>
 
+  </p-fieldset>
+</p-card>
+<!-- Lista de Objetos de Laudo-->
+
+<app-objeto-laudo-list
+  formArrayName="objetos"
+  [objetos]="objetos"
+  >
+</app-objeto-laudo-list>
+
+<!-- Fim da Lista de Objetos de Laudo -->
 </form>
+

@@ -6,6 +6,7 @@ import { ObjetoLaudo } from '../../objeto-laudo/shared/objeto-laudo.model';
 import { ExameDaMateria } from '../shared/exame.model';
 import { ExameDaMateriaService } from '../shared/exame.service';
 import { ActivatedRoute } from '@angular/router';
+import { ObjetoLaudoService } from '../../objeto-laudo/shared/objeto-laudo.service';
 
 @Component({
   selector: 'app-exame-form',
@@ -31,15 +32,19 @@ export class ExameFormComponent implements OnInit {
     private erro: ErrorHandlerService,
     private route: ActivatedRoute,
     private exameService: ExameDaMateriaService,
+    private objetoService: ObjetoLaudoService
 
   ) { }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-    this.exameId = params['exameId'];
-    this.buildResourceForm();
+      this.exameId = params['id'];
+      this.buildResourceForm();
+      if(this.exameId) {
+        this.carregarExame(this.exameId);
+      }
 
-  });
+    });
   }
 
   private buildResourceForm() {
@@ -62,7 +67,7 @@ export class ExameFormComponent implements OnInit {
 
       this.exame = {
         descricao: formulario.descricao,
-          objetos: this.getObjetos()
+        objetos: this.getObjetos()
       };
 
       this.salvarExame(this.exame);
@@ -98,6 +103,28 @@ export class ExameFormComponent implements OnInit {
   adicionarObjeto(objeto: ObjetoLaudo) {
     objeto.exameDaMateriaId = this.exameId;
     this.objetos.push(objeto);
+  }
+
+  carregarExame(exameId: string) {
+    this.exameService.buscarPorId(exameId)
+      .then((exame: ExameDaMateria) => {
+        this.exame = exame;
+        this.resourceForm.patchValue({
+          id: exame.id,
+          descricao: exame.descricao,
+          objetos: exame.objetos
+        });
+      })
+      .catch(error => {
+        this.erro.handle(error);
+        this.messageService.add(
+          { severity: 'error', summary: 'Erro!', detail: 'Erro ao carregar os detalhes do exame', life: 3000 }
+        );
+      })
+  }
+
+  trackByObjetos(index: number, objeto: ObjetoLaudo): string | undefined {
+    return objeto.id;
   }
 
 }
