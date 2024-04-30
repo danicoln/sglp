@@ -19,12 +19,15 @@ export class ExameFormComponent implements OnInit {
 
   formularioAberto: boolean = false;
   exibirFormObjeto: boolean = false;
+  descricaoHabilitada: boolean = true;
 
   exame = new ExameDaMateria();
   objetos: ObjetoLaudo[] = [];
   objeto!: ObjetoLaudo;
 
   exameId: string = '';
+
+
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,10 +43,7 @@ export class ExameFormComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.exameId = params['id'];
       this.buildResourceForm();
-      if(this.exameId) {
-        this.carregarExame(this.exameId);
-      }
-
+      this.carregarExame(this.exameId);
     });
   }
 
@@ -56,7 +56,7 @@ export class ExameFormComponent implements OnInit {
     });
   }
 
-  private getObjetos(): ObjetoLaudo[] {
+  getObjetos(): ObjetoLaudo[] {
     return this.objetos;
   }
 
@@ -66,12 +66,17 @@ export class ExameFormComponent implements OnInit {
       const formulario = this.resourceForm.value;
 
       this.exame = {
+
         descricao: formulario.descricao,
         objetos: this.getObjetos()
       };
 
-      this.salvarExame(this.exame);
-
+      if (this.exameId) {
+        this.exame.id = this.exameId;
+        this.atualizarExame(this.exame);
+      } else {
+        this.criarExame(this.exame);
+      }
     } else {
       console.error('Erro ao salvar exame');
     }
@@ -80,7 +85,7 @@ export class ExameFormComponent implements OnInit {
 
   }
 
-  salvarExame(exame: ExameDaMateria) {
+  criarExame(exame: ExameDaMateria) {
     this.exameService.salvar(exame)
       .then((exameSalvo) => {
 
@@ -88,9 +93,9 @@ export class ExameFormComponent implements OnInit {
           { severity: 'success', summary: 'Sucesso', detail: 'Exame Salvo', life: 3000 }
         )
 
-        this.exame = new ExameDaMateria();
-        this.resourceForm?.reset();
-        this.objetos = [];
+        this.resourceForm.get('descricao')?.disable();
+        this.descricaoHabilitada = false;
+
       })
       .catch(erro => {
         this.erro.handle(erro);
@@ -99,6 +104,30 @@ export class ExameFormComponent implements OnInit {
         )
       });
   }
+
+  atualizarExame(exame: ExameDaMateria) {
+    this.exameService.atualizar(exame)
+      .subscribe(
+        (exameAtualizado: ExameDaMateria) => {
+          this.messageService.add(
+            { severity: 'success', summary: 'Sucesso', detail: 'Exame Atualizado', life: 3000 }
+          );
+          exame = exameAtualizado;
+          if(exame.id){
+            this.carregarExame(exame.id);
+          }
+
+        },
+        (erro: any) => {
+          this.erro.handle(erro);
+          this.messageService.add(
+            { severity: 'error', summary: 'Erro!', detail: 'Erro ao Atualizar Exame', life: 3000 }
+          );
+        }
+      )
+
+  }
+
 
   adicionarObjeto(objeto: ObjetoLaudo) {
     objeto.exameDaMateriaId = this.exameId;
@@ -114,6 +143,7 @@ export class ExameFormComponent implements OnInit {
           descricao: exame.descricao,
           objetos: exame.objetos
         });
+        this.resourceForm.get('descricao')?.disable();
       })
       .catch(error => {
         this.erro.handle(error);
@@ -123,9 +153,12 @@ export class ExameFormComponent implements OnInit {
       })
   }
 
-  trackByObjetos(index: number, objeto: ObjetoLaudo): string | undefined {
-    return objeto.id;
+  editarDescricao() {
+    if (this.descricaoHabilitada) {
+      this.resourceForm.get('descricao')?.enable();
+      this.descricaoHabilitada = false;
+    }
+    //this.resourceForm.get('descricao')?.enable();
   }
-
 }
 

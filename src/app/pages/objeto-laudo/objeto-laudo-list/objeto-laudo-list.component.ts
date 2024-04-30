@@ -3,6 +3,7 @@ import { ObjetoLaudo } from '../shared/objeto-laudo.model';
 import { ErrorHandlerService } from '../../../core/error-handler.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ObjetoLaudoService } from '../shared/objeto-laudo.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-objeto-laudo-list',
@@ -14,7 +15,7 @@ export class ObjetoLaudoListComponent implements OnInit {
   @ViewChild('tabela') tabela!: any;
 
   @Input() titulo: string = 'Título Exemplo';
-  @Input() exameId: string = '';
+  @Input() exameId!: string;
 
   objeto = new ObjetoLaudo();
 
@@ -25,6 +26,7 @@ export class ObjetoLaudoListComponent implements OnInit {
   submitted: boolean = false;
 
   constructor(
+    private route: ActivatedRoute,
     private error: ErrorHandlerService,
     private msgService: MessageService,
     private objetoService: ObjetoLaudoService,
@@ -32,7 +34,10 @@ export class ObjetoLaudoListComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.exameId = params['id'];
     this.listar();
+    });
   }
 
   listar() {

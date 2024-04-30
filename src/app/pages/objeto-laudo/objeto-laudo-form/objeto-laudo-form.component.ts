@@ -27,6 +27,7 @@ export class ObjetoLaudoFormComponent implements OnInit {
   @Input() listaObjetos!: ObjetoLaudo[];
 
   exibirFormularioNovoDocumento: boolean = false;
+  documentoHabilitado: boolean = true;
 
   listaDeDocumentos: Documento[] = []; // talvez n precise
   novoDocumento: Documento = new Documento(); // talvez n precise
@@ -43,7 +44,7 @@ export class ObjetoLaudoFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.exameId = params['exameId'];
+      this.exameId = params['id'];
       this.buildResourceForm();
     });
   }
@@ -66,13 +67,17 @@ export class ObjetoLaudoFormComponent implements OnInit {
       const documento = dadosFormulario.documento;
       if (documento) {
 
-        const objeto: ObjetoLaudo = {
+        this.objeto = {
+          id: dadosFormulario.id,
           exameDaMateriaId: this.exameId,
           documento: documento
         };
 
-        this.salvarDados(objeto);
-        this.objetoAdicionado.emit(objeto);
+        if(this.objeto.id) {
+          this.atualizarObjeto(this.objeto);
+        }
+        this.salvarDados(this.objeto);
+        this.objetoAdicionado.emit(this.objeto);
 
 
       } else {
@@ -91,6 +96,8 @@ export class ObjetoLaudoFormComponent implements OnInit {
         this.msgService.add(
           { severity: 'success', summary: 'Sucesso', detail: 'Objeto Salvo', life: 3000 });
 
+          this.resourceForm.get('documento')?.disable();
+          this.documentoHabilitado = false;
       })
       .catch(erro => {
         this.erro.handle(erro);
@@ -98,6 +105,10 @@ export class ObjetoLaudoFormComponent implements OnInit {
           { severity: 'error', summary: 'Erro!', detail: 'Erro ao Salvar', life: 3000 }
         )
       });
+
+  }
+
+  atualizarObjeto(objeto: ObjetoLaudo) {
 
   }
 
