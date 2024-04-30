@@ -96,8 +96,7 @@ export class ObjetoLaudoFormComponent implements OnInit {
         this.msgService.add(
           { severity: 'success', summary: 'Sucesso', detail: 'Objeto Salvo', life: 3000 });
 
-          this.resourceForm.get('documento')?.disable();
-          this.documentoHabilitado = false;
+          this.resourceForm?.reset();
       })
       .catch(erro => {
         this.erro.handle(erro);

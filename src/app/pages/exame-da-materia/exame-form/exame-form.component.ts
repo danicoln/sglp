@@ -5,7 +5,7 @@ import { ErrorHandlerService } from '../../../core/error-handler.service';
 import { ObjetoLaudo } from '../../objeto-laudo/shared/objeto-laudo.model';
 import { ExameDaMateria } from '../shared/exame.model';
 import { ExameDaMateriaService } from '../shared/exame.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ObjetoLaudoService } from '../../objeto-laudo/shared/objeto-laudo.service';
 
 @Component({
@@ -34,6 +34,7 @@ export class ExameFormComponent implements OnInit {
     private messageService: MessageService,
     private erro: ErrorHandlerService,
     private route: ActivatedRoute,
+    private router: Router,
     private exameService: ExameDaMateriaService,
     private objetoService: ObjetoLaudoService
 
@@ -43,12 +44,13 @@ export class ExameFormComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.exameId = params['id'];
       this.buildResourceForm();
-      this.carregarExame(this.exameId);
+      if(this.exameId) {
+        this.carregarExame(this.exameId);
+      }
     });
   }
 
   private buildResourceForm() {
-    //const exame: ExameDaMateria = this.route.snapshot.data['exame'];
     this.resourceForm = this.formBuilder.group({
       id: [''],
       descricao: ['', Validators.required],
@@ -75,7 +77,11 @@ export class ExameFormComponent implements OnInit {
         this.exame.id = this.exameId;
         this.atualizarExame(this.exame);
       } else {
-        this.criarExame(this.exame);
+        this.salvarExame(this.exame)
+        .then((exameSalvo)=> {
+          this.detalhesDoExame(exameSalvo.id!);
+
+        })
       }
     } else {
       console.error('Erro ao salvar exame');
@@ -85,24 +91,28 @@ export class ExameFormComponent implements OnInit {
 
   }
 
-  criarExame(exame: ExameDaMateria) {
-    this.exameService.salvar(exame)
-      .then((exameSalvo) => {
+  salvarExame(exame: ExameDaMateria): Promise<ExameDaMateria> {
+    return new Promise((resolve, reject) =>{
 
-        this.messageService.add(
-          { severity: 'success', summary: 'Sucesso', detail: 'Exame Salvo', life: 3000 }
-        )
+      this.exameService.salvar(exame)
+        .then((exameSalvo) => {
 
-        this.resourceForm.get('descricao')?.disable();
-        this.descricaoHabilitada = false;
+          this.messageService.add(
+            { severity: 'success', summary: 'Sucesso', detail: 'Exame Salvo', life: 3000 }
+          )
 
-      })
-      .catch(erro => {
-        this.erro.handle(erro);
-        this.messageService.add(
-          { severity: 'error', summary: 'Erro!', detail: 'Erro ao Salvar', life: 3000 }
-        )
-      });
+          this.resourceForm.get('descricao')?.disable();
+          resolve(exameSalvo);
+
+        })
+        .catch(erro => {
+          this.erro.handle(erro);
+          this.messageService.add(
+            { severity: 'error', summary: 'Erro!', detail: 'Erro ao Salvar', life: 3000 }
+          );
+          reject(erro);
+        });
+    })
   }
 
   atualizarExame(exame: ExameDaMateria) {
@@ -136,14 +146,17 @@ export class ExameFormComponent implements OnInit {
 
   carregarExame(exameId: string) {
     this.exameService.buscarPorId(exameId)
-      .then((exame: ExameDaMateria) => {
-        this.exame = exame;
-        this.resourceForm.patchValue({
-          id: exame.id,
-          descricao: exame.descricao,
-          objetos: exame.objetos
-        });
-        this.resourceForm.get('descricao')?.disable();
+    .then((exame: ExameDaMateria) => {
+      this.exame = exame;
+      this.resourceForm.patchValue({
+        id: exame.id,
+        descricao: exame.descricao,
+        objetos: exame.objetos
+      });
+      this.resourceForm.get('descricao')?.setValue(exame.descricao);
+      this.resourceForm.get('descricao')?.disable();
+      this.exibirFormObjeto = true;
+
       })
       .catch(error => {
         this.erro.handle(error);
@@ -159,6 +172,10 @@ export class ExameFormComponent implements OnInit {
       this.descricaoHabilitada = false;
     }
     //this.resourceForm.get('descricao')?.enable();
+  }
+
+  detalhesDoExame(exameId: string) {
+    this.router.navigate(['exames', exameId, 'edit']);
   }
 }
 
