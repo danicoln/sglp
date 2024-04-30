@@ -4,7 +4,7 @@
   <!--Botões de Criar e Deletar-->
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-      <a href="/exames/novo">
+      <a href="exames/novo">
         <p-button
           pRipple
           label="Novo"
@@ -82,7 +82,7 @@
         <td>{{ exame.objetos?.length }}</td>
         <td>{{ exame.descricao }}</td>
         <td>
-          <a href="exames/edit/{{exame.id}}"><i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i></a>
+          <a href="exames/{{exame.id}}/edit"><i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i></a>
           <i (click)="deletar(exame)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i>
         </td>
       </tr>
