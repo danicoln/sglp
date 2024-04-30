@@ -53,7 +53,7 @@
   </p-fieldset>
   <a href="/exames" style="text-decoration: none;"><p>Consultar exames</p></a>
 
-  <div class="obj-form">
+  <div class="obj-form" *ngIf="exibirFormObjeto">
     <app-objeto-laudo-form
 
       (objetoAdicionado)="adicionarObjeto($event)"
@@ -67,7 +67,7 @@
 <!-- Lista de Objetos de Laudo
 -->
 
-<div class="obj-list" >
+<div class="obj-list" *ngFor="let obj of getObjetos()">
   <app-objeto-laudo-list
     formArrayName="objetos"
     [objetos]="objetos"
