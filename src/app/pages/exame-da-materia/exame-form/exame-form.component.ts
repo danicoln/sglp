@@ -38,16 +38,17 @@ export class ExameFormComponent implements OnInit {
     private exameService: ExameDaMateriaService,
     private objetoService: ObjetoLaudoService
 
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.exameId = params['id'];
       this.buildResourceForm();
-      if(this.exameId) {
+      if (this.exameId) {
         this.carregarExame(this.exameId);
       }
-    });
+      });
   }
 
   private buildResourceForm() {
@@ -58,11 +59,6 @@ export class ExameFormComponent implements OnInit {
     });
   }
 
-  getObjetos(): ObjetoLaudo[] {
-    return this.objetos;
-  }
-
-
   submitForm() {
     if (this.resourceForm && this.resourceForm.valid) {
       const formulario = this.resourceForm.value;
@@ -70,7 +66,7 @@ export class ExameFormComponent implements OnInit {
       this.exame = {
 
         descricao: formulario.descricao,
-        objetos: this.getObjetos()
+        objetos: this.objetos
       };
 
       if (this.exameId) {
@@ -78,10 +74,10 @@ export class ExameFormComponent implements OnInit {
         this.atualizarExame(this.exame);
       } else {
         this.salvarExame(this.exame)
-        .then((exameSalvo)=> {
-          this.detalhesDoExame(exameSalvo.id!);
+          .then((exameSalvo) => {
+            this.detalhesDoExame(exameSalvo.id!);
 
-        })
+          })
       }
     } else {
       console.error('Erro ao salvar exame');
@@ -92,11 +88,11 @@ export class ExameFormComponent implements OnInit {
   }
 
   salvarExame(exame: ExameDaMateria): Promise<ExameDaMateria> {
-    return new Promise((resolve, reject) =>{
+    return new Promise((resolve, reject) => {
 
       this.exameService.salvar(exame)
         .then((exameSalvo) => {
-
+          this.exame = exameSalvo;
           this.messageService.add(
             { severity: 'success', summary: 'Sucesso', detail: 'Exame Salvo', life: 3000 }
           )
@@ -115,29 +111,32 @@ export class ExameFormComponent implements OnInit {
     })
   }
 
-  atualizarExame(exame: ExameDaMateria) {
-    this.exameService.atualizar(exame)
-      .subscribe(
-        (exameAtualizado: ExameDaMateria) => {
-          this.messageService.add(
-            { severity: 'success', summary: 'Sucesso', detail: 'Exame Atualizado', life: 3000 }
-          );
-          exame = exameAtualizado;
-          if(exame.id){
-            this.carregarExame(exame.id);
-          }
+  atualizarExame(exame: ExameDaMateria): Promise<ExameDaMateria> {
+    return new Promise((resolve, reject) => {
+      this.exameService.atualizar(exame)
+        .subscribe(
+          (exameAtualizado: ExameDaMateria) => {
+            this.messageService.add(
+              { severity: 'success', summary: 'Sucesso', detail: 'Exame Atualizado', life: 3000 }
+            );
+            this.exame = exameAtualizado;
+            if (exame.id) {
+              this.carregarExame(exame.id);
+            }
+            resolve(exameAtualizado);
 
-        },
-        (erro: any) => {
-          this.erro.handle(erro);
-          this.messageService.add(
-            { severity: 'error', summary: 'Erro!', detail: 'Erro ao Atualizar Exame', life: 3000 }
-          );
-        }
-      )
+          },
+          (erro: any) => {
+            this.erro.handle(erro);
+            this.messageService.add(
+              { severity: 'error', summary: 'Erro!', detail: 'Erro ao Atualizar Exame', life: 3000 }
+            );
+            reject(erro);
+          }
+        );
+    });
 
   }
-
 
   adicionarObjeto(objeto: ObjetoLaudo) {
     objeto.exameDaMateriaId = this.exameId;
@@ -146,17 +145,21 @@ export class ExameFormComponent implements OnInit {
 
   carregarExame(exameId: string) {
     this.exameService.buscarPorId(exameId)
-    .then((exame: ExameDaMateria) => {
-      this.exame = exame;
-      this.resourceForm.patchValue({
-        id: exame.id,
-        descricao: exame.descricao,
-        objetos: exame.objetos
-      });
-      this.resourceForm.get('descricao')?.setValue(exame.descricao);
-      this.resourceForm.get('descricao')?.disable();
-      this.exibirFormObjeto = true;
+      .then((exame: ExameDaMateria) => {
+        this.exame = exame;
+        this.resourceForm.patchValue({
+          id: exame.id,
+          descricao: exame.descricao,
+          objetos: exame.objetos
+        });
+        this.resourceForm.get('descricao')?.setValue(exame.descricao);
+        this.resourceForm.get('descricao')?.disable();
+        this.exibirFormObjeto = true;
 
+
+        this.filtrarObjetos(exameId, exame);
+
+        console.log('objetos: ', this.resourceForm.get('objetos')?.value);
       })
       .catch(error => {
         this.erro.handle(error);
@@ -164,6 +167,14 @@ export class ExameFormComponent implements OnInit {
           { severity: 'error', summary: 'Erro!', detail: 'Erro ao carregar os detalhes do exame', life: 3000 }
         );
       })
+
+  }
+
+  filtrarObjetos(exameId: string, exame: ExameDaMateria) {
+    let objetos = this.objetos;
+    if(objetos || objetos !== undefined) {
+      exame.objetos?.filter(objeto => objeto.exameDaMateriaId === exameId);
+    }
   }
 
   editarDescricao() {
@@ -177,5 +188,13 @@ export class ExameFormComponent implements OnInit {
   detalhesDoExame(exameId: string) {
     this.router.navigate(['exames', exameId, 'edit']);
   }
+
+  getObjetos(): ObjetoLaudo[] {
+    const examesObjetos = this.resourceForm.get('objetos')?.value;
+    this.objetos = examesObjetos.filter((objeto: ObjetoLaudo) =>
+      objeto.exameDaMateriaId === this.exameId);
+    return this.objetos;
+  }
+
 }
 

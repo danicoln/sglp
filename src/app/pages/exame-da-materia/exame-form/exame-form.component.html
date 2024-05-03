@@ -53,26 +53,30 @@
   </p-fieldset>
   <a href="/exames" style="text-decoration: none;"><p>Consultar exames</p></a>
 
+  <!--
+    Formulário de cadastro de objeto
+  -->
   <div class="obj-form" *ngIf="exibirFormObjeto">
     <app-objeto-laudo-form
 
       (objetoAdicionado)="adicionarObjeto($event)"
+
       >
     </app-objeto-laudo-form>
   </div>
-  <!--
-
-  -->
 </p-card>
 <!-- Lista de Objetos de Laudo
 -->
 
-<div class="obj-list" *ngFor="let obj of getObjetos()">
+<div class="obj-list" *ngIf="objetos.length > 0">
   <app-objeto-laudo-list
     formArrayName="objetos"
     [objetos]="objetos"
     >
   </app-objeto-laudo-list>
+</div>
+<div *ngIf="objetos.length === 0">
+  <b>Nenhum objeto associado a este exame</b>
 </div>
 
 <!-- Fim da Lista de Objetos de Laudo -->
