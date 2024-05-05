@@ -15,7 +15,16 @@ import { DropdownComponent } from '../components/dropdown/dropdown.component';
 import { ObjetivoComponent } from '../components/objetivo/objetivo.component';
 
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { PanelModule } from 'primeng/panel';
+import { StepsModule } from 'primeng/steps';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { ToastModule } from 'primeng/toast';
 import { ProcessoAutocompleteComponent } from '../components/autocompletes/processo-autocomplete/processo-autocomplete.component';
+import { MenuStepsComponent } from '../components/menu-steps/menu-steps.component';
+import { StepsComponent } from '../components/menu-steps/steps/steps.component';
+import { TabMenuComponent } from '../components/menu-steps/tab-menu/tab-menu.component';
+import { TabViewComponent } from '../components/tab-view/tab-view.component';
+import { TabViewModule } from 'primeng/tabview';
 
 
 @NgModule({
@@ -23,6 +32,10 @@ import { ProcessoAutocompleteComponent } from '../components/autocompletes/proce
     ObjetivoComponent,
     DropdownComponent,
     ProcessoAutocompleteComponent,
+    MenuStepsComponent,
+    TabMenuComponent,
+    StepsComponent,
+    TabViewComponent
 
   ],
   imports: [
@@ -40,12 +53,21 @@ import { ProcessoAutocompleteComponent } from '../components/autocompletes/proce
     InputTextModule,
     DropdownModule,
     AutoCompleteModule,
+    TabMenuModule,
+    StepsModule,
+    ToastModule,
+    PanelModule,
+    TabViewModule
 
   ],
   exports: [
     ObjetivoComponent,
     DropdownComponent,
-    ProcessoAutocompleteComponent
+    ProcessoAutocompleteComponent,
+    MenuStepsComponent,
+    TabMenuComponent,
+    StepsComponent,
+    TabViewComponent
   ]
 })
 export class SharedModule { }

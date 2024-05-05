@@ -36,12 +36,12 @@ export class ObjetoLaudoListComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.exameId = params['id'];
-    this.listar();
+    this.listar(this.exameId);
     });
   }
 
-  listar() {
-    this.objetoService.listar(this.exameId)
+  listar(exameId: string) {
+    this.objetoService.listar(exameId)
       .subscribe(
         (objetos: ObjetoLaudo[]) => {
           this.objetos = objetos;

@@ -54,38 +54,8 @@
         >
       </p-button>
     </div>
-    <!--
+    <a routerLink="../objetos" style="text-decoration: none;"><p>Consultar objetos</p></a>
 
-      <div *ngFor="let documento of listaDeDocumentos; let i = index">
-
-        <p-panel [header]="documento.nomeTitulo" [toggleable]="true" [collapsed]="true">
-          <p>{{documento.descricao}}</p>
-          <p>{{documento.data | date: 'dd/MM/yyyy' }}</p>
-
-          <button
-            pButton
-            (click)="removerDocumento(documento)"
-            icon="pi pi-trash">
-          </button>
-
-        </p-panel>
-      </div>
-    -->
-    <!--
-          <div *ngFor=" let doc of listaDeDocumentos; let i = index" >
-              <p-panel [header]="doc.nomeTitulo" [toggleable]="true" [collapsed]="true">
-                <p>{{doc.descricao}}</p>
-                <p>{{doc.data| date: 'dd/MM/yyyy' }}</p>
-
-                <button
-                  pButton
-                  (click)="removerDocumento(i)"
-                  icon="pi pi-trash">
-                </button>
-
-              </p-panel>
-            </div>
-        -->
   </p-card>
 </form>
 

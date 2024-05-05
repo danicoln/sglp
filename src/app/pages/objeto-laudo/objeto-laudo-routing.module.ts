@@ -6,7 +6,7 @@ import { ObjetoLaudoListComponent } from './objeto-laudo-list/objeto-laudo-list.
 const routes: Routes = [
   { path: 'objetos', component: ObjetoLaudoListComponent },
   { path: 'objetos/novo', component: ObjetoLaudoFormComponent },
-  { path: 'edit/:id', component: ObjetoLaudoFormComponent }
+  { path: 'objetos/:id/edit', component: ObjetoLaudoFormComponent }
 ];
 
 @NgModule({

@@ -9,14 +9,16 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
+import { CalendarModule } from 'primeng/calendar';
 import { CardModule } from 'primeng/card';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
 import { PanelMenuModule } from 'primeng/panelmenu';
 import { SidebarModule } from 'primeng/sidebar';
+import { StepsModule } from 'primeng/steps';
 import { TabMenuModule } from 'primeng/tabmenu';
 
-import { CalendarModule } from 'primeng/calendar';
+import { PanelModule } from 'primeng/panel';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
@@ -33,7 +35,8 @@ import { SharedModule } from './shared/shared.module';
   declarations: [
     AppComponent,
     HeaderComponent,
-    SidebarComponent,
+    SidebarComponent
+
 
   ],
   imports: [
@@ -49,12 +52,14 @@ import { SharedModule } from './shared/shared.module';
     AvatarModule,
     FontAwesomeModule,
     SharedModule,
+    StepsModule,
     CoreModule,
     CardModule,
     FieldsetModule,
     RouterModule,
     FileUploadModule,
     CalendarModule,
+    PanelModule,
 
     LaudoPericialModule,
     ProcessoModule,
@@ -63,7 +68,6 @@ import { SharedModule } from './shared/shared.module';
     ExameDaMateriaModule,
     QuesitoModule,
 
-    
 
   ],
   providers: [],

@@ -1,0 +1,30 @@
+
+
+<!--
+  <ul class="flex nav-tabs" style="list-style: none;">
+    <li
+      class="mr-2 nav-item"
+      *ngFor="let tab of tabsArray;
+      let sr = index"
+      (click)="setTab(sr)"
+      >
+      <a
+        class="nav-link"
+        [ngClass]="activatedTab == sr ? 'active': ''"
+        >
+        <p-button [disabled]="objetoAssociado"
+          pRipple
+          >{{ tab }}
+        </p-button>
+      </a>
+    </li>
+  </ul>
+
+-->
+<p-tabView>
+  <p-tabPanel *ngFor="let tab of tabsArray" [header]="tab.titulo">
+      <p>
+          {{ tab.content }}
+      </p>
+  </p-tabPanel>
+</p-tabView>
