@@ -10,7 +10,8 @@ import { ProcessoService } from '../pages/processos/shared/processo.service';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+  ],
   imports: [
     CommonModule,
     RouterModule,

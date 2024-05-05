@@ -12,19 +12,23 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { TabViewModule } from 'primeng/tabview';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
 import { SharedModule } from '../../shared/shared.module';
 import { ObjetoLaudoModule } from '../objeto-laudo/objeto-laudo.module';
 import { ExameDaMateriaRoutingModule } from './exame-da-materia-routing.module';
 import { ExameFormComponent } from './exame-form/exame-form.component';
+import { ExameHomeComponent } from './exame-home/exame-home.component';
 import { ExameListComponent } from './exame-list/exame-list.component';
 
 
 @NgModule({
   declarations: [
     ExameListComponent,
-    ExameFormComponent
+    ExameFormComponent,
+    ExameHomeComponent
   ],
   imports: [
     CommonModule,
@@ -44,13 +48,17 @@ import { ExameListComponent } from './exame-list/exame-list.component';
     PanelModule,
     DialogModule,
     ConfirmDialogModule,
+    TabMenuModule,
+    TabViewModule,
 
     ObjetoLaudoModule,
-    
+
+
   ],
   exports: [
     ExameListComponent,
-    ExameFormComponent
+    ExameFormComponent,
+    ExameHomeComponent
   ]
 })
 export class ExameDaMateriaModule { }

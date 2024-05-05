@@ -6,7 +6,8 @@ const routes: Routes = [
   /*
     { path: 'pagina-nao-encontrada', component: PaginaNaoEncontradaComponent },
     */
- { path: '**', redirectTo: 'pagina-nao-encontrada' }
+ { path: '**', redirectTo: 'pagina-nao-encontrada' },
+ 
 
 ];
 

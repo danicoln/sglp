@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { ErrorHandlerService } from '../../../core/error-handler.service';
 import { ObjetoLaudo } from '../../objeto-laudo/shared/objeto-laudo.model';
 import { ExameDaMateria } from '../shared/exame.model';
@@ -20,13 +20,12 @@ export class ExameFormComponent implements OnInit {
   formularioAberto: boolean = false;
   exibirFormObjeto: boolean = false;
   descricaoHabilitada: boolean = true;
-
+  idExistente: boolean = false;
   exame = new ExameDaMateria();
   objetos: ObjetoLaudo[] = [];
   objeto!: ObjetoLaudo;
 
   exameId: string = '';
-
 
 
   constructor(
@@ -48,8 +47,10 @@ export class ExameFormComponent implements OnInit {
       if (this.exameId) {
         this.carregarExame(this.exameId);
       }
-      });
+    });
   }
+
+
 
   private buildResourceForm() {
     this.resourceForm = this.formBuilder.group({

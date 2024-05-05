@@ -1,0 +1,71 @@
+<!--
+  <app-tab-menu
+    [passoAtual]="itemAtual"
+    [menuItens]="itensMenu"
+    >
+  </app-tab-menu>
+-->
+
+<!--
+Teste de componente criado
+
+<div class="row">
+  <div class="col">
+    <app-tab-view
+      [tabsArray]="tabs"
+      (onTabChange)="tabChange($event)"
+      >
+    </app-tab-view>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <div *ngIf="activatedTabIndex == 0">
+      <app-exame-list></app-exame-list>
+    </div>
+  </div>
+  <div class="col-12">
+    <div *ngIf="activatedTabIndex == 1">
+      <app-exame-form></app-exame-form>
+    </div>
+  </div>
+  <div class="col-12">
+    <div *ngIf="activatedTabIndex == 2">
+      <app-objeto-laudo-form></app-objeto-laudo-form>
+    </div>
+  </div>
+  <div class="col-12">
+    <div *ngIf="activatedTabIndex == 3">
+      <app-objeto-laudo-list></app-objeto-laudo-list>
+    </div>
+  </div>
+</div>
+
+-->
+
+<!--
+
+-->
+
+<p-tabView>
+  <p-tabPanel header="Exames" routerLink="exames">
+    <p-tabView>
+      <div>
+        <div *ngIf="!exibirFormulario">
+          <app-exame-list></app-exame-list>
+        </div>
+
+        <div *ngIf="exibirFormulario">
+          <app-exame-form></app-exame-form>
+        </div>
+      </div>
+    </p-tabView>
+  </p-tabPanel>
+
+  <p-tabPanel header="Objetos">
+    <app-objeto-laudo-list></app-objeto-laudo-list>
+  </p-tabPanel>
+
+</p-tabView>
+

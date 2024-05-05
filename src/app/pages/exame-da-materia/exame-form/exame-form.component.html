@@ -1,6 +1,5 @@
 <form [formGroup]="resourceForm" (ngSubmit)="submitForm()">
   <p-toast></p-toast>
-
   <p-card>
 
     <p-fieldset
@@ -23,8 +22,6 @@
           <small class="text-danger">Descrição é obrigatória</small>
         </div>
       </div>
-
-
 
       <div class="btn-salvar">
         <button
@@ -52,33 +49,13 @@
 
   </p-fieldset>
   <a href="/exames" style="text-decoration: none;"><p>Consultar exames</p></a>
+  <a routerLink="objetos/novo" style="text-decoration: none;"><p-button pRipple icon="pi pi-plus" label="Objeto"></p-button></a>
 
-  <!--
-    Formulário de cadastro de objeto
-  -->
-  <div class="obj-form" *ngIf="exibirFormObjeto">
-    <app-objeto-laudo-form
-
-      (objetoAdicionado)="adicionarObjeto($event)"
-
-      >
-    </app-objeto-laudo-form>
+  <div>
+    <app-objeto-laudo-form></app-objeto-laudo-form>
   </div>
 </p-card>
-<!-- Lista de Objetos de Laudo
--->
-
-<div class="obj-list" *ngIf="objetos.length > 0">
-  <app-objeto-laudo-list
-    formArrayName="objetos"
-    [objetos]="objetos"
-    >
-  </app-objeto-laudo-list>
-</div>
-<div *ngIf="objetos.length === 0">
-  <b>Nenhum objeto associado a este exame</b>
-</div>
-
-<!-- Fim da Lista de Objetos de Laudo -->
 </form>
+
+
 
