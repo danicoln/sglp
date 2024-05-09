@@ -22,6 +22,8 @@ import { LaudoListComponent } from './laudo-list/laudo-list.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ProcessoModule } from '../processos/processo.module';
 import { ObjetoLaudoModule } from '../objeto-laudo/objeto-laudo.module';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -33,6 +35,8 @@ import { ObjetoLaudoModule } from '../objeto-laudo/objeto-laudo.module';
     SharedModule,
     ReactiveFormsModule,
     FormsModule,
+    BrowserModule,
+    BrowserAnimationsModule,
     RouterModule,
     CommonModule,
     CardModule,

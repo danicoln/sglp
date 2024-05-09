@@ -6,7 +6,7 @@ import { LaudoListComponent } from './laudo-list/laudo-list.component';
 const routes: Routes = [
   { path: 'laudos', component: LaudoListComponent },
   { path: 'laudos/novo', component: LaudoPericialComponent },
-  { path: 'laudos/:id', component: LaudoPericialComponent }
+  { path: 'laudos/:id/edit', component: LaudoPericialComponent }
 ]
 
 @NgModule({
