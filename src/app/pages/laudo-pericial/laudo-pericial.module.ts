@@ -51,7 +51,9 @@ import { ObjetoLaudoModule } from '../objeto-laudo/objeto-laudo.module';
 
     ProcessoModule,
     ObjetoLaudoModule,
-    LaudoPericialRoutingModule
+    LaudoPericialRoutingModule,
+
+
   ],
   exports: [
     LaudoPericialComponent,

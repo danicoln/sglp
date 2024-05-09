@@ -37,9 +37,9 @@
         <input placeholder="Nome" pInputText type="text" formControlName="nomeReu" />
       </div>
 
-      <p-button type="submit" pRipple label="Salvar" severity="success mr-2" [disabled]="!formGroup.valid">
+      <p-button type="submit" pRipple label="Salvar" [disabled]="!formGroup.valid">
       </p-button>
-      <p-button pRipple label="Cancelar" [outlined]="false" severity="secondary mr-2" [disabled]="!formGroup.valid"
+      <p-button pRipple label="Cancelar" [outlined]="false" [disabled]="!formGroup.valid"
         (onClick)="cancelar()">
       </p-button>
     </div>

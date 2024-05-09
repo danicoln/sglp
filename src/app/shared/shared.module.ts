@@ -18,6 +18,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { PanelModule } from 'primeng/panel';
 import { StepsModule } from 'primeng/steps';
 import { TabMenuModule } from 'primeng/tabmenu';
+import { MegaMenuModule } from 'primeng/megamenu';
 import { ToastModule } from 'primeng/toast';
 import { ProcessoAutocompleteComponent } from '../components/autocompletes/processo-autocomplete/processo-autocomplete.component';
 import { MenuStepsComponent } from '../components/menu-steps/menu-steps.component';
@@ -25,6 +26,7 @@ import { StepsComponent } from '../components/menu-steps/steps/steps.component';
 import { TabMenuComponent } from '../components/menu-steps/tab-menu/tab-menu.component';
 import { TabViewComponent } from '../components/tab-view/tab-view.component';
 import { TabViewModule } from 'primeng/tabview';
+import { MegaMenuComponent } from '../components/mega-menu/mega-menu.component';
 
 
 @NgModule({
@@ -35,7 +37,8 @@ import { TabViewModule } from 'primeng/tabview';
     MenuStepsComponent,
     TabMenuComponent,
     StepsComponent,
-    TabViewComponent
+    TabViewComponent,
+    MegaMenuComponent
 
   ],
   imports: [
@@ -57,7 +60,8 @@ import { TabViewModule } from 'primeng/tabview';
     StepsModule,
     ToastModule,
     PanelModule,
-    TabViewModule
+    TabViewModule,
+    MegaMenuModule,
 
   ],
   exports: [
@@ -67,7 +71,8 @@ import { TabViewModule } from 'primeng/tabview';
     MenuStepsComponent,
     TabMenuComponent,
     StepsComponent,
-    TabViewComponent
+    TabViewComponent,
+    MegaMenuComponent
   ]
 })
 export class SharedModule { }
