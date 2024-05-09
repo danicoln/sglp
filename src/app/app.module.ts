@@ -60,7 +60,6 @@ import { SharedModule } from './shared/shared.module';
     FileUploadModule,
     CalendarModule,
     PanelModule,
-
     LaudoPericialModule,
     ProcessoModule,
     NomeacoesModule,
