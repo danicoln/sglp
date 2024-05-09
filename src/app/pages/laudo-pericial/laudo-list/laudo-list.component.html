@@ -90,7 +90,7 @@
           <p-tag [value]="laudo.status" [severity]="getSeverity(laudo.status)"></p-tag>
         </td>
         <td>
-          <a (click)="editarLaudo(laudo)"><i style="color: green;" class="pi pi-pencil mr-2"></i></a>
+          <a href="laudos/{{laudo.id}}/edit"><i style="color: green;" class="pi pi-pencil mr-2"></i></a>
           <i style="color: red;" class="pi pi-trash" (click)="deletarLaudo(laudo)"></i>
         </td>
       </tr>

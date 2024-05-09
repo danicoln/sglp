@@ -13,6 +13,25 @@ export class MegaMenuComponent implements OnInit {
   ngOnInit() {
       this.itens = [
         {
+          label: 'Laudos',
+          icon: 'pi pi-box',
+          items:
+          [
+            [
+              {
+                label: 'Laudos',
+                items: [
+                  {
+                    label: 'Consultar',
+                    icon: 'pi pi-box',
+                    routerLink: ''
+                  }
+                ],
+              }
+            ],
+          ]
+        },
+        {
           label: 'Processos',
           icon: 'pi pi-box',
           items:
