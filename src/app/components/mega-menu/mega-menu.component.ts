@@ -24,7 +24,7 @@ export class MegaMenuComponent implements OnInit {
                   {
                     label: 'Consultar',
                     icon: 'pi pi-box',
-                    routerLink: ''
+                    routerLink: '/laudos'
                   }
                 ],
               }
@@ -43,12 +43,12 @@ export class MegaMenuComponent implements OnInit {
                   {
                     label: 'Novo',
                     icon: 'pi pi-box',
-                    routerLink: 'processo/novo'
+                    routerLink: '/processos/novo'
                   },
                   {
                     label: 'Listar',
                     icon: 'pi pi-box',
-                    routerLink: 'processos'
+                    routerLink: '/processos'
                   }
                 ],
               }
@@ -67,12 +67,12 @@ export class MegaMenuComponent implements OnInit {
                   {
                     label: 'Novo',
                     icon: 'pi pi-box',
-                    routerLink: 'exames/novo'
+                    routerLink: '/exames/novo'
                   },
                   {
                     label: 'Listar',
                     icon: 'pi pi-box',
-                    routerLink: 'exames'
+                    routerLink: '/exames'
                   }
                 ],
               },
@@ -82,11 +82,11 @@ export class MegaMenuComponent implements OnInit {
                 items: [
                   {
                     label: 'Novo',
-                    routerLink: 'objetos/novo'
+                    routerLink: '/objetos/novo'
                   },
                   {
                     label: 'Listar',
-                    routerLink: 'objetos'
+                    routerLink: '/objetos'
                   }
                 ],
               }
@@ -105,12 +105,12 @@ export class MegaMenuComponent implements OnInit {
                   {
                     label: 'Novo',
                     icon: 'pi pi-box',
-                    routerLink: 'quesitos/novo'
+                    routerLink: '/quesitos/novo'
                   },
                   {
                     label: 'Listar',
                     icon: 'pi pi-box',
-                    routerLink: 'quesitos'
+                    routerLink: '/quesitos'
                   }
                 ],
               }
