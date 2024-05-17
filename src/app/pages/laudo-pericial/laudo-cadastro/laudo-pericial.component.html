@@ -3,19 +3,49 @@
 <form [formGroup]="resourceForm" (ngSubmit)="submitForm()">
 
 
-  <div class="container">
+  <section *ngIf="!laudoId">
     <!--Dados do processo -->
-    <div>
-      <app-processo-autocomplete
-        formControlName="processo"
-        title="Número do processo"
-        >
-      </app-processo-autocomplete>
+    <app-processo-autocomplete
+      formGroupName="processo"
+      title="Número do processo"
+      (processoSelecionado)="onProcessoSelecionado($event)"
+      >
+    </app-processo-autocomplete>
 
-    </div>
+  </section>
+  <div class="salvar-processo mb-2" *ngIf="!laudoId">
+    <p-button
+      label="Salvar"
+      icon="pi pi-save"
+      type="submit"
+      class="ml-2"
+      severity="success"
+      [disabled]="!processoInserido"
+      >
+    </p-button>
   </div>
 
-  <div class="container">
+  <section *ngIf="laudoId">
+    <div class="card" style="display: block;">
+      <div class="elemento" >
+        <p class="n-processo ml-2"><strong>Processo: </strong>{{getProcesso().numero}}</p>
+      </div>
+      <div class="elemento" style="display: flex;">
+        <h4></h4>
+        <p class="assunto ml-2"><strong>Assunto: </strong>{{getProcesso().assunto}}</p>
+      </div>
+      <div class="elemento" style="display: flex;">
+        <p class="nomeAutor ml-2"><strong>Autor: </strong>{{getProcesso().nomeAutor}}</p>
+      </div>
+      <div class="elemento" style="display: flex;">
+        <p class="nomeReu ml-2"><strong>Réu: </strong>{{getProcesso().nomeReu}}</p>
+      </div>
+    </div>
+  </section>
+
+
+
+  <section *ngIf="laudoId">
     <div class="mb-2 col-6">
       <p-card header="Introdução">
         <textarea
@@ -26,6 +56,24 @@
           >
         </textarea>
       </p-card>
+
+      <div class="salvar-introducao">
+        <p-button
+          label="Salvar"
+          icon="pi pi-save"
+          type="submit"
+          class="ml-2"
+          severity="success"
+          >
+        </p-button>
+          <p-button
+            label="Editar"
+            icon="pi pi-pencil"
+            class="ml-2"
+            severity="info"
+            >
+          </p-button>
+      </div>
     </div>
 
     <div class="mb-2 col-6">
@@ -63,37 +111,46 @@
         </textarea>
       </p-card>
     </div>
+    <div class="mb-2 col-6">
+      <p-card header="Conclusão">
+        <textarea
+          placeholder="Insira a Conclusão"
+          pInputTextarea
+          rows="5" cols="30"
+          formControlName="conclusao"
+          >
+        </textarea>
+      </p-card>
+    </div>
 
-  </div>
-
-  <div class="mb-2 col-6">
-    <p-card header="Conclusão">
-      <textarea
-        placeholder="Insira a Conclusão"
-        pInputTextarea
-        rows="5" cols="30"
-        formControlName="conclusao"
+    <div class="salvar-processo">
+      <p-button
+        label="Salvar"
+        icon="pi pi-save"
+        type="submit"
+        class="ml-2"
+        severity="success"
         >
-      </textarea>
-    </p-card>
-  </div>
+      </p-button>
+        <p-button
+          label="Editar"
+          icon="pi pi-pencil"
+          class="ml-2"
+          severity="info"
+          >
+        </p-button>
 
-  <p-button
-    label="Salvar"
-    icon="pi pi-save"
-    type="submit"
-    class="ml-2"
-    severity="success"
-    >
-  </p-button>
-  <p-button
-    label="Cancelar"
-    icon="pi pi-eraser"
-    (click)="cancelar()"
-    class="ml-2"
-    severity="info"
-    >
-  </p-button>
+        <p-button
+          label="Cancelar"
+          icon="pi pi-eraser"
+          (click)="cancelar()"
+          class="ml-2"
+          severity="info"
+          >
+        </p-button>
+    </div>
+
+  </section>
 
 </form> <!--Fim do Formulário-->
 
