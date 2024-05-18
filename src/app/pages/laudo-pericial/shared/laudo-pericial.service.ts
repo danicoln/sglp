@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 import { LaudoPericial } from './laudo-pericial';
 
 @Injectable({
@@ -65,6 +65,14 @@ export class LaudoPericialService {
       .append('Content-Type', 'application/json');
 
     return firstValueFrom(this.http.post<LaudoPericial>(this.url, laudo, { headers }));
+  }
+
+  atualizar(laudo: LaudoPericial): Observable<LaudoPericial> {
+    const headers = new HttpHeaders()
+      .set('Authorization', this.chave)
+      .set('Content-Type', 'application/json');
+
+    return this.http.put<LaudoPericial>(`${this.url}/${laudo.id}`, laudo, { headers });
   }
 
   //CONFERIR
