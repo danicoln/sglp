@@ -13,16 +13,8 @@
     </app-processo-autocomplete>
 
   </section>
-  <div class="salvar-processo mb-2" *ngIf="!laudoId">
-    <p-button
-      label="Salvar"
-      icon="pi pi-save"
-      type="submit"
-      class="ml-2"
-      severity="success"
-      [disabled]="!processoInserido"
-      >
-    </p-button>
+  <div class="salvar-processo mb-2">
+
   </div>
 
   <section *ngIf="laudoId">
@@ -44,110 +36,120 @@
   </section>
 
 
+  <section class="card mt-2">
 
-  <section *ngIf="laudoId">
-    <div class="mb-2 col-6">
-      <p-card header="Introdução">
-        <textarea
-          placeholder="Insira uma introdução"
-          pInputTextarea
-          rows="5" cols="30"
-          formControlName="introducao"
-          >
-        </textarea>
-      </p-card>
-
-      <div class="salvar-introducao">
-        <p-button
-          label="Salvar"
-          icon="pi pi-save"
-          type="submit"
-          class="ml-2"
-          severity="success"
-          >
-        </p-button>
-          <p-button
-            label="Editar"
-            icon="pi pi-pencil"
-            class="ml-2"
-            severity="info"
-            >
-          </p-button>
-      </div>
-    </div>
-
-    <div class="mb-2 col-6">
-      <p-card header="Objetivo">
-        <textarea
-          placeholder="Informe o objetivo do laudo pericial"
-          pInputTextarea
-          rows="5" cols="30"
-          formControlName="objetivo"
-          >
-        </textarea>
-      </p-card>
-    </div>
-
-    <div class="mb-2 col-6">
-      <p-card header="Metodologia Aplicada">
-        <textarea
-          placeholder="Informe a metodologia utilizada na perícia"
-          pInputTextarea
-          rows="5" cols="30"
-          formControlName="metodologiaAplicada"
-          >
-        </textarea>
-      </p-card>
-    </div>
-
-    <div class="mb-2 col-6">
-      <p-card header="Histórico do Processo">
-        <textarea
-          placeholder="Informe o Histórico do Processo"
-          pInputTextarea
-          rows="5" cols="30"
-          formControlName="historico"
-          >
-        </textarea>
-      </p-card>
-    </div>
-    <div class="mb-2 col-6">
-      <p-card header="Conclusão">
-        <textarea
-          placeholder="Insira a Conclusão"
-          pInputTextarea
-          rows="5" cols="30"
-          formControlName="conclusao"
-          >
-        </textarea>
-      </p-card>
-    </div>
-
-    <div class="salvar-processo">
+    <div class="atualizar-processo">
       <p-button
         label="Salvar"
         icon="pi pi-save"
         type="submit"
         class="ml-2"
         severity="success"
+        [disabled]="!edit"
         >
       </p-button>
-        <p-button
-          label="Editar"
-          icon="pi pi-pencil"
-          class="ml-2"
-          severity="info"
-          >
-        </p-button>
+      <p-button
+        label="Editar"
+        icon="pi pi-pencil"
+        class="ml-2"
+        severity="info"
+        (click)="editar()"
+        >
+      </p-button>
 
-        <p-button
-          label="Cancelar"
-          icon="pi pi-eraser"
-          (click)="cancelar()"
-          class="ml-2"
-          severity="info"
+      <p-button
+        label="Cancelar"
+        icon="pi pi-eraser"
+        (click)="cancelar()"
+        class="ml-2"
+        severity="info"
+        >
+      </p-button>
+    </div>
+  </section>
+
+  <section *ngIf="laudoId">
+    <div class="mb-2 col-12">
+      <p-card header="Histórico do Processo">
+        <textarea
+          placeholder="Informe o Histórico do Processo"
+          pInputTextarea
+          rows="5" cols="100"
+          formControlName="historico"
           >
-        </p-button>
+        </textarea>
+      </p-card>
+    </div>
+    <div class="mb-2 col-12">
+      <p-card header="Objetivo">
+        <textarea
+          placeholder="Informe o objetivo do laudo pericial"
+          pInputTextarea
+          rows="5" cols="100"
+          formControlName="objetivo"
+          >
+        </textarea>
+      </p-card>
+    </div>
+
+    <div class="mb-2 col-12">
+      <p-card header="Metodologia Aplicada">
+        <textarea
+          placeholder="Informe a metodologia utilizada na perícia"
+          pInputTextarea
+          rows="5" cols="100"
+          formControlName="metodologiaAplicada"
+          >
+        </textarea>
+      </p-card>
+    </div>
+
+
+    <div class="mb-2 col-6">
+
+      <!--
+        <p-card header="Introdução">
+          <textarea
+            placeholder="Insira uma introdução"
+            pInputTextarea
+            rows="5" cols="30"
+            formControlName="introducao"
+            >
+          </textarea>
+        </p-card>
+
+        <div class="salvar-introducao">
+          <p-button
+            label="Salvar"
+            icon="pi pi-save"
+            type="submit"
+            class="ml-2"
+            severity="success"
+            >
+          </p-button>
+            <p-button
+              label="Editar"
+              icon="pi pi-pencil"
+              class="ml-2"
+              severity="info"
+              >
+            </p-button>
+        </div>
+
+
+        <div class="mb-2 col-6">
+          <p-card header="Conclusão">
+            <textarea
+              placeholder="Insira a Conclusão"
+              pInputTextarea
+              rows="5" cols="30"
+              formControlName="conclusao"
+              >
+            </textarea>
+          </p-card>
+        </div>
+      -->
+
     </div>
 
   </section>

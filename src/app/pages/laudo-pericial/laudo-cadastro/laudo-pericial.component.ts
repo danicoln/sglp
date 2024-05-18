@@ -17,7 +17,7 @@ export class LaudoPericialComponent implements OnInit {
   laudoId: string = '';
 
   processoInserido: boolean = false;
-
+  edit: boolean = false;
   /*
   metodologia: string = '';
   historico: string = '';
@@ -118,9 +118,7 @@ export class LaudoPericialComponent implements OnInit {
 
   submitForm() {
 
-    this.resourceForm?.markAllAsTouched();
-
-    if (this.resourceForm?.valid && this.processoInserido) {
+    if (this.resourceForm.valid) {
       const formulario = this.resourceForm.value;
 
       console.log('Resource válido: ', this.resourceForm.valid);
@@ -155,9 +153,10 @@ export class LaudoPericialComponent implements OnInit {
         },
       }
 
-      if (this.editando) {
+      if (this.laudoId) {
         this.laudoPericial.id = this.laudoId;
         this.atualizar(this.laudoPericial);
+        this.edit = false;
       } else {
         this.salvar(this.laudoPericial)
           .then((laudoSalvo) => {
@@ -165,7 +164,11 @@ export class LaudoPericialComponent implements OnInit {
           });
         this.processoInserido = true;
       }
+    } else {
+      console.error('Erro ao salvar o laudo');
     }
+
+    this.resourceForm?.markAllAsTouched();
 
   }
 
@@ -205,8 +208,29 @@ export class LaudoPericialComponent implements OnInit {
     })
   }
 
-  atualizar(laudo: LaudoPericial) {
-    throw new Error('Method not implemented.');
+  atualizar(laudo: LaudoPericial): Promise<LaudoPericial> {
+    return new Promise((resolve, reject) => {
+      this.service.atualizar(laudo).subscribe(
+        (laudoAtualizado: LaudoPericial) => {
+          this.messageService.add({
+            severity: 'success', summary: 'Sucesso', detail: 'Laudo Atualizado', life: 3000
+          });
+          this.laudoPericial = laudoAtualizado;
+          if (laudo.id) {
+            this.carregarLaudoPericial(laudo.id);
+          }
+          resolve(laudoAtualizado);
+        },
+        (erro: any) => {
+          this.error.handle(erro);
+          this.messageService.add({
+            severity: 'error', summary: 'Erro!', detail: 'Erro ao Atualizar o Laudo', life: 3000
+          });
+          reject(erro);
+        }
+      );
+    });
+
   }
 
 
@@ -215,7 +239,19 @@ export class LaudoPericialComponent implements OnInit {
   }
 
   cancelar() {
-    this.resourceForm?.reset();
+    const camposPreenchidos = ['historico', 'objetivo', 'metodologiaAplicada'];
+    if (this.resourceForm) {
+      this.resetarCampos(camposPreenchidos);
+      this.desabilitarFormulario();
+    }
+  }
+
+  resetarCampos(campos: string[]) {
+    campos.forEach(campo => this.resourceForm.get(campo)?.reset());
+  }
+
+  desabilitarFormulario() {
+    this.resourceForm.disable();
   }
 
   onProcessoSelecionado(processo: any) {
@@ -233,6 +269,13 @@ export class LaudoPericialComponent implements OnInit {
     if (this.laudoId) {
       const processo = this.resourceForm.get('processo')?.value;
       return processo;
+    }
+  }
+
+  editar() {
+    if (this.resourceForm) {
+      this.edit = true;
+      this.resourceForm?.enable();
     }
   }
 
