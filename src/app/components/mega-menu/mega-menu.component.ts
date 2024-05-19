@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MegaMenuItem } from 'primeng/api';
 
 @Component({
@@ -67,12 +67,17 @@ export class MegaMenuComponent implements OnInit {
                   {
                     label: 'Novo',
                     icon: 'pi pi-box',
-                    routerLink: '/exames/novo'
+                    routerLink: 'exames/novo'
                   },
+                  // {
+                  //   label: 'Listar',
+                  //   icon: 'pi pi-box',
+                  //   routerLink: 'exames'
+                  // },
                   {
-                    label: 'Listar',
+                    label: 'Consultar',
                     icon: 'pi pi-box',
-                    routerLink: '/exames'
+                    routerLink: 'exames'
                   }
                 ],
               },

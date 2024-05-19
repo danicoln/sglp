@@ -12,7 +12,7 @@ export class LaudoPericial {
     public conclusao?: string;
     public introducao?: string;
     public dataDoLaudo?: Date;
-    // public exameDaMateria?: ExameDaMateria;
+    public exameDaMateria?: ExameDaMateria;
     // public quesitos?: Quesito;
     //public status?: string;
 

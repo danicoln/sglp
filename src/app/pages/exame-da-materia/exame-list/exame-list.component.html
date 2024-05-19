@@ -1,99 +1,46 @@
-<p-card header="Lista de Exames da Matéria">
+<p-card header="Exame da Matéria">
   <p-toast></p-toast>
 
   <!--Botões de Criar e Deletar-->
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-      <!--
-
-      -->
-      <p-button
-        pRipple
-        label="Novo"
-        icon="pi pi-plus"
-        [routerLink]="['novo']"
-        >
+      <p-button pRipple label="Novo" icon="pi pi-plus" [routerLink]="['novo']" [disabled]="exame.id != null">
       </p-button>
 
-      <p-button
-        pRipple
-        label="Deletar"
-        icon="pi pi-trash"
-        severity="danger"
-        (click)="deletarExamesSelecionados()"
-        [disabled]="!examesSelecionados || !examesSelecionados.length"
-        >
+      <p-button pRipple label="Deletar" icon="pi pi-trash" severity="danger" (click)="deletar(exame)"
+        [disabled]="!exame.id">
       </p-button>
     </ng-template>
   </p-toolbar>
 
-    <!--Tabela-->
-
-    <p-table
-      #tabela
-      [value]="exames"
-      [rows]="10"
-      [paginator]="true"
-      [tableStyle]="{ 'min-width': '75rem' }"
-      [(selection)]="examesSelecionados"
-      [rowHover]="true"
-      dataKey="id"
-      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
-      [showCurrentPageReport]="true"
-      [globalFilterFields]="[
-        'id', 'exame.id',
-        'documento.descricao', 'objeto.documento?.descricao',
-        ]"
-
-      >
-
-    <ng-template pTemplate="caption">
-      <div class="flex align-items-center justify-content-between">
-        <span class="p-input-icon-left">
-          <i class="pi pi-search"></i>
-          <input pInputText type="text" (input)="applyFilterGlobal($event)" placeholder="Buscar..." />
-        </span>
+  <!--Detalhes do Exame-->
+  <div *ngIf="exame?.id; else noExame">
+    <div class="p-grid">
+      <div class="p-col-12 p-md-6">
+        <h3>Detalhes do Exame</h3>
+        <div>
+          <label>ID:</label> {{ exame.id }}
+        </div>
+        <div>
+          <label>Descrição:</label> {{ exame.descricao }}
+        </div>
+        <div>
+          <label>Quantidade de Objetos:</label> {{ exame.objetos?.length }}
+        </div>
       </div>
-    </ng-template>
+      <div class="p-col-12 p-md-6">
+        <h3>Ações</h3>
+        <a href="exames/{{ exame.id }}/edit">
+          <i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i>
+        </a>
+        <i (click)="deletar(exame)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i>
+      </div>
+    </div>
+  </div>
 
-    <!--Header Table-->
-
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="width:4rem">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        </th>
-        <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
-          <th pSortableColumn="exame.objetos.length">Qtde. de Objetos<p-sortIcon field="exame.objetos.length"></p-sortIcon></th>
-          <th pSortableColumn="exame.descricao">Descrição<p-sortIcon field="exame.descricao"></p-sortIcon></th>
-          <th></th>
-        </tr>
-      </ng-template>
-      <!--
-
-    -->
-
-    <!--Body Table-->
-    <ng-template pTemplate="body" let-exame>
-      <tr>
-        <td>
-          <p-tableCheckbox [value]="exame"></p-tableCheckbox>
-        </td>
-        <td>{{ exame.id }}</td>
-        <td>{{ exame.objetos?.length }}</td>
-        <td>{{ exame.descricao }}</td>
-        <td>
-          <a href="exames/{{exame.id}}/edit"><i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i></a>
-          <i (click)="deletar(exame)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i>
-        </td>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="summary">
-      <div class="flex align-items-center justify-content-between">Total de {{ exames ? exames.length : 0 }} exames do laudo.</div>
-    </ng-template>
-  </p-table>
+  <ng-template #noExame>
+    <p>Nenhum exame encontrado para este laudo.</p>
+  </ng-template>
 
   <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
-
 </p-card>
