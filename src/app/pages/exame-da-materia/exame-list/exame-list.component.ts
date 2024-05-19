@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ErrorHandlerService } from '../../../core/error-handler.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ExameDaMateriaService } from '../shared/exame.service';
 import { ExameDaMateria } from '../shared/exame.model';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-exame-list',
@@ -12,65 +13,70 @@ import { ExameDaMateria } from '../shared/exame.model';
 export class ExameListComponent implements OnInit {
 
   @ViewChild('tabela') tabela!: any;
+  @Input() laudoId!: string;
+  @Input() exames!: ExameDaMateria;
+
   objetoDialog: boolean = false;
   submitted: boolean = false;
   examesSelecionados!: ExameDaMateria[] | null;
-  exames!: ExameDaMateria[];
   exame = new ExameDaMateria();
 
   constructor(
+    private route: ActivatedRoute,
     private error: ErrorHandlerService,
     private msgService: MessageService,
     private confirmacaoService: ConfirmationService,
     private exameService: ExameDaMateriaService
 
-    ) { }
+  ) { }
 
-    ngOnInit(): void {
-      this.listar();
-    }
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.laudoId = params['id'];
+      this.listar(this.laudoId);
+    });
+  }
 
-    listar() {
-      this.exameService.listar()
-        .then((dados) => this.exames = dados)
-        .catch(erro => this.error.handle(erro));
-    }
+  listar(laudoId: string) {
+    this.exameService.listar(laudoId)
+      .then((dados) => this.exames = dados)
+      .catch(erro => this.error.handle(erro));
+  }
 
-      deletar(obj: ExameDaMateria) {
-        this.confirmacaoService.confirm({
-          message: 'Tem certeza em deletar o exame de ID: ' + obj.id + '?',
-          header: 'Confirmar',
-          icon: 'pi pi-exclamation-triangle',
-          acceptLabel: 'Sim',
-          rejectLabel: 'Não',
-          accept: () => {
+  deletar(obj: ExameDaMateria) {
+    this.confirmacaoService.confirm({
+      message: 'Tem certeza em deletar o exame de ID: ' + obj.id + '?',
+      header: 'Confirmar',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: 'Sim',
+      rejectLabel: 'Não',
+      accept: () => {
 
-            if (obj.id !== undefined) {
+        if (obj.id !== undefined) {
 
-              this.exameService.excluir(obj.id)
-                .then(() => {
-                  this.exames = this.exames.filter((value) => value.id !== obj.id);
-                  this.exame = {};
-                  this.msgService.add({
-                    severity: 'success', summary: 'Sucesso', detail: 'Exame apagado', life: 3000
-                  });
-                })
-                .catch((erro) => {
-                  this.error.handle(erro);
-                  this.msgService.add({
-                    severity: 'error', summary: 'Erro', detail: 'Erro ao excluir o exame', life: 3000
-                  });
-                })
-            } else {
-              console.error('ID do exame é undefined');
-            }
-          }
-        });
+          this.exameService.excluir(this.laudoId, obj.id)
+            .then(() => {
+              this.exames = {};
+              this.msgService.add({
+                severity: 'success', summary: 'Sucesso', detail: 'Exame apagado', life: 3000
+              });
+            })
+            .catch((erro) => {
+              this.error.handle(erro);
+              this.msgService.add({
+                severity: 'error', summary: 'Erro', detail: 'Erro ao excluir o exame', life: 3000
+              });
+            })
+        } else {
+          console.error('ID do exame é undefined');
+        }
       }
+    });
+  }
 
-      deletarExamesSelecionados() {
-        this.confirmacaoService.confirm({
-      message: 'Tem certeza em deletar os exames selecionados?',
+  deletarExameSelecionado() {
+    this.confirmacaoService.confirm({
+      message: 'Tem certeza em deletar o exame selecionado?',
       header: 'Confirmar',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sim',
@@ -79,22 +85,25 @@ export class ExameListComponent implements OnInit {
         this.examesSelecionados?.forEach(exame => {
           const exameId = typeof exame.id === 'string' ? exame.id : '';
 
-          if (exameId) {
-            this.exameService.excluir(exameId)
-              .then(() => {
-                this.exames = this.exames.filter((value) => !this.examesSelecionados?.includes(value));
-                this.exames = [...this.exames];
-              })
-              .catch(error => {
-                console.error('Erro ao excluir exame: ', error);
-              });
-            } else {
-            console.error('ID inválido: ', exame.id);
-          }
-        });
+          if (this.laudoId !== undefined) {
 
-        this.examesSelecionados = [];
-        this.msgService.add({ severity: 'success', summary: 'Sucesso', detail: 'Exames apagados', life: 3000 });
+            this.exameService.excluir(this.laudoId, exameId)
+              .then(() => {
+                this.exames = {};
+                this.msgService.add({
+                  severity: 'success', summary: 'Sucesso', detail: 'Exame apagado', life: 3000
+                });
+              })
+              .catch((erro) => {
+                this.error.handle(erro);
+                this.msgService.add({
+                  severity: 'error', summary: 'Erro', detail: 'Erro ao excluir o exame', life: 3000
+                });
+              })
+          } else {
+            console.error('ID do exame é undefined');
+          }
+        })
       }
     });
   }
@@ -110,7 +119,7 @@ export class ExameListComponent implements OnInit {
     this.error.handle(erro);
     this.msgService.add(
       ({ severity: 'error', summary: 'Erro', detail: 'Ocorreu um erro ao carregar os exames. Por favor, tente novamente mais tarde.' })
-      )
-    }
-
+    )
   }
+
+}

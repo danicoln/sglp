@@ -10,62 +10,73 @@ export class ExameDaMateriaService {
 
   chave: string = '';
 
-  url = "http://localhost:8080/api/exames";
-
   constructor(
     private http: HttpClient
   ) { }
 
-  async listar(): Promise<ExameDaMateria[]> {
-    const headers = new HttpHeaders().set('Authorization', this.chave);
+  private getUrl(laudoId: string): string {
+    return `http://localhost:8080/api/laudos/${laudoId}/exames`;
+  }
 
-    try{
-      const response = await this.http.get<ExameDaMateria[]>(this.url, {headers})
+  async listar(laudoId: string): Promise<ExameDaMateria> {
+    const headers = new HttpHeaders().set('Authorization', this.chave);
+    const url = this.getUrl(laudoId);
+
+    try {
+      const response = await this.http.get<ExameDaMateria>(url, { headers })
         .toPromise();
-      return response || [];
-    } catch(erro) {
+      if (!response) {
+        throw new Error('Nenhum exame encontrado');
+      }
+      return response;
+    } catch (erro) {
       console.error('Erro ao listar os exames: ', erro);
       throw erro;
     }
   }
 
-  salvar(exame: ExameDaMateria): Promise<ExameDaMateria> {
+  salvar(laudoId: string, exame: ExameDaMateria): Promise<ExameDaMateria> {
     const headers = new HttpHeaders()
-    .set('Authorization', this.chave)
-    .set('Content-Type', 'application/json');
+      .set('Authorization', this.chave)
+      .set('Content-Type', 'application/json');
+    const url = this.getUrl(laudoId);
 
-    return firstValueFrom(this.http.post<ExameDaMateria>(this.url, exame, { headers }));
+    return firstValueFrom(this.http.post<ExameDaMateria>(url, exame, { headers }));
   }
 
-  atualizar(exame: ExameDaMateria): Observable<ExameDaMateria> {
+  atualizar(laudoId: string, exame: ExameDaMateria): Observable<ExameDaMateria> {
     const headers = new HttpHeaders()
-    .set('Authorization', this.chave)
-    .set('Content-Type', 'application/json');
+      .set('Authorization', this.chave)
+      .set('Content-Type', 'application/json');
+    const url = this.getUrl(laudoId);
 
-    return this.http.put<ExameDaMateria>(`${this.url}/${exame.id}`, exame, { headers });
+    return this.http.put<ExameDaMateria>(`${url}/${exame.id}`, exame, { headers });
   }
 
 
-  excluir(exameId: string): Promise<void> {
+  excluir(laudoId: string, exameId: string): Promise<void> {
     const headers = new HttpHeaders().set('Authorization', this.chave);
-    return firstValueFrom(this.http.delete<void>(`${this.url}/${exameId}`, { headers }));
+    const url = this.getUrl(laudoId);
+    return firstValueFrom(this.http.delete<void>(`${url}/${exameId}`, { headers }));
   }
 
-  buscarPorId(exameId: string): Promise<ExameDaMateria> {
+  buscarPorId(laudoId: string, exameId: string): Promise<ExameDaMateria> {
     const headers = new HttpHeaders()
-    .set('Authorization', this.chave);
+      .set('Authorization', this.chave);
+    const url = this.getUrl(laudoId);
 
-  return this.http.get(`${this.url}/${exameId}`, { headers })
-    .toPromise()
-    .then((response: any) => {
-      const processo = response as ExameDaMateria;
-
-      return processo;
-    })
-    .catch((error: any) => {
-      console.error('Erro ao buscar exame pelo ID: ', error);
-      throw error;
-    });
+    return this.http.get<ExameDaMateria>(`${url}/${exameId}`, { headers })
+      .toPromise()
+      .then((exame: any) => {
+        if (!exame) {
+          throw new Error('Exame não encontrado');
+        }
+        return exame;
+      })
+      .catch((error: any) => {
+        console.error('Erro ao buscar exame pelo ID: ', error);
+        throw error;
+      });
   }
 
 

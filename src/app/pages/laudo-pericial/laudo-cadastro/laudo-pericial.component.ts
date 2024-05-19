@@ -17,6 +17,7 @@ export class LaudoPericialComponent implements OnInit {
   laudoId: string = '';
 
   processoInserido: boolean = false;
+  disabled: boolean = true;
   edit: boolean = false;
   /*
   metodologia: string = '';
@@ -61,6 +62,7 @@ export class LaudoPericialComponent implements OnInit {
       }),
       objetivo: [''],
       metodologiaAplicada: [''], //metodologiaAplicada
+      exameDaMateria: [''],
       // exameDaMateria: this.formBuilder.group({
       //   id: [''],
       //   objetos: this.formBuilder.array([
@@ -95,11 +97,11 @@ export class LaudoPericialComponent implements OnInit {
           },
           objetivo: laudo.objetivo,
           metodologiaAplicada: laudo.metodologiaAplicada,
-          historico: laudo.historico,
+          historico: laudo?.historico,
           conclusao: laudo.conclusao,
           introducao: laudo.introducao,
           dataDoLaudo: laudo.dataDoLaudo,
-          // exameDaMateria: laudo.exameDaMateria,
+          exameDaMateria: laudo.exameDaMateria,
           //quesitos: laudo.quesitos,
         });
         this.resourceForm?.disable();
@@ -240,14 +242,24 @@ export class LaudoPericialComponent implements OnInit {
 
   cancelar() {
     const camposPreenchidos = ['historico', 'objetivo', 'metodologiaAplicada'];
+
     if (this.resourceForm) {
       this.resetarCampos(camposPreenchidos);
+      this.edit = false;
       this.desabilitarFormulario();
     }
   }
 
   resetarCampos(campos: string[]) {
-    campos.forEach(campo => this.resourceForm.get(campo)?.reset());
+    campos.forEach(campo => {
+      const formControl = this.resourceForm.get(campo);
+      if(formControl && !formControl.value){
+        formControl.reset();
+      } else {
+        this.carregarLaudoPericial(this.laudoId);
+      }
+
+    });
   }
 
   desabilitarFormulario() {
@@ -261,7 +273,7 @@ export class LaudoPericialComponent implements OnInit {
       this.resourceForm.get('processo')?.markAsDirty();
     }
     this.processoInserido = true;
-
+    this.disabled = false;
     console.log('Dados do Processo: ', processo);
   }
 

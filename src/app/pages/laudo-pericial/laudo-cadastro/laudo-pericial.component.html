@@ -12,10 +12,18 @@
       >
     </app-processo-autocomplete>
 
+    <div class="salvar-processo mb-2">
+      <p-button
+          label="Salvar"
+          icon="pi pi-save"
+          type="submit"
+          class="ml-2"
+          severity="success"
+          [disabled]="disabled"
+          >
+        </p-button>
+    </div>
   </section>
-  <div class="salvar-processo mb-2">
-
-  </div>
 
   <section *ngIf="laudoId">
     <div class="card" style="display: block;">
@@ -38,7 +46,7 @@
 
   <section class="card mt-2">
 
-    <div class="atualizar-processo">
+    <div class="atualizar-processo" *ngIf="laudoId">
       <p-button
         label="Salvar"
         icon="pi pi-save"

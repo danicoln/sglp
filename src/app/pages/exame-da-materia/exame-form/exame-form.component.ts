@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ErrorHandlerService } from '../../../core/error-handler.service';
@@ -16,6 +16,8 @@ import { ObjetoLaudoService } from '../../objeto-laudo/shared/objeto-laudo.servi
 export class ExameFormComponent implements OnInit {
 
   resourceForm!: FormGroup;
+
+  @Input() laudoId!: string;
 
   formularioAberto: boolean = false;
   exibirFormObjeto: boolean = false;
@@ -42,10 +44,10 @@ export class ExameFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.exameId = params['id'];
+      this.laudoId = params['id'];
       this.buildResourceForm();
       if (this.exameId) {
-        this.carregarExame(this.exameId);
+        this.carregarExame(this.laudoId, this.exameId);
       }
     });
   }
@@ -91,7 +93,7 @@ export class ExameFormComponent implements OnInit {
   salvarExame(exame: ExameDaMateria): Promise<ExameDaMateria> {
     return new Promise((resolve, reject) => {
 
-      this.exameService.salvar(exame)
+      this.exameService.salvar(this.laudoId, exame)
         .then((exameSalvo) => {
           this.exame = exameSalvo;
           this.messageService.add(
@@ -114,7 +116,7 @@ export class ExameFormComponent implements OnInit {
 
   atualizarExame(exame: ExameDaMateria): Promise<ExameDaMateria> {
     return new Promise((resolve, reject) => {
-      this.exameService.atualizar(exame)
+      this.exameService.atualizar(this.laudoId, exame)
         .subscribe(
           (exameAtualizado: ExameDaMateria) => {
             this.messageService.add(
@@ -122,7 +124,7 @@ export class ExameFormComponent implements OnInit {
             );
             this.exame = exameAtualizado;
             if (exame.id) {
-              this.carregarExame(exame.id);
+              this.carregarExame(this.laudoId, exame.id);
             }
             resolve(exameAtualizado);
 
@@ -144,8 +146,8 @@ export class ExameFormComponent implements OnInit {
     this.objetos.push(objeto);
   }
 
-  carregarExame(exameId: string) {
-    this.exameService.buscarPorId(exameId)
+  carregarExame(exameId: string, laudoId: string) {
+    this.exameService.buscarPorId(laudoId, exameId)
       .then((exame: ExameDaMateria) => {
         this.exame = exame;
         this.resourceForm.patchValue({
@@ -158,7 +160,7 @@ export class ExameFormComponent implements OnInit {
         this.exibirFormObjeto = true;
 
 
-        this.filtrarObjetos(exameId, exame);
+        this.filtrarObjetos(laudoId, exame);
 
         console.log('objetos: ', this.resourceForm.get('objetos')?.value);
       })
