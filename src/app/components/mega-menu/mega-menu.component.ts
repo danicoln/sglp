@@ -9,6 +9,7 @@ import { MegaMenuItem } from 'primeng/api';
 export class MegaMenuComponent implements OnInit {
 
   itens: MegaMenuItem[] | undefined;
+  @Input() id: string = '';
 
   ngOnInit() {
       this.itens = [

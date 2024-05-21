@@ -4,38 +4,37 @@
   <!--Botões de Criar e Deletar-->
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-      <p-button pRipple label="Novo" icon="pi pi-plus" [routerLink]="['novo']" [disabled]="exame.id != null">
-      </p-button>
+      <p-button pRipple label="Novo" icon="pi pi-plus" [routerLink]="['novo']" [disabled]="exame.id != null"></p-button>
 
-      <p-button pRipple label="Deletar" icon="pi pi-trash" severity="danger" (click)="deletar(exame)"
-        [disabled]="!exame.id">
-      </p-button>
+      <p-button pRipple label="Deletar" icon="pi pi-trash" severity="danger" (click)="deletar(exame)" [disabled]="!exame.id"></p-button>
     </ng-template>
   </p-toolbar>
 
-  <!--Detalhes do Exame-->
+  <!--Tabela de Detalhes do Exame-->
   <div *ngIf="exame?.id; else noExame">
-    <div class="p-grid">
-      <div class="p-col-12 p-md-6">
-        <h3>Detalhes do Exame</h3>
-        <div>
-          <label>ID:</label> {{ exame.id }}
-        </div>
-        <div>
-          <label>Descrição:</label> {{ exame.descricao }}
-        </div>
-        <div>
-          <label>Quantidade de Objetos:</label> {{ exame.objetos?.length }}
-        </div>
-      </div>
-      <div class="p-col-12 p-md-6">
-        <h3>Ações</h3>
-        <a href="exames/{{ exame.id }}/edit">
-          <i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i>
-        </a>
-        <i (click)="deletar(exame)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i>
-      </div>
-    </div>
+    <p-table [value]="[exame]">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>ID</th>
+          <th>Descrição</th>
+          <th>Quantidade de Objetos</th>
+          <th>Ações</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-exame>
+        <tr>
+          <td>{{ exame.id }}</td>
+          <td>{{ exame.descricao }}</td>
+          <td>{{ exame.objetos?.length }}</td>
+          <td>
+            <a [routerLink]="[ exame.id, 'edit']">
+              <i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i>
+            </a>
+            <i (click)="deletar(exame)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 
   <ng-template #noExame>

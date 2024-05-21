@@ -17,13 +17,13 @@ export class ExameFormComponent implements OnInit {
 
   resourceForm!: FormGroup;
 
-  @Input() laudoId!: string;
+  laudoId!: string;
 
   formularioAberto: boolean = false;
   exibirFormObjeto: boolean = false;
   descricaoHabilitada: boolean = true;
   idExistente: boolean = false;
-  exame = new ExameDaMateria();
+  exame: ExameDaMateria = new ExameDaMateria();
   objetos: ObjetoLaudo[] = [];
   objeto!: ObjetoLaudo;
 
@@ -45,8 +45,9 @@ export class ExameFormComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.laudoId = params['id'];
+      this.exameId = params['exameId'];
       this.buildResourceForm();
-      if (this.exameId) {
+      if (this.laudoId && this.exameId) {
         this.carregarExame(this.laudoId, this.exameId);
       }
     });
@@ -67,7 +68,7 @@ export class ExameFormComponent implements OnInit {
       const formulario = this.resourceForm.value;
 
       this.exame = {
-
+        id: this.exameId,
         descricao: formulario.descricao,
         objetos: this.objetos
       };
@@ -146,19 +147,18 @@ export class ExameFormComponent implements OnInit {
     this.objetos.push(objeto);
   }
 
-  carregarExame(exameId: string, laudoId: string) {
+  carregarExame(laudoId: string, exameId: string) {
     this.exameService.buscarPorId(laudoId, exameId)
       .then((exame: ExameDaMateria) => {
         this.exame = exame;
         this.resourceForm.patchValue({
-          id: exame.id,
-          descricao: exame.descricao,
-          objetos: exame.objetos
+          id: exame?.id,
+          descricao: exame?.descricao,
+          objetos: exame?.objetos
         });
         this.resourceForm.get('descricao')?.setValue(exame.descricao);
         this.resourceForm.get('descricao')?.disable();
         this.exibirFormObjeto = true;
-
 
         this.filtrarObjetos(laudoId, exame);
 

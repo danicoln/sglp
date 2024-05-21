@@ -14,11 +14,11 @@ export class ExameListComponent implements OnInit {
 
   @ViewChild('tabela') tabela!: any;
   @Input() laudoId!: string;
-  @Input() exames!: ExameDaMateria;
+  @Input() exameId!: string;
 
   objetoDialog: boolean = false;
   submitted: boolean = false;
-  examesSelecionados!: ExameDaMateria[] | null;
+  exameSelecionados!: ExameDaMateria[] | null;
   exame = new ExameDaMateria();
 
   constructor(
@@ -38,8 +38,14 @@ export class ExameListComponent implements OnInit {
   }
 
   listar(laudoId: string) {
-    this.exameService.listar(laudoId)
-      .then((dados) => this.exames = dados)
+    this.exameService.obterExame(laudoId)
+      .then((dados) => {
+        if(dados) {
+          this.exame = dados;
+        } else {
+          this.exame = new ExameDaMateria;
+        }
+      })
       .catch(erro => this.error.handle(erro));
   }
 
@@ -56,7 +62,7 @@ export class ExameListComponent implements OnInit {
 
           this.exameService.excluir(this.laudoId, obj.id)
             .then(() => {
-              this.exames = {};
+              this.exame = {};
               this.msgService.add({
                 severity: 'success', summary: 'Sucesso', detail: 'Exame apagado', life: 3000
               });
@@ -82,14 +88,14 @@ export class ExameListComponent implements OnInit {
       acceptLabel: 'Sim',
       rejectLabel: 'Não',
       accept: () => {
-        this.examesSelecionados?.forEach(exame => {
+        this.exameSelecionados?.forEach(exame => {
           const exameId = typeof exame.id === 'string' ? exame.id : '';
 
           if (this.laudoId !== undefined) {
 
             this.exameService.excluir(this.laudoId, exameId)
               .then(() => {
-                this.exames = {};
+                this.exame = {};
                 this.msgService.add({
                   severity: 'success', summary: 'Sucesso', detail: 'Exame apagado', life: 3000
                 });
@@ -118,7 +124,7 @@ export class ExameListComponent implements OnInit {
   private handleError(erro: any): void {
     this.error.handle(erro);
     this.msgService.add(
-      ({ severity: 'error', summary: 'Erro', detail: 'Ocorreu um erro ao carregar os exames. Por favor, tente novamente mais tarde.' })
+      ({ severity: 'error', summary: 'Erro', detail: 'Ocorreu um erro ao carregar os exame. Por favor, tente novamente mais tarde.' })
     )
   }
 
