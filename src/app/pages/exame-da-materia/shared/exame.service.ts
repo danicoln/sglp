@@ -18,7 +18,7 @@ export class ExameDaMateriaService {
     return `http://localhost:8080/api/laudos/${laudoId}/exames`;
   }
 
-  async listar(laudoId: string): Promise<ExameDaMateria> {
+  async obterExame(laudoId: string): Promise<ExameDaMateria> {
     const headers = new HttpHeaders().set('Authorization', this.chave);
     const url = this.getUrl(laudoId);
 
@@ -30,7 +30,7 @@ export class ExameDaMateriaService {
       }
       return response;
     } catch (erro) {
-      console.error('Erro ao listar os exames: ', erro);
+      console.error('Erro ao obter exame: ', erro);
       throw erro;
     }
   }

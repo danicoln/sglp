@@ -12,7 +12,7 @@ const routes: Routes = [
   { path: 'laudos/:id/edit', component: LaudoPericialComponent },
   { path: 'laudos/:id/edit/exames', component: ExameListComponent },
   { path: 'laudos/:id/edit/exames/novo', component: ExameFormComponent },
-  { path: 'laudos/:id/edit/exames/:id/edit', component: ExameFormComponent },
+  { path: 'laudos/:id/edit/exames/:exameId/edit', component: ExameFormComponent },
 ]
 
 @NgModule({
