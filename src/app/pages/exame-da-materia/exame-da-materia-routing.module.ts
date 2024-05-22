@@ -7,7 +7,7 @@ import { ExameListComponent } from './exame-list/exame-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'exames', pathMatch: 'full' },
-  // { path: 'exames', component: ExameListComponent },
+   { path: 'exames', component: ExameListComponent },
   { path: 'exames/novo', component: ExameFormComponent },
   { path: 'exames/:id', component: ExameFormComponent,
     children: [ //problemas com roteamentos ao listar objs

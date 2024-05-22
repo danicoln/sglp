@@ -64,8 +64,9 @@ export class ExameListComponent implements OnInit {
             .then(() => {
               this.exame = {};
               this.msgService.add({
-                severity: 'success', summary: 'Sucesso', detail: 'Exame apagado', life: 3000
+                severity: 'success', summary: 'Sucesso', detail: 'Exame excluido', life: 3000
               });
+              this.exame = {};
             })
             .catch((erro) => {
               this.error.handle(erro);
