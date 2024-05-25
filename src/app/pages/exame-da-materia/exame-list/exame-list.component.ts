@@ -33,11 +33,12 @@ export class ExameListComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.laudoId = params['id'];
-      this.listar(this.laudoId);
+      this.exameId = params['exameId'];
+      this.listar(this.laudoId, this.exameId);
     });
   }
 
-  listar(laudoId: string) {
+  listar(laudoId: string, exameId: string) {
     this.exameService.obterExame(laudoId)
       .then((dados) => {
         if(dados) {

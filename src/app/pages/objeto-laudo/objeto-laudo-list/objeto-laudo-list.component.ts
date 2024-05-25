@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ObjetoLaudo } from '../shared/objeto-laudo.model';
-import { ErrorHandlerService } from '../../../core/error-handler.service';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { ObjetoLaudoService } from '../shared/objeto-laudo.service';
 import { ActivatedRoute } from '@angular/router';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ErrorHandlerService } from '../../../core/error-handler.service';
+import { ObjetoLaudo } from '../shared/objeto-laudo.model';
+import { ObjetoLaudoService } from '../shared/objeto-laudo.service';
 
 @Component({
   selector: 'app-objeto-laudo-list',
@@ -16,6 +16,7 @@ export class ObjetoLaudoListComponent implements OnInit {
 
   @Input() titulo: string = 'Título Exemplo';
   @Input() exameId!: string;
+  @Input() objetoId!: string;
 
   objeto = new ObjetoLaudo();
 
@@ -36,11 +37,12 @@ export class ObjetoLaudoListComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.exameId = params['id'];
-    this.listar(this.exameId);
+      this.objetoId = params['objetoId'];
+      this.listar(this.exameId, this.objetoId);
     });
   }
 
-  listar(exameId: string) {
+  listar(exameId: string, objetoId: string) {
     this.objetoService.listar(exameId)
       .subscribe(
         (objetos: ObjetoLaudo[]) => {
@@ -60,22 +62,19 @@ export class ObjetoLaudoListComponent implements OnInit {
       acceptLabel: 'Sim',
       rejectLabel: 'Não',
       accept: () => {
-        this.objetosSelecionados?.forEach(objeto => {
-          const objetoId = typeof objeto.id === 'string' ? objeto.id : '';
+        this.objetos = this.objetos.filter((value) => !this.objetosSelecionados?.includes(value));
+        this.objetos = [...this.objetos];
 
-          if (objetoId) {
-            this.objetoService.excluir(this.exameId, objetoId)
-              .then(() => {
-                this.objetos = this.objetos.filter((value) => !this.objetosSelecionados?.includes(value));
-                this.objetos = [...this.objetos];
-              })
-              .catch(error => {
-                console.error('Erro ao excluir objeto: ', error);
-              });
-          } else {
-            console.error('ID inválido: ', objeto.id);
-          }
-        });
+        if (this.objetoId) {
+          this.objetoService.excluir(this.exameId, this.objetoId)
+            .then(() => {
+            })
+            .catch(error => {
+              console.error('Erro ao excluir objeto: ', error);
+            });
+        } else {
+          console.error('ID inválido: ', this.objetoId);
+        }
 
         this.objetosSelecionados = [];
         this.msgService.add({ severity: 'success', summary: 'Sucesso', detail: 'Objetos apagados', life: 3000 });
@@ -123,13 +122,13 @@ export class ObjetoLaudoListComponent implements OnInit {
   }
 
   editar(obj: ObjetoLaudo) {
-    if(obj.documento?.data){
+    if (obj.documento?.data) {
       const dataFormatada = new Date(obj.documento!.data).toLocaleDateString('pt-BR');
       const dataObjeto = new Date(dataFormatada);
 
-      this.objeto = { ...obj, documento: {...obj.documento, data: dataObjeto} };
+      this.objeto = { ...obj, documento: { ...obj.documento, data: dataObjeto } };
     } else {
-      this.objeto = {...obj };
+      this.objeto = { ...obj };
     }
 
     this.objetoDialog = true;

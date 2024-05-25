@@ -7,24 +7,12 @@ import { ExameListComponent } from './exame-list/exame-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'exames', pathMatch: 'full' },
-  // { path: 'exames', component: ExameListComponent },
+  { path: 'exames', component: ExameListComponent },
   { path: 'exames/novo', component: ExameFormComponent },
-  { path: 'exames/:id', component: ExameFormComponent,
-    children: [ //problemas com roteamentos ao listar objs
-      { path: '', redirectTo: 'objetos', pathMatch: 'full' },
-      { path: 'objetos', component: ObjetoLaudoListComponent },
-      { path: 'objetos/novo', component: ObjetoLaudoFormComponent },
-      { path: 'objetos/:id/edit', component: ObjetoLaudoFormComponent },
-    ]
-  },
-  { path: 'exames/:id/edit', component: ExameFormComponent,
-    children: [
-      { path: '', redirectTo: 'objetos', pathMatch: 'full' },
-      { path: 'objetos', component: ObjetoLaudoListComponent },
-      { path: 'objetos/novo', component: ObjetoLaudoFormComponent },
-      { path: 'objetos/:id/edit', component: ObjetoLaudoFormComponent },
-    ]
-  },
+  { path: 'exames/:id/edit', component: ExameFormComponent },
+  { path: 'exames/:id/edit/objetos', component: ObjetoLaudoListComponent },
+  { path: 'exames/:id/edit/objetos/novo', component: ObjetoLaudoFormComponent },
+  { path: 'exames/:id/edit/objetos/:id/edit', component: ObjetoLaudoFormComponent },
 ];
 
 @NgModule({

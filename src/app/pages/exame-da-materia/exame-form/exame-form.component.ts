@@ -160,7 +160,7 @@ export class ExameFormComponent implements OnInit {
         this.resourceForm.get('descricao')?.disable();
         this.exibirFormObjeto = true;
 
-        this.filtrarObjetos(laudoId, exame);
+        this.filtrarObjetos(exameId, exame);
 
         console.log('objetos: ', this.resourceForm.get('objetos')?.value);
       })
@@ -175,7 +175,7 @@ export class ExameFormComponent implements OnInit {
 
   filtrarObjetos(exameId: string, exame: ExameDaMateria) {
     let objetos = this.objetos;
-    if(objetos || objetos !== undefined) {
+    if (objetos || objetos !== undefined) {
       exame.objetos?.filter(objeto => objeto.exameDaMateriaId === exameId);
     }
   }

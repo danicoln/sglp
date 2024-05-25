@@ -27,7 +27,7 @@
           <td>{{ exame.descricao }}</td>
           <td>{{ exame.objetos?.length }}</td>
           <td>
-            <a [routerLink]="[ exame.id, 'edit']">
+            <a [routerLink]="['/laudos', laudoId, 'edit', 'exames', exame.id, 'edit']">
               <i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i>
             </a>
             <i (click)="deletar(exame)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i>

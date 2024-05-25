@@ -3,7 +3,7 @@
 
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-      <a [routerLink]="['objetos/novo']">
+      <a [routerLink]="['novo']">
         <p-button
           pRipple
           label="Novo"
@@ -11,18 +11,17 @@
           >
         </p-button>
       </a>
-<!--
 
   <p-button
     pRipple
     label="Deletar"
     icon="pi pi-trash"
     severity="danger"
-    (click)="deletarExamesSelecionados()"
-    [disabled]="!examesSelecionados || !examesSelecionados.length"
+    (click)="deletarObjetosSelecionados()"
+    [disabled]="!objetosSelecionados || !objetosSelecionados.length"
     >
   </p-button>
--->
+
     </ng-template>
   </p-toolbar>
 

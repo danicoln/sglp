@@ -24,6 +24,7 @@ export class ObjetoLaudoFormComponent implements OnInit {
   @Input() novaSecao!: FormGroup;
   @Input() index!: number;
   @Input() exameId!: string;
+  @Input() objetoId!: string;
   @Input() listaObjetos!: ObjetoLaudo[];
 
   exibirFormularioNovoDocumento: boolean = false;
@@ -44,13 +45,16 @@ export class ObjetoLaudoFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.exameId = params['id'];
+      this.exameId = params['exameId'];
+      this.objetoId = params['objetoId'];
       this.buildResourceForm();
     });
   }
 
   private buildResourceForm() {
     this.resourceForm = this.formBuilder.group({
+      id: [''],
+      exameDaMateriaId: [''],
       documento: this.formBuilder.group({
         id: [''],
         nomeTitulo: ['', Validators.required],
@@ -64,16 +68,25 @@ export class ObjetoLaudoFormComponent implements OnInit {
     if (this.resourceForm && this.resourceForm.valid) {
       const dadosFormulario = this.resourceForm.value;
 
-      const documento = dadosFormulario.documento;
-      if (documento) {
+      let novoDocumento = dadosFormulario.documento;
+
+      novoDocumento = {
+        id: novoDocumento.id,
+        nomeTitulo: novoDocumento.nomeTitulo,
+        descricao: novoDocumento.descricao,
+        data: novoDocumento.data
+      }
+
+      if (novoDocumento) {
 
         this.objeto = {
-          id: dadosFormulario.id,
+          id: this.objetoId,
           exameDaMateriaId: this.exameId,
-          documento: documento
+          documento: novoDocumento
         };
 
-        if(this.objeto.id) {
+        if(this.objetoId) {
+          this.objeto.id = this.objetoId;
           this.atualizarObjeto(this.objeto);
         }
         this.salvarDados(this.objeto);
