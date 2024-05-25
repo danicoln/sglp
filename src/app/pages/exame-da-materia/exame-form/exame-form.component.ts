@@ -79,7 +79,7 @@ export class ExameFormComponent implements OnInit {
       } else {
         this.salvarExame(this.exame)
           .then((exameSalvo) => {
-            this.detalhesDoExame(exameSalvo.id!);
+            this.detalhesDoExame(this.laudoId, exameSalvo.id!);
 
           })
       }
@@ -188,8 +188,8 @@ export class ExameFormComponent implements OnInit {
     //this.resourceForm.get('descricao')?.enable();
   }
 
-  detalhesDoExame(exameId: string) {
-    this.router.navigate(['exames', exameId, 'edit']);
+  detalhesDoExame(laudoId: string, exameId: string) {
+    this.router.navigate([`laudos/${laudoId}/edit/exames/${exameId}/edit`]);
   }
 
   getObjetos(): ObjetoLaudo[] {
