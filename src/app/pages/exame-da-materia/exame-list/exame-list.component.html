@@ -1,16 +1,35 @@
+<div class="container">
+
 <p-card header="Exame da Matéria">
   <p-toast></p-toast>
 
   <!--Botões de Criar e Deletar-->
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
-      <p-button pRipple label="Novo" icon="pi pi-plus" [routerLink]="['novo']" [disabled]="exame.id != null"></p-button>
+      <app-button 
+        class="mr-2" 
+        label="Novo" 
+        icon="pi pi-plus" 
+        [routerLink]="['novo']" 
+        [disabled]="exame.id != null"
+        >
+      </app-button>
 
-      <p-button pRipple label="Deletar" icon="pi pi-trash" severity="danger" (click)="deletar(exame)" [disabled]="!exame.id"></p-button>
+       <!-- Botão de Voltar -->
+      <app-button
+        icon="pi pi-angle-left"
+        label="Laudo"
+        class="ml-2"
+        severity="info"
+        [raised]="true"
+        (click)="voltar()"
+        >
+      </app-button>
     </ng-template>
   </p-toolbar>
 
-  <!--Tabela de Detalhes do Exame-->
+  <!--Detalhes do Exame-->
+  
   <div *ngIf="exame?.id; else noExame">
     <p-table [value]="[exame]">
       <ng-template pTemplate="header">
@@ -18,19 +37,22 @@
           <th>ID</th>
           <th>Descrição</th>
           <th>Quantidade de Objetos</th>
-          <th>Ações</th>
+          <th>Editar</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-exame>
         <tr>
           <td>{{ exame.id }}</td>
           <td>{{ exame.descricao }}</td>
-          <td>{{ exame.objetos?.length }}</td>
+          <td>{{ objetos ? objetos.length : 0 }}</td>
           <td>
-            <a [routerLink]="['/laudos', laudoId, 'edit', 'exames', exame.id, 'edit']">
-              <i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i>
-            </a>
-            <i (click)="deletar(exame)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i>
+            <app-button
+              severity="success"
+              icon="pi pi-pencil"
+              [text]="true"
+              (click)="edit(exame.id)"
+              >
+            </app-button>
           </td>
         </tr>
       </ng-template>
@@ -43,3 +65,5 @@
 
   <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 </p-card>
+
+</div>

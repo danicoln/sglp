@@ -1,0 +1,15 @@
+<div class="mb-3">
+  <div class="titulo-calendar">
+    <b>{{ title }}</b>
+</div>
+<p-calendar 
+  [(ngModel)]="value" 
+  (ngModelChange)="onValueChange($event)" 
+  [placeholder]="placeholder"
+  [disabled]="isDisabled"
+  [dateFormat]="dateFormat"
+  [readonlyInput]="true"
+  >
+</p-calendar>
+</div>
+

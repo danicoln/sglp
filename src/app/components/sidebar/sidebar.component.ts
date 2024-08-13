@@ -33,7 +33,19 @@ export class SidebarComponent implements OnInit {
           },
           {
             label: 'Nomeações',
-            icon: 'pi pi-fw pi-align-right'
+            icon: 'pi pi-fw pi-briefcase',
+            items: [
+              {
+                label: 'Novo',
+                icon: 'pi pi-fw pi-plus-circle',
+                routerLink: '/nomeacoes/novo'
+              },
+              {
+                label: 'Consultar',
+                icon: 'pi pi-fw pi-list',
+                routerLink: '/nomeacoes'
+              }
+            ]
           },
           {
             label: 'Honorários',
@@ -71,6 +83,24 @@ export class SidebarComponent implements OnInit {
             label: 'Consultar',
             icon: 'pi pi-fw pi-list',
             routerLink: '/processos'
+          },
+
+        ]
+      },
+
+      {
+        label: 'Advogados',
+        icon: 'pi pi-fw pi-book',
+        items: [
+          {
+            label: 'Novo',
+            icon: 'pi pi-fw pi-plus-circle',
+            routerLink: '/advogados/novo'
+          },
+          {
+            label: 'Consultar',
+            icon: 'pi pi-fw pi-list',
+            routerLink: '/advogados'
           },
 
         ]

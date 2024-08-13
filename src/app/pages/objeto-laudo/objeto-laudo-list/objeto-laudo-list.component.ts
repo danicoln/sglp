@@ -15,16 +15,18 @@ export class ObjetoLaudoListComponent implements OnInit {
   @ViewChild('tabela') tabela!: any;
 
   @Input() titulo: string = 'Título Exemplo';
+  @Input() laudoId!: string;
   @Input() exameId!: string;
   @Input() objetoId!: string;
 
   objeto = new ObjetoLaudo();
 
-  @Input() objetos!: ObjetoLaudo[];
+  objetos!: ObjetoLaudo[];
   objetosSelecionados!: ObjetoLaudo[] | null;
 
   objetoDialog: boolean = false;
   submitted: boolean = false;
+  saving: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -36,20 +38,30 @@ export class ObjetoLaudoListComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.exameId = params['id'];
+      this.laudoId = params['id'];
+      this.exameId = params['exameId'];
       this.objetoId = params['objetoId'];
-      this.listar(this.exameId, this.objetoId);
+      this.listar(this.exameId);
     });
   }
 
-  listar(exameId: string, objetoId: string) {
+  listar(exameId: string) {
     this.objetoService.listar(exameId)
       .subscribe(
-        (objetos: ObjetoLaudo[]) => {
+        (objetos) => {
           this.objetos = objetos;
+
+          if (this.objetos.length === 0) {
+            this.msgService.add({
+              severity: 'info', summary: 'Info', detail: 'Nenhum objeto encontrado.', life: 3000
+            });
+          }
         },
         erro => {
           this.handleError(erro);
+          this.msgService.add({
+            severity: 'error', summary: 'Erro', detail: 'Erro ao carregar os objetos. Por favor, tente novamente mais tarde.', life: 3000
+          });
         }
       );
   }
@@ -62,19 +74,23 @@ export class ObjetoLaudoListComponent implements OnInit {
       acceptLabel: 'Sim',
       rejectLabel: 'Não',
       accept: () => {
-        this.objetos = this.objetos.filter((value) => !this.objetosSelecionados?.includes(value));
-        this.objetos = [...this.objetos];
+        this.objetosSelecionados?.forEach(objeto => {
+          const objetoId = typeof objeto.id === 'string' ? objeto.id : '';
 
-        if (this.objetoId) {
-          this.objetoService.excluir(this.exameId, this.objetoId)
-            .then(() => {
-            })
-            .catch(error => {
-              console.error('Erro ao excluir objeto: ', error);
-            });
-        } else {
-          console.error('ID inválido: ', this.objetoId);
-        }
+          if (objetoId) {
+            this.objetoService.excluir(this.exameId, objetoId)
+              .then(() => {
+                this.objetos = this.objetos.filter((value) => !this.objetosSelecionados?.includes(value));
+                this.objetos = [...this.objetos];
+                this.listar(this.exameId);
+              })
+              .catch(error => {
+                console.error('Erro ao excluir objeto: ', error);
+              });
+          } else {
+            console.error('ID inválido: ', this.objeto.id);
+          }
+        });
 
         this.objetosSelecionados = [];
         this.msgService.add({ severity: 'success', summary: 'Sucesso', detail: 'Objetos apagados', life: 3000 });
@@ -91,7 +107,7 @@ export class ObjetoLaudoListComponent implements OnInit {
 
   deletar(obj: ObjetoLaudo) {
     this.confirmacaoService.confirm({
-      message: 'Tem certeza em deletar o objeto: ' + obj.documento?.nomeTitulo + '?',
+      message: 'Tem certeza em deletar o objeto: ' + obj?.nomeTitulo + '?',
       header: 'Confirmar',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sim',
@@ -122,21 +138,26 @@ export class ObjetoLaudoListComponent implements OnInit {
   }
 
   editar(obj: ObjetoLaudo) {
-    if (obj.documento?.data) {
-      const dataFormatada = new Date(obj.documento!.data).toLocaleDateString('pt-BR');
-      const dataObjeto = new Date(dataFormatada);
-
-      this.objeto = { ...obj, documento: { ...obj.documento, data: dataObjeto } };
-    } else {
-      this.objeto = { ...obj };
-    }
-
+    this.objeto = { ...obj };
+    this.objeto.data = this.formatarData(this.objeto.data);
     this.objetoDialog = true;
+  }
+
+  private formatarData(data: string | undefined): string | undefined {
+    if (!data) return undefined;
+
+    const d = new Date(data);
+    const dia = String(d.getDate()).padStart(2, '0');
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const ano = d.getFullYear();
+
+    return `${ano}-${mes}-${dia}`;
   }
 
   esconderDialog() {
     this.objetoDialog = false;
     this.submitted = false;
+    this.objeto = new ObjetoLaudo();
   }
 
   private handleError(erro: any): void {
@@ -147,12 +168,29 @@ export class ObjetoLaudoListComponent implements OnInit {
   }
 
   salvarEdicao() {
+    if (this.saving) {
+      return;
+    }
+
+    this.saving = true;
     this.submitted = true;
+
+    if (!this.objeto.data) {
+      this.msgService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Preencha todos os campos obrigatórios',
+        life: 3000
+      });
+      return;
+    }
+
+    this.objeto.data = new Date(this.objeto.data).toISOString();
 
     this.objetoService.atualizar(this.exameId, this.objeto).subscribe(
       (objetoAtualizado: ObjetoLaudo) => {
-        const index = this.objetos.findIndex(obj => obj.id === objetoAtualizado.id);
 
+        const index = this.objetos.findIndex(obj => obj.id === objetoAtualizado.id);
         if (index !== -1) {
           this.objetos[index] = objetoAtualizado;
         }
@@ -161,10 +199,12 @@ export class ObjetoLaudoListComponent implements OnInit {
           severity: 'success', summary: 'Sucesso', detail: 'Objeto Atualizado', life: 3000
         });
         this.esconderDialog();
+        this.saving = false;
       },
       erro => {
         this.error.handle(erro);
         console.error('Ops! Erro ao atualizar o objeto: ', erro);
+        this.saving = false;
       }
     )
   }

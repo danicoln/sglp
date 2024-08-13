@@ -20,6 +20,8 @@ import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { NgxMaskDirective } from 'ngx-mask';
+import { AdvogadoModule } from '../advogado/advogado.module';
 
 
 @NgModule({
@@ -28,6 +30,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     ProcessoListComponent
   ],
   imports: [
+    NgxMaskDirective,
     SharedModule,
     ToastModule,
     ToolbarModule,
@@ -48,7 +51,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     DropdownModule,
     AutoCompleteModule,
 
-    ProcessoRoutingModule
+    ProcessoRoutingModule,
+    AdvogadoModule
   ],
 
   exports: [

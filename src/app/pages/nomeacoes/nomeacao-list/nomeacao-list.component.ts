@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NomeacaoService } from '../shared/nomeacao.service';
-import { Nomeacao } from '../shared/nomeacao.model';
-import { ErrorHandlerService } from '../../../core/error-handler.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { ErrorHandlerService } from '../../../core/error-handler.service';
+import { DateUtilService } from '../../../utils/date-utils';
+import { Nomeacao } from '../shared/nomeacao.model';
+import { NomeacaoService } from '../shared/nomeacao.service';
 
 @Component({
   selector: 'app-nomeacao-list',
@@ -19,12 +20,14 @@ export class NomeacaoListComponent implements OnInit {
 
   nomeacaoDialog: boolean = false;
   submitted: boolean = false;
+  disabled: boolean = false;
 
   constructor(
     private nomeacaoService: NomeacaoService,
     private error: ErrorHandlerService,
     private confirmacaoService: ConfirmationService,
-    private mensagemService: MessageService
+    private mensagemService: MessageService,
+    private dateUtilService: DateUtilService
   ) { }
 
   ngOnInit(): void {
@@ -45,8 +48,22 @@ export class NomeacaoListComponent implements OnInit {
       acceptLabel: 'Sim',
       rejectLabel: 'Não',
       accept: () => {
-        this.nomeacoes = this.nomeacoes.filter((value) => !this.nomeacoesSelecionadas?.includes(value));
-        this.nomeacoesSelecionadas = null;
+        this.nomeacoesSelecionadas?.forEach(nomeacao => {
+          const nomeacaoId = typeof nomeacao.id === 'string' ? nomeacao.id : '';
+
+          if (nomeacaoId) {
+            this.nomeacaoService.excluir(nomeacaoId)
+              .then(() => {
+                this.nomeacoes = this.nomeacoes.filter((value) => !this.nomeacoesSelecionadas?.includes(value));
+                this.nomeacoes = [...this.nomeacoes];
+                this.listar();
+              })
+              .catch(error => {
+                console.error('Erro ao excluir nomeações: ', error);
+              });
+          }
+        });
+        this.nomeacoesSelecionadas = [];
         this.mensagemService.add({ severity: 'success', summary: 'Sucesso', detail: 'Nomeações apagadas', life: 3000 });
       }
     });
@@ -61,9 +78,25 @@ export class NomeacaoListComponent implements OnInit {
   }
 
   editar(nomeacao: Nomeacao) {
-    this.nomeacao = {...nomeacao };
+    this.nomeacao = { ...nomeacao };
+
+    this.nomeacao.dataNomeacao = this.formatarData(this.nomeacao.dataNomeacao);
+    this.nomeacao.prazo = this.formatarData(this.nomeacao.prazo);
+    this.nomeacao.dataAceite = this.formatarData(this.nomeacao.dataAceite);
+
     this.nomeacaoDialog = true;
-    }
+  }
+
+  private formatarData(data: string | undefined): string | undefined {
+    if (!data) return undefined;
+
+    const d = new Date(data);
+    const dia = String(d.getDate()).padStart(2, '0');
+    const mes = String(d.getMonth() + 1).padStart(2, '0');
+    const ano = d.getFullYear();
+
+    return `${ano}-${mes}-${dia}`;
+  }
 
   deletar(nomeacao: Nomeacao) {
 
@@ -95,34 +128,70 @@ export class NomeacaoListComponent implements OnInit {
     });
   }
 
-
   esconderDialog() {
     this.nomeacaoDialog = false;
-    this.submitted = false;
   }
 
   salvarEdicao() {
+    if (this.submitted) {
+      return;
+    }
     this.submitted = true;
+
+    if (!this.isNomeacaoValida()) {
+      this.mensagemService.add({
+        severity: 'error', summary: 'Erro', detail: 'Preencha todos os campos obrigatórios', life: 3000
+      });
+      this.submitted = false;
+      return;
+    }
+    this.convertAndSetDates();
 
     this.nomeacaoService.atualizar(this.nomeacao).subscribe(
       (nomeacaoAtualizada: Nomeacao) => {
-
-        const index = this.nomeacoes.findIndex(p => p.id === nomeacaoAtualizada.id);
-        if (index !== -1) {
-          this.nomeacoes[index] = nomeacaoAtualizada;
-        }
-
-        this.mensagemService.add({
-          severity: 'success', summary: 'Sucesso', detail: 'Nomeação Atualizada', life: 3000
-        });
-        this.esconderDialog();
+        this.handleSuccess(nomeacaoAtualizada);
+        this.submitted = false;
       },
       erro => {
-        this.error.handle(erro);
-        console.error('Ops! Erro ao atualizar a nomeação: ', erro);
+        this.handleError(erro);
+        this.submitted = false;
       }
     );
+    this.esconderDialog();
+  }
 
+  private isNomeacaoValida(): boolean {
+    return !!this.nomeacao.dataNomeacao && !!this.nomeacao.prazo && !!this.nomeacao.dataAceite;
+  }
+
+  private convertAndSetDates() {
+    this.nomeacao.dataNomeacao = this.dateUtilService.convertDateToISOString(
+      this.dateUtilService.convertStringToDate(this.nomeacao.dataNomeacao!)
+    );
+    this.nomeacao.prazo = this.dateUtilService.convertDateToISOString(
+      this.dateUtilService.convertStringToDate(this.nomeacao.prazo!)
+    );
+    this.nomeacao.dataAceite = this.dateUtilService.convertDateToISOString(
+      this.dateUtilService.convertStringToDate(this.nomeacao.dataAceite!)
+    );
+  }
+
+  private handleSuccess(nomeacaoAtualizada: Nomeacao) {
+    this.nomeacao = nomeacaoAtualizada;
+
+    const index = this.nomeacoes.findIndex(p => p.id === nomeacaoAtualizada.id);
+    if (index !== -1) {
+      this.nomeacoes[index] = nomeacaoAtualizada;
+    }
+
+    this.mensagemService.add({
+      severity: 'success', summary: 'Sucesso', detail: 'Nomeação Atualizada', life: 3000
+    });
+  }
+
+  private handleError(erro: any) {
+    this.error.handle(erro);
+    console.error('Ops! Erro ao atualizar a nomeação: ', erro);
   }
 
 }

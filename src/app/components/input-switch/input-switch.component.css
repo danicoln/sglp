@@ -1,0 +1,9 @@
+.componente{
+    display: flex;
+    margin: 0 auto;
+}
+
+.title, .opcoes {
+    display: flex;
+    align-items: center;
+}

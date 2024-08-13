@@ -1,109 +1,130 @@
-<p-card>
-
-  <p-toast></p-toast>
-  <p-toolbar styleClass="mb-4 gap-2">
-
-    <!--Botões de Criar e Deletar-->
-    <ng-template pTemplate="left">
-      <a href="/laudos/novo">
-        <p-button
-          pRipple
-          label="Novo"
-          icon="pi pi-plus"
+<div class="container">
+  
+  <p-card header="Laudos">
+  
+    <p-toast></p-toast>
+    <p-toolbar styleClass="mb-4 gap-2">
+  
+      <!--Botões de Criar e Deletar-->
+      <ng-template pTemplate="left">
+        <div class="mr-2">
+          <a href="/laudos/novo">
+            <app-button
+              label="Novo"
+              icon="pi pi-plus"
+              >
+            </app-button>
+          </a>
+        </div>
+        <app-button
+          label="Inativar"
+          icon="pi pi-trash"
+          severity="danger"
+          (click)="deletarLaudosSelecionados()"
+          [disabled]="!laudosSelecionado || !laudosSelecionado.length"
           >
-        </p-button>
-      </a>
-      <p-button
-        pRipple
-        label="Deletar"
-        icon="pi pi-trash"
-        severity="danger"
-        (click)="deletarLaudosSelecionados()"
-        [disabled]="!laudosSelecionado || !laudosSelecionado.length"
-        >
-      </p-button>
-    </ng-template>
-
-    <!--Botões de importar e exportar-->
-    <ng-template pTemplate="right">
-      <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Importar" chooseLabel="Import"
-        class="mr-2 inline-block"></p-fileUpload>
-      <p-button pRipple label="Exportar" icon="pi pi-upload"></p-button>
-    </ng-template>
-  </p-toolbar>
-
-  <!--Tabela de Laudos Periciais-->
-  <p-table
-    #dt
-    [value]="laudos"
-    [rows]="10"
-    [paginator]="true"
-    [tableStyle]="{ 'min-width': '75rem' }"
-    [(selection)]="laudosSelecionado"
-    [rowHover]="true"
-    dataKey="id"
-    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
-    [showCurrentPageReport]="true"
-    ><!--[globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"-->
-
-    <ng-template pTemplate="caption">
-      <div class="flex align-items-center justify-content-between">
-        <h5 class="m-0">Gerenciamento de Laudos Periciais</h5>
-        <span class="p-input-icon-left">
-          <i class="pi pi-search"></i>
-          <!-- filtro -> erro no $event.target.value -->
-          <input pInputText type="text" (input)="dt.filterGlobal($event.target , 'contains')" placeholder="Buscar..." />
-        </span>
-      </div>
-    </ng-template>
-    <!--Header Table-->
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="width: 4rem">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        </th>
-        <th pSortableColumn="id" style="min-width:15rem">ID<p-sortIcon field="id"></p-sortIcon></th>
-        <th pSortableColumn="objetivo" style="min-width:15rem">Objetivo<p-sortIcon field="objetivo"></p-sortIcon></th>
-        <th pSortableColumn="valorHonorarios">Valor Honorários<p-sortIcon field="valorHonorarios"></p-sortIcon></th>
-        <th pSortableColumn="objeto" style="min-width:10rem">Quantidade de Objeto <p-sortIcon field="objeto"></p-sortIcon></th>
-        <!--TODO: Colocar barra de %
-        <th pSortableColumn="rating">Reviews <p-sortIcon field="rating"></p-sortIcon></th>
-        -->
-        <th pSortableColumn="statusLaudo" style="min-width:10rem">Status<p-sortIcon field="statusLaudo"></p-sortIcon></th>
-        <th></th>
-      </tr>
-    </ng-template>
-    <!--Body Table-->
-    <ng-template pTemplate="body" let-laudo>
-      <tr>
-        <td>
-          <p-tableCheckbox [value]="laudo"></p-tableCheckbox>
-        </td>
-        <td>{{ laudo.id }}</td>
-        <td>{{ laudo.objetivo }}</td>
-        <td>{{ laudo.valorHonorarios | currency: 'BRL' }}</td>
-        <td>{{ laudo.objeto?.documentos?.length }}</td>
-        <!--TODO: Colocar barra de %
-          <td><p-rating [ngModel]="laudo.rating" [readonly]="false" [cancel]="false"></p-rating></td>
-        -->
-        <td>
-          <p-tag [value]="laudo.status" [severity]="getSeverity(laudo.status)"></p-tag>
-        </td>
-        <td>
-          <a href="laudos/{{laudo.id}}/edit"><i style="color: green;" class="pi pi-pencil mr-2"></i></a>
-          <i style="color: red;" class="pi pi-trash" (click)="deletarLaudo(laudo)"></i>
-        </td>
-      </tr>
-    </ng-template>
-    <ng-template pTemplate="summary">
-      <div class="flex align-items-center justify-content-between">Total de {{ laudos ? laudos.length : 0
-        }} laudos.</div>
-    </ng-template>
-  </p-table>
-
-      <!--=======================================================================================================================================================-->
-      <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
-    <!--
-    -->
-</p-card>
-
+        </app-button>
+      </ng-template>
+  
+      <!--Botões de importar e exportar-->
+      <!-- <ng-template pTemplate="right">
+        <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Importar" chooseLabel="Import"
+          class="mr-2 inline-block"></p-fileUpload>
+        <p-button pRipple label="Exportar" icon="pi pi-upload"></p-button>
+      </ng-template> -->
+    </p-toolbar>
+  
+    <!--Tabela de Laudos Periciais-->
+    <p-table
+      #tabela
+      [value]="laudos"
+      [rows]="10"
+      [paginator]="true"
+      [tableStyle]="{ 'min-width': '75rem' }"
+      [(selection)]="laudosSelecionado"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+      [showCurrentPageReport]="true"
+      [globalFilterFields]="['numero','laudos.numero', 'processo.numero', 'laudos.processo?.numero', 'status', 'laudo.status']"
+      >
+  
+      <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+          <h5 class="m-0">Gerenciamento de Laudos Periciais</h5>
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <!-- filtro -> erro no $event.target.value -->
+            <input pInputText type="text" (input)="applyFilterGlobal($event)" placeholder="Buscar..." />
+          </span>
+        </div>
+      </ng-template>
+      <!--Header Table-->
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 4rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          
+          <th pSortableColumn="numero">Número do Laudo<p-sortIcon field="numero"></p-sortIcon></th>
+          <th pSortableColumn="processo.numero">Número do Processo<p-sortIcon field="processo.numero"></p-sortIcon></th>
+          <th pSortableColumn="data">Data do Laudo<p-sortIcon field="data"></p-sortIcon></th>
+          <th pSortableColumn="status">Status<p-sortIcon field="status"></p-sortIcon></th>
+          <th pSortableColumn="progresso">Progresso</th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <!--Body Table-->
+      <ng-template pTemplate="body" let-laudo>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="laudo"></p-tableCheckbox>
+          </td>
+  
+          <td>{{ laudo.numero }}</td>
+          <td>{{ laudo.processo?.numero }}</td>
+          <td>{{ laudo.dataDoLaudo | date: 'dd/MM/yyyy' }}</td>
+          <td>
+            <p-tag
+              [value]="getStatusLabel(laudo.status)"
+              [severity]="getSeverity(laudo.status)"
+              >
+            </p-tag>
+          </td>
+  
+          <td>
+            <p-progressBar [value]="progresso[laudo.id]" showValue="true" mode="determinate" />
+          </td>
+          <td>
+            <a routerLink="/laudos/{{laudo.id}}/edit">
+              <app-button
+                severity="success"
+                icon="pi pi-pencil"
+                [text]="true"
+                >
+              </app-button>
+            </a>
+            <app-button 
+              icon="pi pi-trash"
+              severity="danger" 
+              [text]="true"
+              (click)="desativar(laudo)"
+              >
+            </app-button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="summary">
+        <div class="flex align-items-center justify-content-between">Total de {{ laudos ? laudos.length : 0
+          }} laudos.</div>
+      </ng-template>
+    </p-table>
+  
+        <!--=======================================================================================================================================================-->
+        <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
+      <!--
+      -->
+  </p-card>
+  
+  
+  </div>

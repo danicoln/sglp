@@ -1,85 +1,85 @@
-<form [formGroup]="quesitoForm" (ngSubmit)="submitForm()">
+<div class="container">
+
+<form [formGroup]="resourceForm" (ngSubmit)="submitForm()">
   <p-toast></p-toast>
-  <p-card>
+  <div class="mt-3" >
 
-    <div class="mt-3" >
+    <p-card>
+      <app-dropdown
+        label="Responsável"
+        class="mr-3"
+        name="label"
+        [options]="tipoDoResponsavel()"
+        placeholder="Selecione"
+        formControlName="parte"
+        (click)="selecionarParte()"
+        >
+      </app-dropdown>
+    </p-card>
 
-        <app-dropdown
-          label="Responsável"
-          class="mr-3"
-          name="label"
-          [options]="tipoDoResponsavel()"
-          placeholder="Selecione"
-          formControlName="parte"
-          (click)="selecionarParte()"
-          >
-        </app-dropdown>
+</div>
 
+<div class="quesitos">
 
+  <p-card class="col-12">
+    <div class="justify-content-center">
+      <app-input-textarea
+        label="Pergunta:"
+        formControlName="pergunta"
+        >
+      </app-input-textarea>
     </div>
-
-      <!--
-      <p-dialog
-        [(visible)]="quesitoDialog"
-        [style]="{ 'width': '550px','margin':'30px' }"
-        header="Inserir responsável do quesito" [modal]="true"
-        styleClass="p-fluid">
-
-        <ng-template pTemplate="content">
-          <input
-            pInputText
-            formControlName="parte"
-            >
-        </ng-template>
-
-        <ng-template pTemplate="footer">
-          <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="esconderDialog()"></button>
-          <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text"  (click)="selecionarParte()"></button>
-        </ng-template>
-
-      </p-dialog>
-      <p-confirmDialog [style]="{ width: '450px'}"></p-confirmDialog>
-    -->
-
-    <div class="quesitos">
-
-      <p-card class="col-12">
-        <div class="justify-content-center">
-          <textarea
-            pInputTextarea
-            rows="4" cols="80"
-            value="{{quesito}}"
-            placeholder="Insira o quesito"
-            formControlName="quesito"
-            >
-          </textarea>
-        </div>
-      </p-card>
-
-      <p-card class="col-12">
-        <div class="justify-content-center">
-          <textarea
-            pInputTextarea
-            rows="5" cols="100"
-            value="{{resposta}}"
-            placeholder="Insira a resposta"
-            formControlName="resposta"
-            >
-          </textarea>
-        </div>
-
-        <div class="botoes mt-3">
-          <p-button type="submit" pRipple label="Salvar">
-          </p-button>
-          <p-button pRipple label="Cancelar" [outlined]="false"
-            (onClick)="cancelar()">
-          </p-button>
-          <a href="/quesitos" style="text-decoration: none;"><p>Consultar quesitos</p></a>
-
-        </div>
-      </p-card>
-
-    </div>
-
   </p-card>
+
+  <p-card class="col-12">
+    <div class="justify-content-center">
+      <app-input-textarea
+        label="Resposta:"
+        formControlName="resposta"
+        >
+      </app-input-textarea>
+    </div>
+
+    <div class="botoes mt-3">
+      <app-button 
+        class="mr-2" 
+        type="submit" 
+        label="Salvar" 
+        [disabled]="!resourceForm.valid">
+      </app-button>
+      <app-button 
+        severity="danger" 
+        label="Cancelar" 
+        [outlined]="true"
+        [disabled]="!resourceForm.valid"
+        (click)="cancelar()">
+      </app-button>
+
+      <app-button
+        class="ml-2"
+        icon="pi pi-pencil"
+        severity="info"
+        [outlined]="true"
+        (click)="editar()"
+        label="Editar"
+        >
+      </app-button>
+
+      <div style="display: inline-block;">
+        <app-gpt-assistente 
+          [isDisabled]="!resourceForm.valid"
+          [objetos]="objetos"
+          [contexto]="contexto"
+          (generate)="gerarRespostaIA($event)"
+          >
+        </app-gpt-assistente>
+      </div>
+
+      <a [routerLink]="['/laudos', laudoId, 'edit', 'quesitos']" style="text-decoration: none;"><p>Consultar quesitos</p></a>
+    </div>
+  </p-card>
+
+</div>
 </form>
+
+</div>

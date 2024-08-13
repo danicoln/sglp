@@ -1,3 +1,4 @@
+import { Advogado } from "../../advogado/shared/advogado.model";
 
 export class Processo {
 
@@ -10,6 +11,8 @@ export class Processo {
   nomeReu?: string;
   parteAutora?: string;
   parteReu?: string;
-
+  laudoId?: string;
+  advogadoReu?: Advogado;
+  advogadoAutor?: Advogado;
 
 }

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Nomeacao } from './nomeacao.model';
-import { Observable, firstValueFrom } from 'rxjs';
+import { Observable, catchError, firstValueFrom, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +34,14 @@ export class NomeacaoService {
     .append('Authorization', this.chave)
     .append('Content-Type', 'application/json');
 
-    return firstValueFrom(this.http.post<Nomeacao>(this.url, nomeacao, { headers }));
+    return firstValueFrom(
+      this.http.post<Nomeacao>(this.url, nomeacao, { headers })
+      .pipe(
+        catchError(error => {
+          return throwError(() => error);
+        })
+      )
+    );
   }
 
   atualizar(nomeacao: Nomeacao): Observable<Nomeacao> {

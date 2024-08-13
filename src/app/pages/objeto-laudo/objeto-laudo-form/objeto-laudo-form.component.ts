@@ -23,6 +23,7 @@ export class ObjetoLaudoFormComponent implements OnInit {
   @Input() obj!: FormGroup;
   @Input() novaSecao!: FormGroup;
   @Input() index!: number;
+  @Input() laudoId!: string;
   @Input() exameId!: string;
   @Input() objetoId!: string;
   @Input() listaObjetos!: ObjetoLaudo[];
@@ -45,6 +46,7 @@ export class ObjetoLaudoFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
+      this.laudoId = params['id'];
       this.exameId = params['exameId'];
       this.objetoId = params['objetoId'];
       this.buildResourceForm();
@@ -55,12 +57,9 @@ export class ObjetoLaudoFormComponent implements OnInit {
     this.resourceForm = this.formBuilder.group({
       id: [''],
       exameDaMateriaId: [''],
-      documento: this.formBuilder.group({
-        id: [''],
-        nomeTitulo: ['', Validators.required],
-        descricao: [''],
-        data: [undefined]
-      })
+      nomeTitulo: ['', Validators.required],
+      descricao: [''],
+      data: [undefined]
     });
   }
 
@@ -68,55 +67,51 @@ export class ObjetoLaudoFormComponent implements OnInit {
     if (this.resourceForm && this.resourceForm.valid) {
       const dadosFormulario = this.resourceForm.value;
 
-      let novoDocumento = dadosFormulario.documento;
-
-      novoDocumento = {
-        id: novoDocumento.id,
-        nomeTitulo: novoDocumento.nomeTitulo,
-        descricao: novoDocumento.descricao,
-        data: novoDocumento.data
-      }
-
-      if (novoDocumento) {
+      if (dadosFormulario) {
 
         this.objeto = {
           id: this.objetoId,
           exameDaMateriaId: this.exameId,
-          documento: novoDocumento
+          nomeTitulo: dadosFormulario.nomeTitulo,
+          descricao: dadosFormulario.descricao,
+          data: dadosFormulario.data
         };
 
-        if(this.objetoId) {
+        if (this.objetoId) {
           this.objeto.id = this.objetoId;
           this.atualizarObjeto(this.objeto);
+        } else {
+          
+          this.salvarDados(this.objeto);
         }
-        this.salvarDados(this.objeto);
-        this.objetoAdicionado.emit(this.objeto);
-
-
+        
+        
       } else {
         console.error('O ID do documento não está definido');
-
+        
       }
-    } else {
-      this.resourceForm?.markAllAsTouched();
-    }
+    } 
   }
 
-  salvarDados(objeto: ObjetoLaudo) {
-    this.objetoService.salvar(this.exameId, objeto)
-      .then(() => {
-        console.log('TOAST: Objeto salvo! ', objeto);
-        this.msgService.add(
-          { severity: 'success', summary: 'Sucesso', detail: 'Objeto Salvo', life: 3000 });
-
-          this.resourceForm?.reset();
-      })
-      .catch(erro => {
-        this.erro.handle(erro);
-        this.msgService.add(
-          { severity: 'error', summary: 'Erro!', detail: 'Erro ao Salvar', life: 3000 }
-        )
-      });
+  salvarDados(objeto: ObjetoLaudo): Promise<ObjetoLaudo> {
+    return new Promise((resolve, reject) => {
+      this.objetoService.salvar(this.exameId, objeto)
+      .then(objetoSalvo => {
+          this.msgService.add(
+            { severity: 'success', summary: 'Sucesso', detail: 'Objeto Salvo', life: 3000 });
+  
+            this.resourceForm?.reset();
+            // this.objetoAdicionado.emit(objetoSalvo);
+            resolve(objetoSalvo);
+        })
+        .catch(erro => {
+          this.erro.handle(erro);
+          this.msgService.add(
+            { severity: 'error', summary: 'Erro!', detail: 'Erro ao Salvar', life: 3000 }
+          )
+        });
+    })
+    
 
   }
 
@@ -164,12 +159,12 @@ export class ObjetoLaudoFormComponent implements OnInit {
     if (this.resourceForm && this.resourceForm.valid) {
       const dadosFormulario = this.resourceForm.value;
 
-      const documento = dadosFormulario.documento;
-
-      if (documento) {
+      if (dadosFormulario) {
         const objeto: ObjetoLaudo = {
           exameDaMateriaId: this.exameId,
-          documento: documento
+          nomeTitulo: dadosFormulario.nomeTitulo,
+          descricao: dadosFormulario.descricao,
+          data: dadosFormulario.data
         };
 
         this.objetoAdicionado.emit(objeto);

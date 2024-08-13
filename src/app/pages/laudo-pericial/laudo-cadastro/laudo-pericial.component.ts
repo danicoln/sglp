@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLinkActive } from '@angular/router';
+import { MegaMenuItem, MenuItem, MessageService } from 'primeng/api';
+import { MessageComponent } from '../../../components/message/message.component';
 import { ErrorHandlerService } from '../../../core/error-handler.service';
+import { Status } from '../../../model/status';
+import { IaService } from '../../../services/ia.service';
+import { Quesito } from '../../quesito/shared/quesito.model';
 import { LaudoPericial } from '../shared/laudo-pericial';
 import { LaudoPericialService } from '../shared/laudo-pericial.service';
 
@@ -13,28 +17,52 @@ import { LaudoPericialService } from '../shared/laudo-pericial.service';
 })
 export class LaudoPericialComponent implements OnInit {
 
-  laudoPericial: LaudoPericial = new LaudoPericial();
+  @Input() laudo = new LaudoPericial();
   laudoId: string = '';
+  itens: MenuItem[] = [];
+  home?: any;
+
+  fields = [
+    {
+      label: 'Histórico do Processo',
+      prompt: 'Por favor, com base na informação passada {historico}, forneça extritamente o historico',
+      fieldName: 'historico'
+    },
+    {
+      label: 'Objetivo',
+      prompt: 'Qual é o objetivo deste laudo considerando {objetivo}? Forneça extritamente o objetivo',
+      fieldName: 'objetivo'
+    },
+    {
+      label: 'Metodologia Aplicada',
+      prompt: 'Descreva a metodologia aplicada no laudo com base em {metodologiaAplicada}. Forneça extritamente a metodologiaAplicada',
+      fieldName: 'metodologiaAplicada'
+    }
+  ];
 
   processoInserido: boolean = false;
   disabled: boolean = true;
+  disabledData: boolean = false;
   edit: boolean = false;
-  /*
-  metodologia: string = '';
-  historico: string = '';
-  conclusao: string = '';
-  introducao: string = '';
-  */
+
   resourceForm!: FormGroup;
+
+  selectedStatus?: string;
+
+  statusOptions = Status.getOptions();
 
   constructor(
     private service: LaudoPericialService,
+    private iaService: IaService,
     private route: ActivatedRoute,
     private router: Router,
     private error: ErrorHandlerService,
     private formBuilder: FormBuilder,
-    private messageService: MessageService
-  ) { }
+    private messageService: MessageService,
+    private message: MessageComponent
+  ) {
+   
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -44,6 +72,14 @@ export class LaudoPericialComponent implements OnInit {
         this.carregarLaudoPericial(this.laudoId);
       }
     });
+    this.itens = [
+      {label: 'Exames', routerLink: 'exames'},
+      {label: 'Quesitos', routerLink: 'quesitos'}
+    ]
+  }
+
+  onStatusChange(status: any) {
+    console.log('Status Selecionado: ', status);
   }
 
   private buildResourceForm() {
@@ -60,30 +96,27 @@ export class LaudoPericialComponent implements OnInit {
         nomeReu: [''],
         assunto: [''],
       }),
+      status: [Status.NAO_INICIADO],
       objetivo: [''],
-      metodologiaAplicada: [''], //metodologiaAplicada
-      exameDaMateria: [''],
-      // exameDaMateria: this.formBuilder.group({
-      //   id: [''],
-      //   objetos: this.formBuilder.array([
-      //     {id: [''], exameDaMateriaId: [''], documento: ['']}
-      //   ]),
-      // }),
-
+      metodologiaAplicada: [''],
+      quesitos: this.formBuilder.array([]),
       historico: [''],
       conclusao: [''],
       introducao: [''],
       dataDoLaudo: [null]
-      //quesitos
     });
   }
 
   carregarLaudoPericial(laudoId: string) {
     this.service.buscarPorId(laudoId)
       .then((laudo: LaudoPericial) => {
-        this.laudoPericial = laudo;
+        this.laudo = laudo;
+
+        const dataDoLaudo = laudo?.dataDoLaudo ? new Date(laudo.dataDoLaudo) : null;
+
         this.resourceForm.patchValue({
           id: laudo.id,
+          status: laudo.status,
           processo: {
             id: laudo.processo?.id,
             numero: laudo.processo?.numero,
@@ -95,54 +128,44 @@ export class LaudoPericialComponent implements OnInit {
             nomeReu: laudo.processo?.nomeReu,
             assunto: laudo.processo?.assunto,
           },
+          quesitos: laudo.quesitos,
           objetivo: laudo.objetivo,
           metodologiaAplicada: laudo.metodologiaAplicada,
           historico: laudo?.historico,
           conclusao: laudo.conclusao,
-          introducao: laudo.introducao,
-          dataDoLaudo: laudo.dataDoLaudo,
-          exameDaMateria: laudo.exameDaMateria,
-          //quesitos: laudo.quesitos,
+          introducao: laudo?.introducao,
+          dataDoLaudo: dataDoLaudo,
         });
+
+        this.atualizaQuesitos();
         this.resourceForm?.disable();
       })
       .catch(erro => {
         this.error.handle(erro);
-        this.messageService.add(
-          {
-            severity: 'error',
-            summary: 'Erro!',
-            detail: 'Erro ao carregar os detalhes do laudo pericial',
-            life: 3000
-          });
-      })
+        this.message.showError('Erro!', 'Erro ao carregar os detalhes do laudo pericial');
+      });
   }
 
   submitForm() {
 
     if (this.resourceForm.valid) {
       const formulario = this.resourceForm.value;
-
-      console.log('Resource válido: ', this.resourceForm.valid);
-
       if (!formulario.processo) {
         console.error('Problema com os dados do processo');
         return;
       }
-      // this.processoInserido = true;
 
-      this.laudoPericial = {
-        id: formulario.id,
+      this.laudo = {
+        id: this.laudoId,
+        status: formulario.status,
         objetivo: formulario.objetivo,
         metodologiaAplicada: formulario.metodologiaAplicada,
         historico: formulario.historico,
         conclusao: formulario.conclusao,
         introducao: formulario.introducao,
         dataDoLaudo: formulario.dataDoLaudo,
-        // exameDaMateria: formulario.exameDaMateria,
-        //quesitos, dataDoLaudo, objetos ??
+        quesitos: formulario.quesitos,
         processo: {
-          // ...formulario.processo
           id: formulario.processo.id,
           numero: formulario.processo.numero,
           comarca: formulario.processo.comarca,
@@ -156,15 +179,13 @@ export class LaudoPericialComponent implements OnInit {
       }
 
       if (this.laudoId) {
-        this.laudoPericial.id = this.laudoId;
-        this.atualizar(this.laudoPericial);
+        this.laudo.id = this.laudoId;
+        this.atualizar(this.laudo);
         this.edit = false;
       } else {
-        this.salvar(this.laudoPericial)
-          .then((laudoSalvo) => {
-            this.detalhesDoLaudo(laudoSalvo.id!);
-          });
-        this.processoInserido = true;
+        this.salvar(this.laudo).then((laudoSalvo) => {
+          this.router.navigate(['laudos', laudoSalvo.id, 'edit']);
+        })
       }
     } else {
       console.error('Erro ao salvar o laudo');
@@ -182,32 +203,30 @@ export class LaudoPericialComponent implements OnInit {
     return new Promise((resolve, reject) => {
 
       this.service.salvar(laudo)
-        .then((laudoSalvo) => {
-          this.laudoPericial = laudoSalvo;
-
-          this.messageService.add(
-            {
-              severity: 'success',
-              summary: 'Sucesso',
-              detail: 'Exame Salvo',
-              life: 3000
-            });
+        .then(laudoSalvo => {
+          this.laudoId = laudoSalvo.id!;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Sucesso',
+            detail: 'Laudo Pericial Salvo',
+            life: 3000
+          });
 
           resolve(laudoSalvo);
-
+          this.resourceForm?.disable();
         })
         .catch(erro => {
+          this.message.showError('Erro!', 'Erro ao salvar');
           this.error.handle(erro);
-          this.messageService.add(
-            {
-              severity: 'error',
-              summary: 'Erro!',
-              detail: 'Erro ao Salvar',
-              life: 3000
-            });
           reject(erro);
         });
-    })
+    });
+  }
+
+  atualizaQuesitos() {
+    if (this.laudo.quesitos && this.laudo.quesitos.length > 0) {
+      this.laudo.quesitos.forEach((quesito: Quesito) => this.addQuesito(quesito));
+    }
   }
 
   atualizar(laudo: LaudoPericial): Promise<LaudoPericial> {
@@ -217,7 +236,7 @@ export class LaudoPericialComponent implements OnInit {
           this.messageService.add({
             severity: 'success', summary: 'Sucesso', detail: 'Laudo Atualizado', life: 3000
           });
-          this.laudoPericial = laudoAtualizado;
+          this.laudo = laudoAtualizado;
           if (laudo.id) {
             this.carregarLaudoPericial(laudo.id);
           }
@@ -225,9 +244,7 @@ export class LaudoPericialComponent implements OnInit {
         },
         (erro: any) => {
           this.error.handle(erro);
-          this.messageService.add({
-            severity: 'error', summary: 'Erro!', detail: 'Erro ao Atualizar o Laudo', life: 3000
-          });
+          this.message.showError('Erro!', 'Erro ao atualizar o laudo');
           reject(erro);
         }
       );
@@ -237,7 +254,7 @@ export class LaudoPericialComponent implements OnInit {
 
 
   get editando() {
-    return Boolean(this.laudoPericial.id);
+    return Boolean(this.laudo.id);
   }
 
   cancelar() {
@@ -253,7 +270,7 @@ export class LaudoPericialComponent implements OnInit {
   resetarCampos(campos: string[]) {
     campos.forEach(campo => {
       const formControl = this.resourceForm.get(campo);
-      if(formControl && !formControl.value){
+      if (formControl && !formControl.value) {
         formControl.reset();
       } else {
         this.carregarLaudoPericial(this.laudoId);
@@ -274,7 +291,6 @@ export class LaudoPericialComponent implements OnInit {
     }
     this.processoInserido = true;
     this.disabled = false;
-    console.log('Dados do Processo: ', processo);
   }
 
   getProcesso() {
@@ -287,8 +303,17 @@ export class LaudoPericialComponent implements OnInit {
   editar() {
     if (this.resourceForm) {
       this.edit = true;
-      this.resourceForm?.enable();
+      this.resourceForm.enable();
     }
   }
 
+  addQuesito(quesito?: Quesito) {
+    const quesitosFormArray = this.resourceForm.get('quesitos') as FormArray;
+    const quesitoFormGroup = this.formBuilder.group({
+      id: [quesito ? quesito.id : ''],
+      pergunta: [quesito ? quesito.pergunta : '', Validators.required],
+      resposta: [quesito ? quesito.resposta : '']
+    });
+    quesitosFormArray.push(quesitoFormGroup);
+  }
 }

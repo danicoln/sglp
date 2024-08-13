@@ -1,8 +1,9 @@
-import { Documento } from "../../documentos/shared/documento.model";
 
 export class ObjetoLaudo {
 
-  id?: string;
-  exameDaMateriaId?: string;
-  documento?: Documento;
+  public id?: string;
+  public exameDaMateriaId?: string;
+  public nomeTitulo?: string;
+  public descricao?: string;
+  public data?: string;
 }

@@ -1,0 +1,40 @@
+<div [formGroup]="form">
+    <div *ngIf="response">
+        <p-card header="Resposta Sugetiva">{{ response }}</p-card>
+    </div>
+    <div class="ml-2 mt-2" style="display: flex;">
+        <app-button 
+            label="IA Responde" 
+            icon="pi pi-globe"  
+            [raised]="true" 
+            severity="info"
+            (click)="onGenerate($event)"
+            [disabled]="isDisabled">
+        </app-button>
+        <div class="ml-2 mr-2">
+            <app-button 
+                *ngIf="response"
+                severity="info" 
+                type="button" 
+                icon="pi pi-copy" 
+                tooltip="Copiar Resposta" 
+                tooltipPosition="top" 
+                (click)="copyResponse()" 
+                label="Copiar"
+                >
+            </app-button>
+        </div>
+        <app-button 
+            *ngIf="response"
+            severity="danger" 
+            [outlined]="true"
+            type="button" 
+            icon="pi pi-eraser" 
+            tooltip="Cancelar" 
+            tooltipPosition="top" 
+            (click)="cancelar()" 
+            label="Cancelar"
+            >
+        </app-button>
+    </div>
+</div>

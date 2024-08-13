@@ -1,60 +1,62 @@
+
 <form [formGroup]="resourceForm" (ngSubmit)="submitForm()">
-  <p-toast></p-toast>
+  <div class="container">
+    <p-toast></p-toast>
 
   <p-card>
 
     <div class="form-documentos">
-      <div formGroupName="documento">
-        <input
-          class="col-4"
-          placeholder="Nome do Documento"
-          pInputText
-          type="text"
+      <div class="mb-2">
+        <app-input-text 
+          title="Título:"
+          class="col-4" 
+          placeholder="Título" 
           formControlName="nomeTitulo"
           >
-        <textarea
-          class="col-12"
-          pInputTextarea
-          rows="5" cols="30"
-          type="text"
-          formControlName="descricao"
-          >
-        </textarea>
-
-        <p-calendar
-          class="flex col-4"
-          dateFormat="dd/mm/yy" [readonlyInput]="true"
-          placeholder="Data do Documento"
-          formControlName="data"
-          >
-        </p-calendar>
-
+        </app-input-text>
       </div>
+      <app-input-textarea 
+        class="col-12" 
+        rows="5" 
+        cols="30" 
+        label="Descrição"
+        id="float-input"
+        formControlName="descricao"
+        >
+      </app-input-textarea>
+
+      <app-calendar 
+        title="Data:"
+        class="flex col-4" 
+        placeholder="dd/mm/aaaa"
+        formControlName="data">
+      </app-calendar>
 
     </div>
 
     <div class="mt-3">
-      <button
-        icon="pi pi-save"
-        pRipple
-        class="btn-salvar p-button-success"
-        type="submit"
-        label="Salvar Objeto"
-        pButton
+      <app-button 
+        icon="pi pi-save" 
+        class="btn-salvar p-button-success" 
+        type="submit" 
+        label="Salvar" 
+        [disabled]="!resourceForm.valid"
         >
-      </button>
+      </app-button>
 
-      <p-button
-        (click)="cancelar()"
-        pRipple
-        class="col-3 btn-cancelar"
+      <app-button 
+        class="col-3 btn-cancelar" 
         label="Cancelar"
+        [outlined]="true"
+        [disabled]="!resourceForm.valid" 
+        (click)="cancelar()" 
         >
-      </p-button>
+      </app-button>
     </div>
-    <a [routerLink]="['/exames', exameId, 'edit', 'objetos']" style="text-decoration: none;"><p>Consultar objetos</p></a>
+    <a [routerLink]="['/laudos', laudoId, 'edit', 'exames', exameId, 'edit', 'objetos']" style="text-decoration: none;">
+      <p>Consultar objetos</p>
+    </a>
 
   </p-card>
+  </div>
 </form>
-
-

@@ -1,3 +1,5 @@
+<div class="container">
+  
 <p-card header="Lista de Quesitos do Laudo">
   <p-toast></p-toast>
 
@@ -6,24 +8,33 @@
     <!--Botões de Criar e Deletar-->
 
     <ng-template pTemplate="left">
-      <a href="/quesitos/novo">
-        <p-button
-          pRipple
+      <a class="mr-2" [routerLink]="['novo']">
+        <app-button
           label="Novo"
           icon="pi pi-plus"
           >
-        </p-button>
+        </app-button>
       </a>
 
-      <p-button
-        pRipple
+      <app-button
         label="Deletar"
         icon="pi pi-trash"
         severity="danger"
         (click)="deletarQuesitosSelecionados()"
         [disabled]="!quesitosSelecionados || !quesitosSelecionados.length"
         >
-      </p-button>
+      </app-button>
+
+      <a [routerLink]="['/laudos', laudoId, 'edit']">
+        <app-button
+          class="ml-2"
+          label="Laudo"
+          icon="pi pi-angle-left"
+          [raised]="true"
+          severity="info"
+          >
+        </app-button>
+      </a>  
     </ng-template>
 
   </p-toolbar>
@@ -65,15 +76,12 @@
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
         <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
-          <th pSortableColumn=" novoQuesito.parte">Parte<p-sortIcon field=" novoQuesito.parte"></p-sortIcon></th>
-          <th pSortableColumn="novoQuesito.quesito">Quesito<p-sortIcon field="novoQuesito.quesito"></p-sortIcon></th>
-          <th pSortableColumn="novoQuesito.resposta">Resposta<p-sortIcon field="quesito.resposta"></p-sortIcon></th>
-          <th></th>
-        </tr>
+        <th pSortableColumn=" novoQuesito.parte">Parte<p-sortIcon field=" novoQuesito.parte"></p-sortIcon></th>
+        <th pSortableColumn="novoQuesito.quesito">Quesito<p-sortIcon field="novoQuesito.quesito"></p-sortIcon></th>
+        <th pSortableColumn="novoQuesito.resposta">Resposta<p-sortIcon field="quesito.resposta"></p-sortIcon></th>
+        <th></th>
+      </tr>
       </ng-template>
-      <!--
-
-    -->
 
     <!--Body Table-->
     <ng-template pTemplate="body" let-novoQuesito>
@@ -82,12 +90,32 @@
           <p-tableCheckbox [value]="novoQuesito"></p-tableCheckbox>
         </td>
         <td>{{ novoQuesito.id }}</td>
-        <td>{{ novoQuesito.parte }}</td>
-        <td>{{ novoQuesito.quesito }}</td>
+
+        <td> 
+          <a [routerLink]="['/laudos', laudoId, 'edit', 'quesitos', novoQuesito.id, 'edit']"
+            > {{ novoQuesito.parte }}
+          </a>
+        </td>
+
+        <td>{{ novoQuesito.pergunta }}</td>
         <td>{{ novoQuesito.resposta }}</td>
         <td>
-          <a (click)="editar(novoQuesito)"><i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i></a>
-          <i (click)="deletar(novoQuesito)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i>
+          <app-button
+            severity="success"
+            icon="pi pi-pencil"
+            [text]="true"
+            (click)="editar(novoQuesito)"
+            >
+          </app-button>
+          <app-button 
+            icon="pi pi-trash"
+            severity="danger" 
+            [text]="true"
+            (click)="deletar(novoQuesito)"
+            >
+          </app-button>
+          <!-- <a (click)="editar(novoQuesito)"><i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i></a>
+          <i (click)="deletar(novoQuesito)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i> -->
         </td>
       </tr>
     </ng-template>
@@ -110,9 +138,16 @@
 
     <ng-template pTemplate="content">
       <div class="field">
-        <label for="parte">Parte</label>
-          <input [(ngModel)]="novoQuesito.parte" type="text" pInputText id="parte" disabled/>
-      </div>
+        <app-dropdown
+          label="Responsável"
+          class="mr-3"
+          name="label"
+          [options]="tipoDoResponsavel()"
+          placeholder="Selecione"
+          [(ngModel)]="novoQuesito.parte"
+          >
+        </app-dropdown>
+        </div>
       <div class="field">
         <label for="novoQuesito">Quesito</label>
           <textarea
@@ -120,7 +155,7 @@
             pInputTextarea
             rows="5" cols="30"
             type="text"
-            [(ngModel)]="novoQuesito.quesito"
+            [(ngModel)]="novoQuesito.pergunta"
             >
           </textarea>
       </div>
@@ -135,8 +170,9 @@
             >
           </textarea>
       </div>
-    </ng-template>
 
+    </ng-template>
+    
     <ng-template pTemplate="footer">
       <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="esconderDialog()"></button>
       <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="salvarEdicao()"></button>
@@ -146,3 +182,5 @@
   <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 </p-card>
 
+
+</div>

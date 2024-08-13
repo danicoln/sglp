@@ -1,9 +1,12 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, Input, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { ErrorHandlerService } from '../../../core/error-handler.service';
-import { ConfirmationService, MessageService } from 'primeng/api';
-import { ExameDaMateriaService } from '../shared/exame.service';
+import { ObjetoLaudo } from '../../objeto-laudo/shared/objeto-laudo.model';
+import { ObjetoLaudoService } from '../../objeto-laudo/shared/objeto-laudo.service';
 import { ExameDaMateria } from '../shared/exame.model';
-import { ActivatedRoute } from '@angular/router';
+import { ExameDaMateriaService } from '../shared/exame.service';
+import { LaudoPericial } from '../../laudo-pericial/shared/laudo-pericial';
 
 @Component({
   selector: 'app-exame-list',
@@ -14,106 +17,65 @@ export class ExameListComponent implements OnInit {
 
   @ViewChild('tabela') tabela!: any;
   @Input() laudoId!: string;
+  @Input() laudo = new LaudoPericial();
   @Input() exameId!: string;
 
-  objetoDialog: boolean = false;
+  exameDialog: boolean = false;
   submitted: boolean = false;
   exameSelecionados!: ExameDaMateria[] | null;
+  exames!: ExameDaMateria[];
   exame = new ExameDaMateria();
 
+  quantidadeObjetos?: number = 0;
+  objetos!: ObjetoLaudo[];
+
   constructor(
+    protected injector: Injector,
     private route: ActivatedRoute,
     private error: ErrorHandlerService,
     private msgService: MessageService,
-    private confirmacaoService: ConfirmationService,
-    private exameService: ExameDaMateriaService
-
-  ) { }
+    private exameService: ExameDaMateriaService,
+    private objetoService: ObjetoLaudoService,
+    private router: Router
+  ) { 
+    this.route = this.injector.get(ActivatedRoute);
+    this.router = this.injector.get(Router);
+    this.error = this.injector.get(ErrorHandlerService);
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.laudoId = params['id'];
       this.exameId = params['exameId'];
-      this.listar(this.laudoId, this.exameId);
+      this.listar(this.laudoId);
     });
   }
 
-  listar(laudoId: string, exameId: string) {
-    this.exameService.obterExame(laudoId)
-      .then((dados) => {
-        if(dados) {
-          this.exame = dados;
-        } else {
-          this.exame = new ExameDaMateria;
+  listarObjetos(exameId: string) {
+    this.objetoService.listar(exameId)
+      .subscribe(
+        (objetos) => {
+          this.objetos = objetos;
         }
-      })
-      .catch(erro => this.error.handle(erro));
+      );
   }
 
-  deletar(obj: ExameDaMateria) {
-    this.confirmacaoService.confirm({
-      message: 'Tem certeza em deletar o exame de ID: ' + obj.id + '?',
-      header: 'Confirmar',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sim',
-      rejectLabel: 'Não',
-      accept: () => {
-
-        if (obj.id !== undefined) {
-
-          this.exameService.excluir(this.laudoId, obj.id)
-            .then(() => {
-              this.exame = {};
-              this.msgService.add({
-                severity: 'success', summary: 'Sucesso', detail: 'Exame excluido', life: 3000
-              });
-              this.exame = {};
-            })
-            .catch((erro) => {
-              this.error.handle(erro);
-              this.msgService.add({
-                severity: 'error', summary: 'Erro', detail: 'Erro ao excluir o exame', life: 3000
-              });
-            })
-        } else {
-          console.error('ID do exame é undefined');
+  async listar(laudoId: string) {
+    try {
+      this.exame = await this.exameService.obterExame(laudoId);
+      if (Object.keys(this.exame).length === 0) {
+        this.msgService.add({
+          severity: 'info', summary: 'Info', detail: 'Nenhum exame encontrado.', life: 3000
+        });
+      } else {
+        this.exames = [this.exame];
+        if (this.exame.id !== undefined) {
+          this.listarObjetos(this.exame.id);
         }
       }
-    });
-  }
-
-  deletarExameSelecionado() {
-    this.confirmacaoService.confirm({
-      message: 'Tem certeza em deletar o exame selecionado?',
-      header: 'Confirmar',
-      icon: 'pi pi-exclamation-triangle',
-      acceptLabel: 'Sim',
-      rejectLabel: 'Não',
-      accept: () => {
-        this.exameSelecionados?.forEach(exame => {
-          const exameId = typeof exame.id === 'string' ? exame.id : '';
-
-          if (this.laudoId !== undefined) {
-
-            this.exameService.excluir(this.laudoId, exameId)
-              .then(() => {
-                this.exame = {};
-                this.msgService.add({
-                  severity: 'success', summary: 'Sucesso', detail: 'Exame apagado', life: 3000
-                });
-              })
-              .catch((erro) => {
-                this.error.handle(erro);
-                this.msgService.add({
-                  severity: 'error', summary: 'Erro', detail: 'Erro ao excluir o exame', life: 3000
-                });
-              })
-          } else {
-            console.error('ID do exame é undefined');
-          }
-        })
-      }
-    });
+    } catch (error) {
+      this.handleError(error);
+    }
   }
 
   applyFilterGlobal(event: Event) {
@@ -126,8 +88,23 @@ export class ExameListComponent implements OnInit {
   private handleError(erro: any): void {
     this.error.handle(erro);
     this.msgService.add(
-      ({ severity: 'error', summary: 'Erro', detail: 'Ocorreu um erro ao carregar os exame. Por favor, tente novamente mais tarde.' })
+      ({ severity: 'error', summary: 'Erro', detail: 'Ocorreu um erro. Por favor, tente novamente mais tarde.' })
     )
   }
 
+  voltar() {
+    this.router.navigate(['/laudos', this.laudoId, 'edit']);
+  }
+
+  // edit(id: any) {
+  //   const url = this.router.url;
+  //   const novaUrl = url + '/' + id + '/edit';
+  //   console.log('URL:', novaUrl);
+  //   this.router.navigateByUrl(novaUrl);
+  // }
+
+  edit(id: any) {
+    const novaUrl = `exames/${id}/edit`;
+    this.router.navigate([novaUrl], { relativeTo: this.route });
+  }
 }

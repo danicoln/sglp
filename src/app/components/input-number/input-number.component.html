@@ -1,0 +1,11 @@
+<b>{{ title }}</b><br>
+<p-inputNumber 
+    [(ngModel)]="value"
+    mode="decimal" 
+    mode="currency"
+    [minFractionDigits]="2" 
+    [maxFractionDigits]="5"
+    currency="BRL"
+    (ngModelChange)="onInputChange($event)"
+    [disabled]="disabled"
+/>

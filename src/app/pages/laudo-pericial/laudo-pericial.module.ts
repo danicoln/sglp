@@ -3,24 +3,34 @@ import { LaudoPericialComponent } from './laudo-cadastro/laudo-pericial.componen
 import { LaudoPericialRoutingModule } from './laudo-pericial-routing.module';
 
 import { SharedModule } from '../../shared/shared.module';
+import { ExameDaMateriaModule } from '../exame-da-materia/exame-da-materia.module';
+import { QuesitoModule } from '../quesito/quesito.module';
+import { DadosLaudoComponent } from './dados-laudo/dados-laudo.component';
+import { LaudoFormComponent } from './laudo-form/laudo-form.component';
 import { LaudoListComponent } from './laudo-list/laudo-list.component';
-import { ObjetoLaudoModule } from '../objeto-laudo/objeto-laudo.module';
 
 
 @NgModule({
   declarations: [
     LaudoPericialComponent,
-    LaudoListComponent
+    LaudoListComponent,
+    LaudoFormComponent,
+    DadosLaudoComponent
   ],
   imports: [
     SharedModule,
     LaudoPericialRoutingModule,
-    ObjetoLaudoModule
+    ExameDaMateriaModule,
+    QuesitoModule
+    // ObjetoLaudoModule,
+    // AdvogadoModule,
 
   ],
   exports: [
     LaudoPericialComponent,
-    LaudoListComponent
-  ]
+    LaudoListComponent,
+    LaudoFormComponent,
+    DadosLaudoComponent
+  ],
 })
 export class LaudoPericialModule { }

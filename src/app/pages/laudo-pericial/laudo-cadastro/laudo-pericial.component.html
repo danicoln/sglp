@@ -1,166 +1,151 @@
-<app-mega-menu [id]="laudoId"></app-mega-menu>
-<p-toast></p-toast>
 <form [formGroup]="resourceForm" (ngSubmit)="submitForm()">
+  <div class="container">
+    <p-toast></p-toast>  
 
+    <!-- <app-tab-menu [itens]="itens"></app-tab-menu> -->
 
-  <section *ngIf="!laudoId">
     <!--Dados do processo -->
-    <app-processo-autocomplete
-      formGroupName="processo"
-      title="Número do processo"
-      (processoSelecionado)="onProcessoSelecionado($event)"
-      >
-    </app-processo-autocomplete>
-
-    <div class="salvar-processo mb-2">
-      <p-button
-          label="Salvar"
-          icon="pi pi-save"
-          type="submit"
-          class="ml-2"
-          severity="success"
-          [disabled]="disabled"
-          >
-        </p-button>
-    </div>
-  </section>
-
-  <section *ngIf="laudoId">
-    <div class="card" style="display: block;">
-      <div class="elemento" >
-        <p class="n-processo ml-2"><strong>Processo: </strong>{{getProcesso().numero}}</p>
-      </div>
-      <div class="elemento" style="display: flex;">
-        <h4></h4>
-        <p class="assunto ml-2"><strong>Assunto: </strong>{{getProcesso().assunto}}</p>
-      </div>
-      <div class="elemento" style="display: flex;">
-        <p class="nomeAutor ml-2"><strong>Autor: </strong>{{getProcesso().nomeAutor}}</p>
-      </div>
-      <div class="elemento" style="display: flex;">
-        <p class="nomeReu ml-2"><strong>Réu: </strong>{{getProcesso().nomeReu}}</p>
-      </div>
-    </div>
-  </section>
-
-
-  <section class="card mt-2">
-
-    <div class="atualizar-processo" *ngIf="laudoId">
-      <p-button
-        label="Salvar"
-        icon="pi pi-save"
-        type="submit"
-        class="ml-2"
-        severity="success"
-        [disabled]="!edit"
+    <section *ngIf="!laudoId">
+      <app-processo-autocomplete
+        formGroupName="processo"
+        title="Número do processo"
+        (processoSelecionado)="onProcessoSelecionado($event)"
         >
-      </p-button>
-      <p-button
-        label="Editar"
-        icon="pi pi-pencil"
-        class="ml-2"
-        severity="info"
-        (click)="editar()"
-        >
-      </p-button>
+      </app-processo-autocomplete>
 
-      <p-button
-        label="Cancelar"
-        icon="pi pi-eraser"
-        (click)="cancelar()"
-        class="ml-2"
-        severity="info"
-        >
-      </p-button>
-    </div>
-  </section>
-
-  <section *ngIf="laudoId">
-    <div class="mb-2 col-12">
-      <p-card header="Histórico do Processo">
-        <textarea
-          placeholder="Informe o Histórico do Processo"
-          pInputTextarea
-          rows="5" cols="100"
-          formControlName="historico"
-          >
-        </textarea>
-      </p-card>
-    </div>
-    <div class="mb-2 col-12">
-      <p-card header="Objetivo">
-        <textarea
-          placeholder="Informe o objetivo do laudo pericial"
-          pInputTextarea
-          rows="5" cols="100"
-          formControlName="objetivo"
-          >
-        </textarea>
-      </p-card>
-    </div>
-
-    <div class="mb-2 col-12">
-      <p-card header="Metodologia Aplicada">
-        <textarea
-          placeholder="Informe a metodologia utilizada na perícia"
-          pInputTextarea
-          rows="5" cols="100"
-          formControlName="metodologiaAplicada"
-          >
-        </textarea>
-      </p-card>
-    </div>
-
-
-    <div class="mb-2 col-6">
-
-      <!--
-        <p-card header="Introdução">
-          <textarea
-            placeholder="Insira uma introdução"
-            pInputTextarea
-            rows="5" cols="30"
-            formControlName="introducao"
-            >
-          </textarea>
-        </p-card>
-
-        <div class="salvar-introducao">
-          <p-button
+      <div class="salvar-processo mb-2">
+        <app-button
             label="Salvar"
             icon="pi pi-save"
             type="submit"
-            class="ml-2"
             severity="success"
+            [disabled]="disabled"
             >
-          </p-button>
-            <p-button
-              label="Editar"
-              icon="pi pi-pencil"
-              class="ml-2"
-              severity="info"
-              >
-            </p-button>
+          </app-button>
+      </div>
+    </section>
+
+    <section *ngIf="laudoId">
+      <div class="card" style="display: block;">
+        <div class="elemento" >
+            <strong>Processo:</strong>
+            <br>
+            <input class="mt-1" type="text" disabled pInputText [value]="getProcesso().numero">
         </div>
-
-
-        <div class="mb-2 col-6">
-          <p-card header="Conclusão">
-            <textarea
-              placeholder="Insira a Conclusão"
-              pInputTextarea
-              rows="5" cols="30"
-              formControlName="conclusao"
-              >
-            </textarea>
-          </p-card>
+        <div class="mt-1 elemento" >
+          <strong>Assunto:</strong>
+          <br>
+          <input class="mt-1" type="text" disabled pInputText [value]="getProcesso().assunto">
         </div>
-      -->
+        <div class="mt-1 elemento">
+          <strong>Autor:</strong>
+          <br>
+          <input class="mt-1" type="text" disabled pInputText [value]="getProcesso().nomeAutor">
+        </div>
+        <div class="mt-2 elemento">
+          <strong>Réu:</strong>
+          <br>
+          <input class="mt-1" type="text" disabled pInputText [value]="getProcesso().nomeReu">
+        </div>
+      </div> 
+    </section>
 
-    </div>
+    <section class="card mt-2" *ngIf="laudoId">
 
-  </section>
+      <div class="atualizar-processo">
+        <app-button
+          label="Salvar"
+          icon="pi pi-save"
+          type="submit"
+          [raised]="true"
+          severity="success"
+          [disabled]="!edit"
+          >
+        </app-button>
+        <app-button
+          label="Editar"
+          icon="pi pi-pencil"
+          class="ml-2"
+          [outlined]="true"
+          severity="info"
+          (click)="editar()"
+          type="button"
+          >
+        </app-button>
 
-</form> <!--Fim do Formulário-->
+        <app-button
+          label="Cancelar"
+          icon="pi pi-eraser"
+          (click)="cancelar()"
+          class="ml-2"
+          [outlined]="true"
+          severity="danger"
+          >
+        </app-button>
+
+      </div>
+      <app-chat-openai-form
+        [formGroup]="resourceForm"
+        [fields]="fields"
+        >
+      </app-chat-openai-form>
+    </section>
+
+    <section *ngIf="laudoId">
+      <div class="mb-2 col-3">
+        <app-dropdown
+          [options]="statusOptions"
+          [showTag]="true"
+          formControlName="status"
+          >
+        </app-dropdown>
+      </div>
+      <div class="mb-2 col-12">
+        <p-card header="Histórico do Processo">
+          <app-input-textarea
+            placeholder="Informe o Histórico do Processo"
+            rows="5" cols="50"
+            formControlName="historico"
+            >
+          </app-input-textarea>
+        </p-card>
+        
+      </div>
+      <div class="mb-2 col-12">
+        <p-card header="Objetivo">
+          <app-input-textarea
+            placeholder="Informe o objetivo do laudo pericial"
+            rows="5" cols="100"
+            formControlName="objetivo"
+            >
+          </app-input-textarea>
+        </p-card>
+      </div>
+
+      <div class="mb-2 col-12">
+        <p-card header="Metodologia Aplicada">
+          <app-input-textarea
+            placeholder="Informe a metodologia utilizada na perícia"
+            rows="5" cols="100"
+            formControlName="metodologiaAplicada"
+            >
+          </app-input-textarea>
+        </p-card>
+      </div>
+
+      <div class="mb-2 col-12">
+        <p-card header="Data da Entrega do Laudo">
+          <app-calendar
+            class="flex col-4" 
+            placeholder="Data da Entrega" 
+            formControlName="dataDoLaudo"
+            >
+          </app-calendar>
+        </p-card>
+      </div>
+
+    </section>
+
+  </div>
+</form> 
 

@@ -1,9 +1,9 @@
-import { Parte } from './../../../model/parte';
 export class Quesito {
 
   public id?: string;
-  public quesito?: string;
+  public pergunta?: string;
   public resposta?: string;
-  public parte?: Parte;
+  public parte?: string;
+  public laudoId?: string;
 
 }

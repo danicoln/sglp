@@ -35,11 +35,11 @@ export class ExameHomeComponent implements OnInit {
       this.idExistente = !!this.itemAtual;
       this.itensTabMenu();
 
-      if(exameId) {
-        this.objetoService.listar(exameId).subscribe(objetos => {
-          this.objetosExistentes = objetos && objetos.length > 0;
-        })
-      }
+      // if(exameId) {
+      //   this.objetoService.listar(exameId).subscribe(objetos => {
+      //     this.objetosExistentes = objetos && objetos.length > 0;
+      //   })
+      // }
   }
 
   itensTabMenu() {

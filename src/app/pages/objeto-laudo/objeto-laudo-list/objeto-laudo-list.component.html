@@ -1,26 +1,38 @@
+<div class="container">
+  
 <p-card header="Lista de Objetos do Laudo">
   <p-toast></p-toast>
 
   <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
       <a [routerLink]="['novo']">
-        <p-button
-          pRipple
+        <app-button
+          class="mr-2"
           label="Novo"
           icon="pi pi-plus"
           >
-        </p-button>
+        </app-button>
       </a>
 
-  <p-button
-    pRipple
+  <app-button
     label="Deletar"
     icon="pi pi-trash"
     severity="danger"
     (click)="deletarObjetosSelecionados()"
     [disabled]="!objetosSelecionados || !objetosSelecionados.length"
     >
-  </p-button>
+  </app-button>
+
+  <a [routerLink]="['/laudos', laudoId, 'edit', 'exames', exameId, 'edit']">
+    <app-button
+      class="ml-2"
+      label="Exame"
+      icon="pi pi-angle-left"
+      [raised]="true"
+      severity="info"
+      >
+    </app-button>
+  </a>  
 
     </ng-template>
   </p-toolbar>
@@ -39,8 +51,8 @@
     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
     [showCurrentPageReport]="true"
     [globalFilterFields]="[
-      'documento.nomeTitulo', 'objeto.documento?.nomeTitulo',
-      'documento.descricao', 'objeto.documento?.descricao',
+      'nomeTitulo', 'objeto?.nomeTitulo',
+      'descricao', 'objeto?.descricao',
       ]"
 
     >
@@ -62,9 +74,9 @@
           <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
         </th>
         <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
-        <th pSortableColumn=" objeto.documento?.nomeTitulo">Título<p-sortIcon field=" objeto.documento?.nomeTitulo"></p-sortIcon></th>
-        <th pSortableColumn="objeto.documento?.descricao">Descrição<p-sortIcon field="objeto.documento?.descricao"></p-sortIcon></th>
-        <th pSortableColumn="objeto.documento?.data">Data<p-sortIcon field="objeto.documento?.data"></p-sortIcon></th>
+        <th pSortableColumn=" objeto?.nomeTitulo">Título<p-sortIcon field=" objeto?.nomeTitulo"></p-sortIcon></th>
+        <th pSortableColumn="objeto?.descricao">Descrição<p-sortIcon field="objeto?.descricao"></p-sortIcon></th>
+        <th pSortableColumn="objeto?.data">Data<p-sortIcon field="objeto?.data"></p-sortIcon></th>
         <th></th>
       </tr>
     </ng-template>
@@ -81,12 +93,24 @@
         </td>
 
         <td>{{ objeto.id }}</td>
-        <td>{{ objeto.documento?.nomeTitulo }}</td>
-        <td>{{ objeto.documento?.descricao }}</td>
-        <td>{{ objeto.documento?.data | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ objeto?.nomeTitulo }}</td>
+        <td>{{ objeto?.descricao }}</td>
+        <td>{{ objeto?.data | date: 'dd/MM/yyyy' }}</td>
         <td>
-          <a (click)="editar(objeto)"><i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i></a>
-          <i (click)="deletar(objeto)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i>
+          <app-button
+            severity="success"
+            icon="pi pi-pencil"
+            [text]="true"
+            (click)="editar(objeto)"
+            >
+          </app-button>
+          <app-button 
+            icon="pi pi-trash"
+            severity="danger" 
+            [text]="true"
+            (click)="deletar(objeto)"
+            >
+          </app-button>
         </td>
       </tr>
     </ng-template>
@@ -109,41 +133,50 @@
 
     <ng-template pTemplate="content">
       <div class="field">
-        <label for="nomeTitulo">Título</label>
-          <input type="text" pInputText id="nomeTitulo" [(ngModel)]="objeto.documento!.nomeTitulo"/>
-        <small class="p-error" *ngIf="submitted && !objeto.documento!.nomeTitulo">Título é obrigatório.</small>
+          <app-input-text 
+            title="Título:"
+            id="nomeTitulo" 
+            [(ngModel)]="objeto!.nomeTitulo"
+            >
+          </app-input-text>
+        <small class="p-error" *ngIf="submitted && !objeto!.nomeTitulo">Título é obrigatório.</small>
       </div>
       <div class="field">
-        <label for="descricao">Descrição</label>
-          <textarea
+          <app-input-textarea
+            label="Descrição"
             class="col-12"
-            pInputTextarea
             rows="5" cols="30"
-            type="text"
-            [(ngModel)]="objeto.documento!.descricao"
+            [(ngModel)]="objeto!.descricao"
             >
-          </textarea>
+          </app-input-textarea>
       </div>
 
       <div class="field">
-        <label for="data">Data do Documento</label>
-        <p-calendar
-          dateFormat="dd/mm/yy"
-          [readonlyInput]="true"
-          class="flex"
-          placeholder="Data do Documento"
-          [(ngModel)]="objeto.documento!.data"
+        <app-date-picker
+          [(ngModel)]="objeto.data"
           >
-        </p-calendar>
+        </app-date-picker>
       </div>
     </ng-template>
 
     <ng-template pTemplate="footer">
-      <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="esconderDialog()"></button>
-      <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="salvarEdicao()"></button>
+    <app-button
+      label="Cancelar"
+      icon="pi pi-times"
+      (click)="esconderDialog()"
+      >
+    </app-button>
+    <app-button
+      label="Salvar"
+      icon="pi pi-check"
+      (click)="salvarEdicao()"
+      >
+    </app-button>
     </ng-template>
 
   </p-dialog>
   <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 </p-card>
 
+
+</div>

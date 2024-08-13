@@ -1,0 +1,9 @@
+<p-dialog 
+    [(visible)]="visible"
+    [header]="header"
+    [modal]="modal"
+    [style]="style"
+    [maximizable]="maximizable"
+    (onHide)="hideDialog()">
+    <ng-content></ng-content>
+</p-dialog>

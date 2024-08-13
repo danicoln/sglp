@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Observable, firstValueFrom, map } from 'rxjs';
 import { LaudoPericial } from './laudo-pericial';
 
 @Injectable({
@@ -9,6 +9,8 @@ import { LaudoPericial } from './laudo-pericial';
 export class LaudoPericialService {
 
   chave: string = '';
+  private mostrarFormSubject = new BehaviorSubject<boolean>(false);
+  mostrarForm$ = this.mostrarFormSubject.asObservable();
 
   url = "http://localhost:8080/api/laudos";
 
@@ -17,8 +19,12 @@ export class LaudoPericialService {
     private http: HttpClient
   ) { }
 
+  alternarForm() {
+    this.mostrarFormSubject.next(!this.mostrarFormSubject.value);
+  }
+
   //CONFERIR
-  pesquisar(): Promise<any> {
+  pesquisar(): Promise<LaudoPericial[]> {
     const headers = new HttpHeaders().set('Authorization', this.chave);
     let paramentros = new HttpParams();
 
@@ -33,12 +39,12 @@ export class LaudoPericialService {
       .toPromise()
       .then((response: any) => {
         const respostaJson = response;
-        const dadosLaudo = respostaJson.content;
+        return respostaJson.content as LaudoPericial[];
 
-        const resultado = {
-          dadosLaudo
-        }
-        return resultado;
+        // const resultado = {
+        //   dadosLaudo
+        // }
+        // return resultado;
       });
   }
 
@@ -59,6 +65,17 @@ export class LaudoPericialService {
       });
   }
 
+  getHistoricoProcesso(input: string): Observable<string> {
+    const headers = new HttpHeaders()
+      .append('Authorization', this.chave)
+      .append('Content-Type', 'application/json');
+
+    const body = { message: input };
+
+    return this.http.post<string>(`${this.url}/historico`, body, { headers });
+  }
+
+
   salvar(laudo: LaudoPericial): Promise<LaudoPericial> {
     const headers = new HttpHeaders()
       .append('Authorization', this.chave)
@@ -75,18 +92,43 @@ export class LaudoPericialService {
     return this.http.put<LaudoPericial>(`${this.url}/${laudo.id}`, laudo, { headers });
   }
 
-  //CONFERIR
   async listar(): Promise<LaudoPericial[]> {
     const headers = new HttpHeaders().set('Authorization', this.chave);
 
     try {
       const response = await this.http.get<LaudoPericial[]>(this.url, { headers }).toPromise();
-      return response || [];
+      return (response || []).filter(laudo => laudo.ativo);
     } catch (error) {
-
       console.error('Erro ao listar laudos:', error);
       throw error;
     }
+  }
+
+  ativar(laudoId: string): Promise<LaudoPericial> {
+    const headers = new HttpHeaders()
+      .set('Authorization', this.chave)
+      .set('Content-Type', 'application/json');
+
+    return firstValueFrom(this.http.put<LaudoPericial>(`${this.url}/${laudoId}/ativar`, { headers }));
+  }
+
+  desativar(laudoId: string): Promise<LaudoPericial> {
+    const headers = new HttpHeaders()
+      .set('Authorization', this.chave)
+      .set('Content-Type', 'application/json');
+
+    return firstValueFrom(this.http.put<LaudoPericial>(`${this.url}/${laudoId}/desativar`, { headers }));
+  }
+
+  getIAResponse(prompt: string): Observable<string> {
+    const request = {
+      model: 'gpt-3.5-turbo',
+      messages: [
+        { role: 'user', content: prompt }
+      ]
+    };
+    return this.http.post<{ content: string }>(`${this.url}/ia`, request)
+      .pipe(map(response => response.content));
   }
 }
 

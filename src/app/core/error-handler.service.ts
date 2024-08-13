@@ -7,26 +7,40 @@ import { MessageService } from "primeng/api";
 })
 export class ErrorHandlerService {
 
-  constructor(private message: MessageService){
+  constructor(private message: MessageService) {
 
   }
 
   handle(errorResponse: any) {
     let mensagem: any;
 
-    if(typeof errorResponse === 'string') {
+    if (typeof errorResponse === 'string') {
       mensagem = errorResponse;
-    }else if(errorResponse instanceof HttpErrorResponse && errorResponse.status >= 400
+    } else if (errorResponse instanceof HttpErrorResponse && errorResponse.status >= 400
       && errorResponse.status <= 499) {
-        mensagem = 'Ocorreu um erro ao processar a sua solicitação';
+      
+      mensagem = 'Ocorreu um erro ao processar a sua solicitação';
 
-        try{
+      if (errorResponse.error && errorResponse.error.message) {
+        mensagem = errorResponse.error.message;
+      } else {
+        try {
           mensagem = errorResponse.error[0].mensagemUsuario;
-        }catch(e){}
-        console.error('Ocorreu um erro', errorResponse);
+        } catch (e) {
+          console.error('Ocorreu um erro', errorResponse);
+          this.message.add({
+            severity: 'error', summary: 'Erro',
+            detail: 'Infelizmente ocorreu um erro, verifique e tente novamente.'
+          });
+        }
       }
+    } else {
+      mensagem = 'Erro ao processar serviço remoto. Tente novamente.';
+    }
 
-      this.message.add({severity: 'error', summary: 'Erro',
-      detail: 'Infelizmente ocorreu um erro, verifique e tente novamente.'});
+    this.message.add({
+      severity: 'error', summary: 'Erro',
+      detail: mensagem
+    });
   }
 }
