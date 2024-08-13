@@ -4,8 +4,10 @@ export class Nomeacao {
 
   id?: string;
   processo?: Processo;
-  dataNomeacao?: Date;
-  prazo?: Date;
-  dataAceite?: Date;
+  dataNomeacao?: string;
+  prazo?: string;
+  dataAceite?: string;
   aceite?: string;
+  honorarioHomologado?: number;
+  honorarioEnviado?: number
 }

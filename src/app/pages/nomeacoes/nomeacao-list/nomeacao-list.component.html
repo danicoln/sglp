@@ -1,181 +1,198 @@
-<p-card header="Lista de Nomeações">
-  <p-toast></p-toast>
-
-  <p-toolbar styleClass="mb-4 gap-2">
-
-    <!--Botões de Criar e Deletar-->
-
-    <ng-template pTemplate="left">
-      <a href="/nomeacoes/novo">
-        <p-button
-          pRipple
-          label="Nova"
-          icon="pi pi-plus"
-          >
-        </p-button>
-      </a>
-
-      <p-button
-        pRipple
-        label="Deletar"
-        icon="pi pi-trash"
-        severity="danger"
-        (click)="deletarNomeacoesSelecionadas()"
-        [disabled]="!nomeacoesSelecionadas || !nomeacoesSelecionadas.length"
-        >
-      </p-button>
-    </ng-template>
-
-  </p-toolbar>
-
-  <!--Tabela de Processos-->
-
-  <p-table
-    #tabela
-    [value]="nomeacoes"
-    [rows]="10"
-    [paginator]="true"
-    [tableStyle]="{ 'min-width': '75rem' }"
-    [(selection)]="nomeacoesSelecionadas"
-    [rowHover]="true"
-    dataKey="id"
-    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
-    [showCurrentPageReport]="true"
-    [globalFilterFields]="[
-      'processo.numero', 'nomeacao.processo?.numero',
-      'dataNomeacao', 'nomeacao.dataNomeacao',
-      'dataAceite', 'nomeacao.dataAceite',
-      'prazo', 'nomeacao.prazo',
-      'aceite', 'nomeacao.aceite'
-      ]"
-
-    >
-
-    <ng-template pTemplate="caption">
-      <div class="flex align-items-center justify-content-between">
-        <span class="p-input-icon-left">
-          <i class="pi pi-search"></i>
-          <!-- filtro -> erro no $event.target.value -->
-          <input pInputText type="text" (input)="applyFilterGlobal($event)" placeholder="Buscar..." />
-        </span>
-      </div>
-    </ng-template>
-
-    <!--Header Table-->
-
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="width:4rem">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        </th>
-        <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
-          <th pSortableColumn="nomeacao.processo?.numero">Processo<p-sortIcon field="nomeacao.processo?.numero"></p-sortIcon></th>
-        <th pSortableColumn="dataNomeacao">Data da Nomeação<p-sortIcon field="dataNomeacao"></p-sortIcon></th>
-        <th pSortableColumn="prazo">Prazo<p-sortIcon field="prazo"></p-sortIcon></th>
-        <th pSortableColumn="dataAceite">Data do Aceite<p-sortIcon field="dataAceite"></p-sortIcon></th>
-        <th pSortableColumn="aceite">Aceite<p-sortIcon field="aceite"></p-sortIcon></th>
-        <th></th>
-      </tr>
-    </ng-template>
-
-    <!--Body Table-->
-    <ng-template pTemplate="body" let-nomeacao>
-      <tr>
-        <td>
-          <p-tableCheckbox [value]="nomeacao"></p-tableCheckbox>
-        </td>
-        <td>{{ nomeacao.id }}</td>
-        <td>{{ nomeacao.processo?.numero }}</td>
-        <td>{{ nomeacao.dataNomeacao | date: 'dd/MM/yyyy' }}</td>
-        <td>{{ nomeacao.prazo | date: 'dd/MM/yyyy' }}</td>
-        <td>{{ nomeacao.dataAceite | date: 'dd/MM/yyyy' }}</td>
-        <td>{{ nomeacao.aceite }}</td>
-        <td>
-          <a (click)="editar(nomeacao)"><i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i></a>
-          <i (click)="deletar(nomeacao)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i>
-        </td>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="summary">
-      <div class="flex align-items-center justify-content-between">Total de {{ nomeacoes ? nomeacoes.length : 0 }} processos.</div>
-    </ng-template>
-  </p-table>
-
-  <!--=============================================================================-->
-  <!--==Caixa de diálogo de edição==-->
-
-
-  <p-dialog [(visible)]="nomeacaoDialog" [style]="{ 'width': '550px','margin':'30px' }" header="Detalhes da Nomeação" [modal]="true" styleClass="p-fluid">
-    <ng-template pTemplate="content">
-
-      <!--
-
-        <div class="field">
-            <app-processo-autocomplete
-            title="Número do processo"
-            [ngModel]="nomeacao.processo"
-            (ngModelChange)="nomeacao.processo?.numero"
+<div class="container">
+  
+  <p-card header="Nomeações">
+    <p-toast></p-toast>
+  
+    <p-toolbar styleClass="mb-4 gap-2">
+  
+      <!--Botões de Criar e Deletar-->
+  
+      <ng-template pTemplate="left">
+        <a class="mr-2" href="/nomeacoes/novo">
+          <app-button
+            label="Nova"
+            icon="pi pi-plus"
             >
-          </app-processo-autocomplete>
-          <small class="p-error" *ngIf="submitted && !nomeacao.processo?.numero">Número é obrigatório.</small>
+          </app-button>
+        </a>
+  
+        <app-button
+          label="Deletar"
+          icon="pi pi-trash"
+          severity="danger"
+          (click)="deletarNomeacoesSelecionadas()"
+          [disabled]="!nomeacoesSelecionadas || !nomeacoesSelecionadas.length"
+          >
+        </app-button>
+      </ng-template>
+  
+    </p-toolbar>
+  
+    <!--Tabela de Processos-->
+  
+    <p-table
+      #tabela
+      [value]="nomeacoes"
+      [rows]="10"
+      [paginator]="true"
+      [tableStyle]="{ 'min-width': '75rem' }"
+      [(selection)]="nomeacoesSelecionadas"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+      [showCurrentPageReport]="true"
+      [globalFilterFields]="[
+        'processo.numero', 'nomeacao.processo?.numero',
+        'dataNomeacao', 'nomeacao.dataNomeacao',
+        'dataAceite', 'nomeacao.dataAceite',
+        'prazo', 'nomeacao.prazo',
+        'aceite', 'nomeacao.aceite'
+        ]"
+  
+      >
+  
+      <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+          <h5 class="m-0">Gerenciamento de Nomeações</h5>
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <!-- filtro -> erro no $event.target.value -->
+            <input pInputText type="text" (input)="applyFilterGlobal($event)" placeholder="Buscar..." />
+          </span>
         </div>
-      -->processo: {{nomeacao.processo?.numero}}
-
-        <div class="field">
-          <label for="dataNomeacao">Data da Nomeação</label>
-          <p-calendar
-            [showButtonBar]="true"
-            dateFormat="dd/mm/yy"
-            [readonlyInput]="true"
-            class="flex"
-            placeholder="Data da nomeação"
+      </ng-template>
+  
+      <!--Header Table-->
+  
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width:4rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th pSortableColumn="nomeacao.processo?.numero">Processo<p-sortIcon field="nomeacao.processo?.numero"></p-sortIcon></th>
+          <th pSortableColumn="dataNomeacao">Data da Nomeação<p-sortIcon field="dataNomeacao"></p-sortIcon></th>
+          <th pSortableColumn="prazo">Prazo<p-sortIcon field="prazo"></p-sortIcon></th>
+          <th pSortableColumn="aceite">Aceite<p-sortIcon field="aceite"></p-sortIcon></th>
+          <th pSortableColumn="dataAceite">Data do Aceite<p-sortIcon field="dataAceite"></p-sortIcon></th>
+          <th pSortableColumn="honorarioEnviado">Honorários<p-sortIcon field="honorarioEnviado"></p-sortIcon></th>
+          <th pSortableColumn="honorarioHomologado">Honorário Homologado<p-sortIcon field="honorarioHomologado"></p-sortIcon></th>
+          <th></th>
+        </tr>
+      </ng-template>
+  
+      <!--Body Table-->
+      <ng-template pTemplate="body" let-nomeacao>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="nomeacao"></p-tableCheckbox>
+          </td>
+          <td>{{ nomeacao.processo?.numero }}</td>
+          <td>{{ nomeacao.dataNomeacao | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ nomeacao.prazo | date: 'dd/MM/yyyy' }}</td>
+          <td>
+            <app-input-switch disabled [(ngModel)]="nomeacao.aceite"></app-input-switch>
+          </td>
+          <td>{{ nomeacao.dataAceite | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ nomeacao.honorarioEnviado | currency: 'BRL':'symbol':'1.2-2' }}</td>
+          <td>{{ nomeacao.honorarioHomologado | currency: 'BRL':'symbol':'1.2-2' }}</td>
+          <td>
+            <app-button
+              severity="success"
+              icon="pi pi-pencil"
+              [text]="true"
+              (click)="editar(nomeacao)"
+              >
+            </app-button>
+            <app-button 
+              icon="pi pi-trash"
+              severity="danger" 
+              [text]="true"
+              (click)="deletar(nomeacao)"
+              >
+            </app-button>
+          </td>
+        </tr>
+      </ng-template>
+  
+      <ng-template pTemplate="summary">
+        <div class="flex align-items-center justify-content-between">Total de {{ nomeacoes ? nomeacoes.length : 0 }} processos.</div>
+      </ng-template>
+    </p-table>
+  
+    <!--=============================================================================-->
+    <!--==Caixa de diálogo de edição==-->
+  
+    <app-dialog 
+      [(visible)]="nomeacaoDialog" 
+      [style]="{ 'width': '550px','margin':'30px' }" 
+      header="Detalhes da Nomeação" 
+      [modal]="true" 
+      styleClass="p-fluid">
+      <div class="datas mt-3">
+          <app-date-picker
+            title="Data da Nomeação:"
             [(ngModel)]="nomeacao.dataNomeacao"
             >
-          </p-calendar>
-          <small class="p-error" *ngIf="submitted && !nomeacao.dataNomeacao">Data da nomeação é obrigatória.</small>
-        </div>
+          </app-date-picker>
+        <small class="p-error" *ngIf="submitted && !nomeacao.dataNomeacao">Data da nomeação é obrigatória.</small>
+      </div>
 
-        <div class="field">
-          <label for="prazo">Prazo</label>
-          <p-calendar
-            dateFormat="dd/mm/yy"
-            [readonlyInput]="true"
-            class="flex"
-            placeholder="Prazo"
+      <div class="datas mt-3">
+          <app-date-picker
+            title="Prazo:"
             [(ngModel)]="nomeacao.prazo"
             >
-          </p-calendar>
-          <small class="p-error" *ngIf="submitted && !nomeacao.prazo">Prazo é obrigatório.</small>
-        </div>
+          </app-date-picker>
+        <small class="p-error" *ngIf="submitted && !nomeacao.dataNomeacao">Data da nomeação é obrigatória.</small>
+      </div>
 
-        <div class="field">
-          <label for="dataAceite">Data do Aceite</label>
-          <p-calendar
-            dateFormat="dd/mm/yy"
-            [readonlyInput]="true"
-            class="flex"
-            placeholder="Data do Aceite"
-            [(ngModel)]="nomeacao.dataAceite"
-            >
-          </p-calendar>
-        </div>
+      <div class="datas mt-3">
+        <app-date-picker
+          title="Data do Aceite:"
+          [(ngModel)]="nomeacao.dataAceite"
+          >
+        </app-date-picker>
+      </div>
 
-        <div class="field">
-          <label for="aceite">Aceitou a nomeação?</label>
-          <input type="text" pInputText id="aceite" [(ngModel)]="nomeacao.aceite"/>
-        </div>
+      <div class="field mt-3">
+        <label for="aceite">Aceitou a nomeação?</label>
+        <app-input-switch [(ngModel)]="nomeacao.aceite"></app-input-switch>
+      </div>
 
-    </ng-template>
-
-    <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="esconderDialog()"></button>
-        <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="salvarEdicao()"></button>
-    </ng-template>
-</p-dialog>
-
-
-  <!--=============================================================================-->
-  <p-confirmDialog [style]="{ width: '450px'}"></p-confirmDialog>
-</p-card>
+      <div class="honorario">
+        <app-input-number 
+          title="Honorários:"
+          [(ngModel)]="nomeacao.honorarioEnviado"
+          >
+        </app-input-number>
+      </div>
+      <div class="homologado mt-2 mb-2">
+        <app-input-number class="mt-2"
+          title="Honorário Homologado:"
+          [(ngModel)]="nomeacao.honorarioHomologado" 
+          >
+        </app-input-number>
+      </div>
+      
+      <app-button
+        label="Cancelar"
+        icon="pi pi-times"
+        (click)="esconderDialog()"
+        >
+      </app-button>
+      <app-button
+        class="ml-2"
+        label="Salvar"
+        icon="pi pi-check"
+        (click)="salvarEdicao()"
+        [disabled]="submitted"
+        >
+      </app-button>
+  
+  </app-dialog>
+  
+    <!--=============================================================================-->
+    <p-confirmDialog [style]="{ width: '450px'}"></p-confirmDialog>
+  </p-card>
+</div>
 

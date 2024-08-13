@@ -1,0 +1,14 @@
+<b>{{title}}</b><br>
+<input
+    pInputText
+    [type]="type"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+    [(ngModel)]="value"
+    [disabled]="disabled"
+    [placeholder]="placeholder"
+/>
+<p-messages
+    *ngIf="enableMessage"
+    [value]="messages"
+/>

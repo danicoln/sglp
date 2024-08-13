@@ -1,9 +1,18 @@
 <b class="mb-1" style="display: flex;">{{ label }}</b>
-<p-dropdown
-  [showClear]="true"
-  [options]="options"
-  [(ngModel)]="valorSelecionado"
-  placeholder="{{ placeholder }}"
-  (onChange)="onChange($event)"
+<p-dropdown 
+  [options]="options" 
+  [(ngModel)]="selectedValue" 
+  [placeholder]="placeholder"
+  [showClear]="showClear" 
+  (onChange)="onDropdownChange($event)"
+  [disabled]="isDisabled"
   >
+  <ng-template *ngIf="showTag" let-selectedItem pTemplate="selectedItem">
+    <p-tag *ngIf="selectedItem" [value]="selectedItem.label" [severity]="selectedItem.severity" />
+    <span *ngIf="!selectedItem">{{ placeholder }}</span>
+  </ng-template>
+
+  <ng-template *ngIf="showTag" let-option pTemplate="item">
+    <p-tag [value]="option.label" [severity]="option.severity"></p-tag>
+  </ng-template>
 </p-dropdown>

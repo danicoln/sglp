@@ -4,9 +4,9 @@ import { NomeacaoListComponent } from './nomeacao-list/nomeacao-list.component';
 import { NomeacaoFormComponent } from './nomeacao-form/nomeacao-form.component';
 
 const routes: Routes = [
-  { path: 'nomeacoes', component: NomeacaoListComponent },
-  { path: 'nomeacoes/novo', component: NomeacaoFormComponent },
-  { path: 'editar/:id', component: NomeacaoFormComponent }
+  { path: '', component: NomeacaoListComponent },
+  { path: 'novo', component: NomeacaoFormComponent },
+  { path: ':id/edit', component: NomeacaoFormComponent }
 ];
 
 @NgModule({

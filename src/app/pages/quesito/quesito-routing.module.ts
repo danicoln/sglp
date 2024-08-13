@@ -4,9 +4,9 @@ import { QuesitoFormComponent } from './quesito-form/quesito-form.component';
 import { QuesitoListComponent } from './quesito-list/quesito-list.component';
 
 const routes: Routes = [
-  { path: 'quesitos', component: QuesitoListComponent },
-  { path: 'quesitos/novo', component: QuesitoFormComponent },
-  { path: 'editar/:id', component: QuesitoFormComponent },
+  { path: '', component: QuesitoListComponent },
+  { path: 'novo', component: QuesitoFormComponent },
+  { path: ':id/edit', component: QuesitoFormComponent },
 ];
 
 @NgModule({

@@ -1,0 +1,46 @@
+.custom-sidebar .content {
+    padding: 1em;
+    background-color: #f4f4f9; 
+    border-radius: 8px;
+  }
+  
+  .field {
+    margin-bottom: 1em;
+  }
+  
+  .field label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5em;
+  }
+  
+  textarea {
+    width: 100%;
+    padding: 0.5em;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    resize: none;
+  }
+  
+  p-button.mt-2 {
+    margin-top: 1em;
+  }
+  
+  p-panel.mt-2 {
+    margin-top: 1em;
+  }
+  
+  .custom-sidebar {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+  }
+  
+  .custom-sidebar h2 {
+    margin-bottom: 1em;
+    color: #333;
+  }
+
+  .panel-resposta {
+    margin-top: 1.5rem;
+  }

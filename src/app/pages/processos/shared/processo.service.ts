@@ -59,13 +59,15 @@ export class ProcessoService {
   buscarPorId(id: string): Promise<Processo> {
     const headers = new HttpHeaders()
     .set('Authorization', this.chave);
+    const url = this.url;
 
-  return this.http.get(`${this.url}/${id}`, { headers })
+  return this.http.get<Processo>(`${url}/${id}`, { headers })
     .toPromise()
-    .then((response: any) => {
-      const processo = response as Processo;
-
-      return processo;
+    .then((processo: Processo | undefined) => {
+      if(!processo) {
+        throw new Error('Processo não encontrado');
+      }
+      return processo
     })
     .catch((error: any) => {
       console.error('Erro ao buscar processo pelo id: ', error);

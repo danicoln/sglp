@@ -1,0 +1,234 @@
+<div class="container">
+    <!-- <app-mega-menu
+    [itens]="[
+      {
+        label: 'Laudo Pericial',
+        icon: 'pi pi-box',
+        items:
+        [
+          [
+            {
+              label: 'Laudo Pericial',
+              items: [
+                {
+                  label: 'Novo',
+                  icon: 'pi pi-box',
+                  routerLink: '/laudos/novo'
+                },
+                {
+                label: 'Consultar',
+                icon: 'pi pi-box',
+                routerLink: '/laudos'
+                }
+              ],
+            }
+          ],
+        ]
+      },
+      {
+        label: 'Processos',
+        icon: 'pi pi-box',
+        items:
+        [
+          [
+            {
+              label: 'Processos',
+              items: [
+                {
+                  label: 'Cadastrar',
+                  icon: 'pi pi-box',
+                  routerLink: '/processos/novo'
+                },
+                {
+                  label: 'Consultar',
+                  icon: 'pi pi-box',
+                  routerLink: '/processos'
+                }
+              ],
+            },
+          ],
+        ]
+      },
+      {
+        label: 'Nomeações',
+        icon: 'pi pi-box',
+        items:
+        [
+          [
+            {
+              label: 'Nomeações',
+              items: [
+                {
+                  label: 'Cadastrar',
+                  icon: 'pi pi-box',
+                  routerLink: '/nomeacoes/novo'
+                },
+                {
+                  label: 'Consultar',
+                  icon: 'pi pi-box',
+                  routerLink: '/nomeacoes'
+                }
+              ],
+            },
+  
+          ],
+        ]
+      },
+    ]"
+    >
+  </app-mega-menu> -->
+  <p-card header="Advogados">
+
+    <p-toast></p-toast>
+  
+    <p-toolbar styleClass="mb-4 gap-2">
+  
+      <!--Botões de Criar e Deletar-->
+  
+      <ng-template pTemplate="left">
+        <a class="mr-2" href="/advogados/novo">
+          <app-button
+            label="Novo"
+            icon="pi pi-plus"
+            >
+          </app-button>
+        </a>
+  
+        <app-button
+          label="Deletar"
+          icon="pi pi-trash"
+          severity="danger"
+          (click)="deletarItensSelecionados()"
+          [disabled]="!itensSelecionados || !itensSelecionados.length"
+          >
+        </app-button>
+      </ng-template>
+  
+    </p-toolbar>
+  
+    <!-- Tabela -->
+  
+    <p-table
+      #tabela
+      [value]="advogados"
+      [rows]="10"
+      [paginator]="true"
+      [tableStyle]="{ 'min-width': '75rem' }"
+      [(selection)]="itensSelecionados"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+      [showCurrentPageReport]="true"
+      [globalFilterFields]="[ 'nome', 'advogados.nome', 'email', 'advogados.email', 'telefone', 'advogados.telefone']"
+  
+      >
+  
+      <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+          <h5 class="m-0">Gerenciamento de Advogados</h5>
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="applyFilterGlobal($event)" placeholder="Buscar..." />
+          </span>
+        </div>
+      </ng-template>
+  
+      <!--Header Table-->
+  
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width:4rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th pSortableColumn="nome">Nome<p-sortIcon field="nome"></p-sortIcon></th>
+          <th pSortableColumn="email">E-mail<p-sortIcon field="email"></p-sortIcon></th>
+          <th pSortableColumn="telefone">Telefone<p-sortIcon field="telefone"></p-sortIcon></th>
+          <th></th>
+        </tr>
+      </ng-template>
+  
+      <!--Body Table-->
+      <ng-template pTemplate="body" let-advogado>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="advogado"></p-tableCheckbox>
+          </td>
+          <td>{{ advogado.nome }}</td>
+          <td>{{ advogado.email }}</td>
+          <td>{{ advogado.telefone }}</td>
+          <td>
+            <app-button
+              severity="success"
+              icon="pi pi-pencil"
+              [text]="true"
+              (click)="editar(advogado)"
+              >
+            </app-button>
+            <app-button 
+              icon="pi pi-trash"
+              severity="danger" 
+              [text]="true"
+              (click)="deletar(advogado)"
+              >
+            </app-button>
+          </td>
+        </tr>
+      </ng-template>
+  
+      <ng-template pTemplate="summary">
+        <div class="flex align-items-center justify-content-between">Total de {{ advogados ? advogados.length : 0 }} advogados.</div>
+      </ng-template>
+    </p-table>
+  
+    <!--=============================================================================-->
+    <!--==Caixa de diálogo de edição==-->
+  
+    <p-dialog [(visible)]="recursoDialog" [style]="{ width: '450px' }" header="Detalhes do Processo" [modal]="true" styleClass="p-fluid">
+      <ng-template pTemplate="content">
+          
+          <div class="field">
+            <app-input-text
+              title="Nome:"
+              [(ngModel)]="advogado.nome"
+              >
+            </app-input-text>
+          </div>
+          <div class="field">
+            <app-input-text
+              title="E-mail:"
+              [(ngModel)]="advogado.email"
+              >
+            </app-input-text>
+          </div>
+          <div class="field">
+            <app-input-text
+              title="Telefone:"
+              [(ngModel)]="advogado.telefone"
+              >
+            </app-input-text>
+          </div>
+  
+      </ng-template>
+  
+      <ng-template pTemplate="footer">
+        <app-button
+          label="Cancelar"
+          icon="pi pi-times"
+          (click)="esconderDialog()"
+          >
+        </app-button>
+        <app-button
+          label="Salvar"
+          icon="pi pi-check"
+          (click)="salvar()"
+          >
+        </app-button>
+      </ng-template>
+  </p-dialog>
+  
+  
+    <!--=============================================================================-->
+    <p-confirmDialog [style]="{ width: '450px'}"></p-confirmDialog>
+  </p-card>
+  
+  </div>

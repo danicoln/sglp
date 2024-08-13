@@ -19,6 +19,7 @@ export class ProcessoListComponent implements OnInit {
 
   processoDialog: boolean = false;
   submitted: boolean = false;
+  saving: boolean = false;
 
   constructor(
     private processoService: ProcessoService,
@@ -44,6 +45,10 @@ export class ProcessoListComponent implements OnInit {
   }
 
   salvar() {
+    if (this.saving) {
+      return;
+    }
+    this.saving = true;
     this.submitted = true;
 
     this.processoService.atualizar(this.processo).subscribe(
@@ -55,13 +60,15 @@ export class ProcessoListComponent implements OnInit {
         }
 
         this.mensagemService.add({
-          severity: 'success', summary: 'Sucesso', detail: 'Processo Atualizado', life: 3000
+          severity: 'success', summary: 'Sucesso!', detail: 'Dados atualizados', life: 3000
         });
         this.esconderDialog();
+        this.saving = false;
       },
       erro => {
         this.error.handle(erro);
         console.error('Ops! Erro ao atualizar o processo: ', erro);
+        this.saving = false;
       }
     );
 
@@ -112,8 +119,23 @@ export class ProcessoListComponent implements OnInit {
       acceptLabel: 'Sim',
       rejectLabel: 'Não',
       accept: () => {
-        this.processos = this.processos.filter((value) => !this.processosSelecionados?.includes(value));
-        this.processosSelecionados = null;
+
+        this.processosSelecionados?.forEach(processo => {
+          const processoId = typeof processo.id === 'string' ? processo.id : '';
+
+          if (processoId) {
+            this.processoService.excluir(processoId)
+              .then(() => {
+                this.processos = this.processos.filter((value) => !this.processosSelecionados?.includes(value));
+                this.processos = [...this.processos];
+                this.listar();
+              })
+              .catch(error => {
+                console.error('Erro ao excluir quesitos: ', error);
+              });
+          }
+        });
+        this.processosSelecionados = [];
         this.mensagemService.add({ severity: 'success', summary: 'Sucesso', detail: 'Processos apagados', life: 3000 });
       }
     });

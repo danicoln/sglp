@@ -1,0 +1,150 @@
+<form [formGroup]="resourceForm" (ngSubmit)="submitForm()">
+    <div class="container">
+      <p-toast></p-toast>  
+  
+      <section *ngIf="!laudoId">
+        <!--Dados do processo -->
+        <app-processo-autocomplete
+          formGroupName="processo"
+          title="Número do processo"
+          (processoSelecionado)="onProcessoSelecionado($event)"
+          >
+        </app-processo-autocomplete>
+  
+        <div class="salvar-processo mb-2">
+          <app-button
+              label="Salvar"
+              icon="pi pi-save"
+              type="submit"
+              severity="success"
+              [disabled]="disabled"
+              >
+            </app-button>
+        </div>
+      </section>
+  
+      <section *ngIf="laudoId">
+        <div class="card" style="display: block;">
+          <div class="elemento" >
+              <strong>Processo:</strong>
+              <br>
+              <input class="mt-1" type="text" disabled pInputText [value]="getProcesso().numero">
+          </div>
+          <div class="mt-1 elemento" >
+            <strong>Assunto:</strong>
+            <br>
+            <input class="mt-1" type="text" disabled pInputText [value]="getProcesso().assunto">
+          </div>
+          <div class="mt-1 elemento">
+            <strong>Autor:</strong>
+            <br>
+            <input class="mt-1" type="text" disabled pInputText [value]="getProcesso().nomeAutor">
+          </div>
+          <div class="mt-2 elemento">
+            <strong>Réu:</strong>
+            <br>
+            <input class="mt-1" type="text" disabled pInputText [value]="getProcesso().nomeReu">
+          </div>
+        </div> 
+      </section>
+  
+        <section class="card mt-2" *ngIf="laudoId">
+    
+            <div class="atualizar-processo">
+              <app-button
+                label="Salvar"
+                icon="pi pi-save"
+                type="submit"
+                [raised]="true"
+                severity="success"
+                [disabled]="!edit"
+                >
+              </app-button>
+              <app-button
+                label="Editar"
+                icon="pi pi-pencil"
+                class="ml-2"
+                [outlined]="true"
+                severity="info"
+                (click)="editar()"
+                type="button"
+                >
+              </app-button>
+
+              <!-- <app-button
+              label="Cancelar"
+              icon="pi pi-eraser"
+              (click)="cancelar()"
+              class="ml-2"
+              [outlined]="true"
+              severity="danger"
+              >
+              </app-button> -->
+
+            </div>
+            <!-- <app-chat-openai-form
+                [formGroup]="resourceForm"
+                [fields]="fields"
+                >
+            </app-chat-openai-form> -->
+        </section>
+  
+      <section *ngIf="laudoId">
+        <div class="mb-2 col-3">
+          <app-dropdown
+            [options]="statusOptions"
+            [showTag]="true"
+            formControlName="status"
+            >
+          </app-dropdown>
+        </div>
+        <!-- <div class="mb-2 col-12">
+          <p-card header="Histórico do Processo">
+            <app-input-textarea
+              placeholder="Informe o Histórico do Processo"
+              rows="5" cols="50"
+              formControlName="historico"
+              >
+            </app-input-textarea>
+          </p-card>
+          
+        </div>
+        <div class="mb-2 col-12">
+          <p-card header="Objetivo">
+            <app-input-textarea
+              placeholder="Informe o objetivo do laudo pericial"
+              rows="5" cols="100"
+              formControlName="objetivo"
+              >
+            </app-input-textarea>
+          </p-card>
+        </div>
+  
+        <div class="mb-2 col-12">
+          <p-card header="Metodologia Aplicada">
+            <app-input-textarea
+              placeholder="Informe a metodologia utilizada na perícia"
+              rows="5" cols="100"
+              formControlName="metodologiaAplicada"
+              >
+            </app-input-textarea>
+          </p-card>
+        </div> -->
+  
+        <div class="mb-2 col-12">
+          <p-card header="Data da Entrega do Laudo">
+            <app-calendar
+              class="flex col-4" 
+              placeholder="Data da Entrega" 
+              formControlName="dataDoLaudo"
+              >
+            </app-calendar>
+          </p-card>
+        </div>
+  
+      </section>
+  
+    </div>
+  </form> 
+  
+  

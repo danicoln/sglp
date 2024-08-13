@@ -1,0 +1,16 @@
+<div class="componente mb-2">
+    <div class="title">
+        <b>{{ title }}</b> 
+    </div>
+    <div class="input-switch ml-2">
+        <p-inputSwitch 
+        class="input-switch"
+        [(ngModel)]="value"
+        (onChange)="onToggle($event)" 
+        [disabled]="disabled"
+        />
+    </div>
+    <div class="opcoes ml-3">
+        <span class="label">{{ value ? 'Sim' : 'Não' }}</span>
+    </div>
+</div>

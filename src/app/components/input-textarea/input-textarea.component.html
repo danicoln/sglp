@@ -1,0 +1,17 @@
+<p-floatLabel>
+    <textarea 
+        class="custom-area"
+        pInputTextarea 
+        [rows]="rows"
+        [cols]="cols" 
+        [(ngModel)]="value"
+        [autoResize]="autoResize"
+        [placeholder]="placeholder"
+        [ngClass]="variant"
+        [disabled]="disabled"
+        (input)="onInput($event)"
+        (blur)="onBlur()"
+        >
+    </textarea>
+    <label for="float-input">{{ label }}</label>
+  </p-floatLabel>

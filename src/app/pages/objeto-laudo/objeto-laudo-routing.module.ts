@@ -4,9 +4,9 @@ import { ObjetoLaudoFormComponent } from './objeto-laudo-form/objeto-laudo-form.
 import { ObjetoLaudoListComponent } from './objeto-laudo-list/objeto-laudo-list.component';
 
 const routes: Routes = [
-  { path: 'objetos', component: ObjetoLaudoListComponent },
-  { path: 'objetos/novo', component: ObjetoLaudoFormComponent },
-  { path: 'objetos/:id/edit', component: ObjetoLaudoFormComponent }
+  { path: '', component: ObjetoLaudoListComponent },
+  { path: 'novo', component: ObjetoLaudoFormComponent },
+  { path: ':objetoId/edit', component: ObjetoLaudoFormComponent }
 ];
 
 @NgModule({

@@ -1,0 +1,106 @@
+<div class="dashboard-container">
+  
+  <!-- Linha principal com Honorários, Tendência dos Laudos e Nomeações -->
+
+  <h1>Seja bem vindo, {{user}}</h1> <br>
+  <div class="main-row">
+     <!-- Cards de Honorários -->
+     <section class="section honorarios">
+      <p-card>
+        <div class="card-content">
+          <h2>{{ receitaTotal | currency: 'BRL':'symbol':'1.2-2' }}</h2>
+          <span>Receita total</span>
+        </div>
+      </p-card>
+      <p-card>
+        <div class="card-content">
+          <h2>{{ receitaAReceber | currency: 'BRL':'symbol':'1.2-2' }}</h2>
+          <span>A receber</span>
+        </div>
+      </p-card>
+      <p-card>
+        <div class="card-content">
+          <h2>{{ receitaEfetivada | currency: 'BRL':'symbol':'1.2-2' }}</h2>
+          <span>Recebido</span>
+        </div>
+      </p-card>
+    </section>
+  </div>
+  <div class="main-row">
+   
+    <section class="section">
+      <!-- Card de Resumo dos Laudos -->
+      <div class="section laudos">
+        <p-card header="Laudos Periciais: {{ geralLaudos }}">
+          <div class="card-content">
+            <h2>{{ laudosNaoIniciado }}</h2>
+            <span>Não Iniciados</span>
+            <h2>{{ laudosEmAndamento }}</h2>
+            <span>Pendentes</span>
+            <h2>{{ laudosConcluidos }}</h2>
+            <span>Concluídos</span>
+          </div>
+        </p-card>
+      </div>
+    </section>
+
+    <!-- Gráfico de Tendência dos Laudos -->
+    <section class="section trend-laudos">
+      <p-panel header="Tendência dos Laudos">
+        <p-chart type="line" [data]="data"></p-chart>
+      </p-panel>
+      <!-- Desempenho dos Processos -->
+      <div class="section performance">
+        <p-panel header="Desempenho dos Processos">
+          <p-chart type="bar" [data]="performanceData" [options]="{
+                        scales: {
+                            xAxes: [{
+                                stacked: true
+                            }],
+                            yAxes: [{
+                                stacked: true
+                            }]
+                        }
+                    }"></p-chart>
+        </p-panel>
+      </div>
+    </section>
+
+    <!-- Card de Nomeações -->
+    <section class="section nomeacoes">
+      <p-card header="Nomeações: {{ nomeacaoTotal }}">
+        <div class="card-content">
+          <h2>{{ nomeacoesRecusadas }}</h2>
+          <span>Recusadas</span>
+          <h2>{{ nomeacoesAceitas }}</h2>
+          <span>Aceitas</span>
+          <h2>{{ nomeacoesPendentes }}</h2>
+          <span>Pendentes</span>
+        </div>
+      </p-card>
+     
+    </section>
+  </div>
+
+  <!-- Tabela de Processos Recentes -->
+  <div class="section processos-recentes">
+    <p-panel header="Processos Recentes">
+      <p-table [value]="processosRecentes">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Processo</th>
+            <th>Data</th>
+            <th>Status</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-processo>
+          <tr>
+            <td>{{ processo.numero }}</td>
+            <td>{{ processo.data | date }}</td>
+            <td>{{ processo.status }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-panel>
+  </div>
+</div>

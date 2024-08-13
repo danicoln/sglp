@@ -1,0 +1,9 @@
+<b>{{ title }}</b><br>
+<input 
+    type="date" 
+    pInputText 
+    [(ngModel)]="value" 
+    (ngModelChange)="onValueChange($event)"
+    [disabled]="isDisabled"
+    placeholder="placeholder"
+/>

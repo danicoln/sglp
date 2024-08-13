@@ -18,32 +18,38 @@ export class DropdownComponent implements ControlValueAccessor {
 
   @Input() label?: string;
   @Input() options?: any[];
-  @Input() placeholder?: string;
+  @Input() placeholder: string = 'Selecione uma opção';
+  @Input() showClear: boolean = false;
+  @Input() showTag: boolean = false;
   @Output() valueChange: EventEmitter<any> = new EventEmitter<any>();
 
-  private _valorSelecionado: any;
+  private selectedValueInternal: any;
+  isDisabled: boolean = false;
 
-  onChange: any = () => {};
-  onTouched: any = () => {};
-  value: any;
+  onChange: any = () => { };
+  onTouched: any = () => { };
 
   constructor() { }
 
-  get valorSelecionado():any {
-    return this._valorSelecionado;
+  get selectedValue(): any {
+    return this.selectedValueInternal;
   }
 
-  set valorSelecionado(value: any) {
-    if (value !== this._valorSelecionado) {
-      this._valorSelecionado = value;
+  set selectedValue(value: any) {
+    if (value !== this.selectedValueInternal) {
+      this.selectedValueInternal = value;
       this.onChange(value);
       this.onTouched();
       this.valueChange.emit(value);
     }
   }
 
+  setDisabledState(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+  }
+
   writeValue(obj: any): void {
-    this._valorSelecionado = obj;
+    this.selectedValueInternal = obj;
   }
   registerOnChange(fn: any): void {
     this.onChange = fn;
@@ -52,10 +58,10 @@ export class DropdownComponent implements ControlValueAccessor {
     this.onTouched = fn;
   }
 
-  onDropdownChange(value: any) {
-    this.value = value;
-    this.onChange(value);
-    this.onTouched(value);
+  onDropdownChange(event: any): void {
+    this.selectedValue = event.value;
+    this.onChange(event.value);
+    this.onTouched(event.value);
   }
 
 

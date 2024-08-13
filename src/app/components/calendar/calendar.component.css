@@ -1,0 +1,15 @@
+.calendar-container {
+    width: 100%;
+}
+
+.titulo-calendar {
+    display: flex;
+}
+
+p-calendar {
+    width: 100%;
+}
+
+.ui-inputtext {
+    width: 100%;
+}

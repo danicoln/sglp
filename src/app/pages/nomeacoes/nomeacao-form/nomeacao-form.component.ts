@@ -13,12 +13,15 @@ import { MessageService } from 'primeng/api';
 })
 export class NomeacaoFormComponent implements OnInit {
 
+  title: string = "Aceite: ";
   nomeacao: Nomeacao = new Nomeacao();
   processo: Processo = new Processo();
   formGroup!: FormGroup;
 
   nomeacaoDialog: boolean = false;
   submitted: boolean = false;
+  aceitouNomeacao: boolean = false;
+  aceite: string = '';
 
   constructor(
     private nomeacaoService: NomeacaoService,
@@ -30,6 +33,12 @@ export class NomeacaoFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildResourceForm();
+    this.aceiteDeNomeacao();
+    
+    this.formGroup.get('aceite')?.valueChanges.subscribe(value => {
+      this.onAceiteChange(value);
+      console.log('Valor: ', value)
+    });
   }
 
   private buildResourceForm() {
@@ -37,18 +46,19 @@ export class NomeacaoFormComponent implements OnInit {
       id: [null],
       dataNomeacao: [null, Validators.required],
       prazo: [null, Validators.required],
-      dataAceite: [null],
+      dataAceite: [{ value: null, disabled: true }],
       aceite: [''],
-      processo: [null]
+      processo: [null],
+      honorarioEnviado: [null],
+      honorarioHomologado: [null]
     });
   }
 
   submitForm() {
     if (this.formGroup && this.formGroup.valid) {
-
       const dadosFormulario = this.formGroup.value;
-
       const processo = dadosFormulario.processo.processo;
+
       if (processo) {
 
         this.nomeacao = {
@@ -56,7 +66,9 @@ export class NomeacaoFormComponent implements OnInit {
           dataAceite: dadosFormulario.dataAceite,
           dataNomeacao: dadosFormulario.dataNomeacao,
           prazo: dadosFormulario.prazo,
-          processo: processo
+          processo: processo,
+          honorarioHomologado: dadosFormulario.honorarioHomologado,
+          honorarioEnviado: dadosFormulario.honorarioEnviado
         };
 
         this.salvarDados(this.nomeacao);
@@ -82,9 +94,15 @@ export class NomeacaoFormComponent implements OnInit {
         this.formGroup?.reset();
       })
       .catch(erro => {
+        let errorMessage = 'Erro ao Salvar';
+
+        if (erro && erro.error && erro.error.message) {
+          errorMessage = erro.error.message;
+        }
+
         this.error.handle(erro);
         this.msgService.add(
-          { severity: 'error', summary: 'Erro!', detail: 'Erro ao Salvar', life: 3000 }
+          { severity: 'error', summary: 'Erro!', detail: errorMessage, life: 3000 }
         )
       });
 
@@ -94,4 +112,25 @@ export class NomeacaoFormComponent implements OnInit {
     this.formGroup?.reset();
   }
 
+  onAceiteChange(value: string): void {
+    this.aceitouNomeacao = value === 'Sim';
+    if (!this.aceitouNomeacao) {
+      this.formGroup.get('dataAceite')?.setValue(null);
+      this.formGroup.get('dataAceite')?.disable();
+    } else {
+      this.formGroup.get('dataAceite')?.enable();
+    }
+  }
+
+  aceiteDeNomeacao() {
+    const aceiteControl = this.formGroup.get('aceite');
+    this.aceitouNomeacao = aceiteControl?.value === 'Sim';
+    if (!this.aceitouNomeacao) {
+      this.formGroup.get('dataAceite')?.setValue(null);
+      this.formGroup.get('dataAceite')?.disable();
+    } else {
+      this.formGroup.get('dataAceite')?.enable();
+    }
+  }
 }
+

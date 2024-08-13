@@ -1,135 +1,174 @@
-<p-card>
-  <p-toast></p-toast>
-
-  <p-toolbar styleClass="mb-4 gap-2">
-
-    <!--Botões de Criar e Deletar-->
-
-    <ng-template pTemplate="left">
-      <a href="/processos/novo">
-        <p-button
-          pRipple
-          label="Novo"
-          icon="pi pi-plus"
+<div class="container">
+  <p-card header="Processos">
+    <p-toast></p-toast>
+  
+    <p-toolbar styleClass="mb-4 gap-2">
+  
+      <!--Botões de Criar e Deletar-->
+  
+      <ng-template pTemplate="left">
+        <a class="mr-2" href="/processos/novo">
+          <app-button
+            label="Novo"
+            icon="pi pi-plus"
+            >
+          </app-button>
+        </a>
+  
+        <app-button
+          label="Deletar"
+          icon="pi pi-trash"
+          severity="danger"
+          (click)="deletarProcessosSelecionados()"
+          [disabled]="!processosSelecionados || !processosSelecionados.length"
           >
-        </p-button>
-      </a>
-
-      <p-button
-        pRipple
-        label="Deletar"
-        icon="pi pi-trash"
-        severity="danger"
-        (click)="deletarProcessosSelecionados()"
-        [disabled]="!processosSelecionados || !processosSelecionados.length"
-        >
-      </p-button>
-    </ng-template>
-
-  </p-toolbar>
-
-  <!--Tabela de Processos-->
-
-  <p-table
-    #tabela
-    [value]="processos"
-    [rows]="10"
-    [paginator]="true"
-    [tableStyle]="{ 'min-width': '75rem' }"
-    [(selection)]="processosSelecionados"
-    [rowHover]="true"
-    dataKey="id"
-    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
-    [showCurrentPageReport]="true"
-    [globalFilterFields]="['assunto', 'processos.assunto', 'numero', 'processos.numero']"
-
-    >
-
-    <ng-template pTemplate="caption">
-      <div class="flex align-items-center justify-content-between">
-        <h5 class="m-0">Gerenciamento de Processos</h5>
-        <span class="p-input-icon-left">
-          <i class="pi pi-search"></i>
-          <!-- filtro -> erro no $event.target.value -->
-          <input pInputText type="text" (input)="applyFilterGlobal($event)" placeholder="Buscar..." />
-        </span>
-      </div>
-    </ng-template>
-
-    <!--Header Table-->
-
-    <ng-template pTemplate="header">
-      <tr>
-        <th style="width:4rem">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        </th>
-        <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
-        <th pSortableColumn="numero">Número<p-sortIcon field="numero"></p-sortIcon></th>
-        <th pSortableColumn="assunto">Assunto<p-sortIcon field="assunto"></p-sortIcon></th>
-        <th pSortableColumn="autor">Autor<p-sortIcon field="autor"></p-sortIcon></th>
-        <th pSortableColumn="reu">Réu<p-sortIcon field="reu"></p-sortIcon></th>
-        <th></th>
-      </tr>
-    </ng-template>
-
-    <!--Body Table-->
-    <ng-template pTemplate="body" let-processo>
-      <tr>
-        <td>
-          <p-tableCheckbox [value]="processo"></p-tableCheckbox>
-        </td>
-        <td>{{ processo.id }}</td>
-        <td>{{ processo.numero }}</td>
-        <td>{{ processo.assunto }}</td>
-        <td>{{ processo.nomeAutor }}</td>
-        <td>{{ processo.nomeReu }}</td>
-        <td>
-          <a (click)="editar(processo)"><i style="color: green; cursor: pointer;" class="pi pi-pencil mr-2 btn-editar"></i></a>
-          <i (click)="deletar(processo)" style="color: red; cursor: pointer;" class="pi pi-trash btn-excluir"></i>
-        </td>
-      </tr>
-    </ng-template>
-
-    <ng-template pTemplate="summary">
-      <div class="flex align-items-center justify-content-between">Total de {{ processos ? processos.length : 0 }} processos.</div>
-    </ng-template>
-  </p-table>
-
-  <!--=============================================================================-->
-  <!--==Caixa de diálogo de edição==-->
-
-  <p-dialog [(visible)]="processoDialog" [style]="{ width: '450px' }" header="Detalhes do Processo" [modal]="true" styleClass="p-fluid">
-    <ng-template pTemplate="content">
-        <div class="field">
-          <label for="numero">Número</label>
-          <input type="text" pInputText id="numero" [(ngModel)]="processo.numero" required autofocus />
-          <small class="p-error" *ngIf="submitted && !processo.numero">Número é obrigatório.</small>
+        </app-button>
+      </ng-template>
+  
+    </p-toolbar>
+  
+    <!--Tabela de Processos-->
+  
+    <p-table
+      #tabela
+      [value]="processos"
+      [rows]="10"
+      [paginator]="true"
+      [tableStyle]="{ 'min-width': '75rem' }"
+      [(selection)]="processosSelecionados"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} entradas"
+      [showCurrentPageReport]="true"
+      [globalFilterFields]="[ 'numero', 'processos.numero', 'assunto', 'processos.assunto', 'nomeAutor', 'processos.nomeAutor', 'nomeReu', 'processos.nomeReu']"
+  
+      >
+  
+      <ng-template pTemplate="caption">
+        <div class="flex align-items-center justify-content-between">
+          <h5 class="m-0">Gerenciamento de Processos</h5>
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <!-- filtro -> erro no $event.target.value -->
+            <input pInputText type="text" (input)="applyFilterGlobal($event)" placeholder="Buscar..." />
+          </span>
         </div>
-        <div class="field">
-          <label for="assunto">Assunto</label>
-          <input type="text" pInputText id="assunto" [(ngModel)]="processo.assunto" required autofocus />
-          <small class="p-error" *ngIf="submitted && !processo.assunto">Assunto é obrigatório.</small>
-        </div>
-        <div class="field">
-          <label for="nomeAutor">Nome do Autor</label>
-          <input type="text" pInputText id="nomeAutor" [(ngModel)]="processo.nomeAutor" required autofocus />
-          <small class="p-error" *ngIf="submitted && !processo.nomeAutor">Nome do autor é obrigatório.</small>
-        </div>
-        <div class="field">
-          <label for="nomeReu">Nome do Réu</label>
-          <input type="text" pInputText id="nomeReu" [(ngModel)]="processo.nomeReu" required autofocus />
-          <small class="p-error" *ngIf="submitted && !processo.nomeReu">Nome do réu é obrigatório.</small>
-        </div>
-
-    </ng-template>
-
-    <ng-template pTemplate="footer">
-        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="esconderDialog()"></button>
-        <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="salvar()"></button>
-    </ng-template>
-</p-dialog>
-
-
-  <!--=============================================================================-->
-  <p-confirmDialog [style]="{ width: '450px'}"></p-confirmDialog>
-</p-card>
+      </ng-template>
+  
+      <!--Header Table-->
+  
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width:4rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th pSortableColumn="id">ID<p-sortIcon field="id"></p-sortIcon></th>
+          <th pSortableColumn="numero">Número<p-sortIcon field="numero"></p-sortIcon></th>
+          <th pSortableColumn="assunto">Assunto<p-sortIcon field="assunto"></p-sortIcon></th>
+          <th pSortableColumn="autor">Autor<p-sortIcon field="autor"></p-sortIcon></th>
+          <th pSortableColumn="reu">Réu<p-sortIcon field="reu"></p-sortIcon></th>
+          <th></th>
+        </tr>
+      </ng-template>
+  
+      <!--Body Table-->
+      <ng-template pTemplate="body" let-processo>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="processo"></p-tableCheckbox>
+          </td>
+          <td>{{ processo.id }}</td>
+          <td>{{ processo.numero }}</td>
+          <td>{{ processo.assunto }}</td>
+          <td>{{ processo.nomeAutor }}</td>
+          <td>{{ processo.nomeReu }}</td>
+          <td>
+            <app-button
+              severity="success"
+              icon="pi pi-pencil"
+              [text]="true"
+              (click)="editar(processo)"
+              >
+            </app-button>
+            <app-button 
+              icon="pi pi-trash"
+              severity="danger" 
+              [text]="true"
+              (click)="deletar(processo)"
+              >
+            </app-button>
+          </td>
+        </tr>
+      </ng-template>
+  
+      <ng-template pTemplate="summary">
+        <div class="flex align-items-center justify-content-between">Total de {{ processos ? processos.length : 0 }} processos.</div>
+      </ng-template>
+    </p-table>
+  
+    <!--=============================================================================-->
+    <!--==Caixa de diálogo de edição==-->
+  
+    <p-dialog [(visible)]="processoDialog" [style]="{ width: '450px' }" header="Detalhes do Processo" [modal]="true" styleClass="p-fluid">
+      <ng-template pTemplate="content">
+          <div class="field">
+            <label for="numero">Número</label>
+            <input 
+              type="text" 
+              mask="0000000-00.0000.0.00.0000"
+              [dropSpecialCharacters]="false"
+              pInputText 
+              id="numero" [(ngModel)]="processo.numero" required autofocus 
+            />
+            <small class="p-error" *ngIf="submitted && !processo.numero">Número é obrigatório.</small>
+          </div>
+          <div class="field">
+            <app-input-text
+              title="Assunto:"
+              [(ngModel)]="processo.assunto"
+              required autofocus
+              >
+            </app-input-text>
+            <small class="p-error" *ngIf="submitted && !processo.assunto">Assunto é obrigatório.</small>
+          </div>
+          <div class="field">
+            <app-input-text
+              title="Nome do Autor:"
+              [(ngModel)]="processo.nomeAutor"
+              required autofocus
+              >
+            </app-input-text>
+            <small class="p-error" *ngIf="submitted && !processo.nomeAutor">Nome do autor é obrigatório.</small>
+          </div>
+          <div class="field">
+            <app-input-text
+              title="Nome do Réu:"
+              [(ngModel)]="processo.nomeReu"
+              required autofocus
+              >
+            </app-input-text>
+            <small class="p-error" *ngIf="submitted && !processo.nomeReu">Nome do réu é obrigatório.</small>
+          </div>
+      </ng-template>
+  
+      <ng-template pTemplate="footer">
+        <app-button
+          label="Cancelar"
+          icon="pi pi-times"
+          (click)="esconderDialog()"
+          >
+        </app-button>
+        <app-button
+          label="Salvar"
+          icon="pi pi-check"
+          (click)="salvar()"
+          >
+        </app-button>
+      </ng-template>
+  </p-dialog>
+  
+    <!--=============================================================================-->
+    <p-confirmDialog [style]="{ width: '450px'}"></p-confirmDialog>
+  </p-card>
+  
+</div>

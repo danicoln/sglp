@@ -1,0 +1,60 @@
+<form [formGroup]="resourceForm" (ngSubmit)="submitForm()">
+<p-toast></p-toast>
+
+<div class="container">
+    <p-card header="Cadastro de Advogado">
+        <div class="row">
+            <div class="col-12 md:col-12">
+                <div class="mt-2">
+                    <app-input-text
+                        title="Nome:"
+                        formControlName="nome" 
+                        placeholder="Digite o nome"
+                        >
+                    </app-input-text>
+                </div>
+            </div>
+            <div class="col-12 md:col-12">
+                <div class="mt-2">
+                    <app-input-text
+                        title="E-mail:"
+                        formControlName="email" 
+                        placeholder="Informe o e-mail"
+                        >
+                    </app-input-text>
+                </div>
+            </div>
+            <div class="col-12 md:col-12">
+                <div class="mt-2">
+                    <app-input-text
+                        title="Telefone:"
+                        formControlName="telefone" 
+                        placeholder="Informe o telefone"
+                        >
+                    </app-input-text>
+                </div>
+            </div>
+        </div>
+        
+        <div class="btn-submit-cancelar">
+            <div class="col-12 md:col-12">
+                <app-button 
+                class="mr-2"
+                type="submit"
+                label="Salvar" 
+                [disabled]="!resourceForm.valid">
+                </app-button>
+                <app-button 
+                label="Cancelar" 
+                [outlined]="true" 
+                [disabled]="!resourceForm.valid"
+                (onClick)="cancelar()">
+                </app-button>
+            </div>
+        </div>
+        
+        <a href="/advogados" style="text-decoration: none;"><p>Consultar advogados</p></a>
+
+    </p-card>
+</div>
+</form>

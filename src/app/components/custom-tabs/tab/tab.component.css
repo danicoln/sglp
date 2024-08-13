@@ -1,0 +1,27 @@
+.tab-content>.tab-pane {
+    display: none;
+  }
+  
+  .tab-content>.tab-pane.show {
+    display: block;
+  }
+  
+  .nav-tabs {
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .nav-link {
+    cursor: pointer;
+  }
+  
+  .nav-link.active {
+    border-color: #ddd #ddd #fff;
+  }
+  
+  .tab-pane {
+    display: none;
+  }
+  
+  .tab-pane.show {
+    display: block;
+  }

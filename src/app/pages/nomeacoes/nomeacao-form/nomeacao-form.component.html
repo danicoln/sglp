@@ -11,31 +11,52 @@
       </app-processo-autocomplete>
     <p-card>
 
-      <div class="col-12">
-        <b>Data da Nomeação</b>
-        <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" class="flex col-4" placeholder="Data da nomeação" formControlName="dataNomeacao"></p-calendar>
+      <app-calendar 
+        title="Data da Nomeação"
+        formControlName="dataNomeacao"
+        placeholder="Data da nomeação"
+        >
+      </app-calendar>
+
+      <app-calendar 
+        title="Prazo"
+        placeholder="Prazo"
+        formControlName="prazo"
+        >
+      </app-calendar>
+      
+      <app-input-switch 
+        formControlName="aceite" 
+        [title]="title"
+        >
+      </app-input-switch>
+      
+      <app-calendar *ngIf="aceitouNomeacao"
+        title="Data do Aceite"
+        placeholder="Data do Aceite"
+        formControlName="dataAceite"
+        >
+      </app-calendar>
+
+      <div class="honorario">
+        <app-input-number title="Honorários" formControlName="honorarioEnviado"></app-input-number>
       </div>
 
-      <div class="col-12">
-        <b>Prazo</b>
-        <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" class="flex col-4" placeholder="Prazo" formControlName="prazo"></p-calendar>
-      </div>
+      <div class="mt-3">
 
-      <div class="col-12">
-        <b>Data do Aceite</b>
-        <p-calendar dateFormat="dd/mm/yy" [readonlyInput]="true" class="flex col-4" placeholder="Data do Aceite" formControlName="dataAceite"></p-calendar>
+        <app-button 
+          class="mr-2"
+          type="submit" 
+          label="Salvar" 
+          [disabled]="!formGroup.valid">
+        </app-button>
+        <app-button 
+          label="Cancelar" 
+          [outlined]="true" 
+          [disabled]="!formGroup.valid"
+          (click)="cancelar()">
+        </app-button>
       </div>
-
-      <div class="col-12">
-        <b>Aceite</b>
-        <input class="flex col-3" placeholder="Informe se aceitou a nomeação" pInputText type="text" formControlName="aceite" />
-      </div>
-
-      <p-button type="submit" pRipple label="Salvar" [disabled]="!formGroup.valid">
-      </p-button>
-      <p-button pRipple label="Cancelar" [outlined]="false" [disabled]="!formGroup.valid"
-        (onClick)="cancelar()">
-      </p-button>
       <a href="/nomeacoes" style="text-decoration: none;"><p>Consultar nomeações</p></a>
 
     </p-card>

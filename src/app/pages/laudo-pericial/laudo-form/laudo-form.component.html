@@ -1,0 +1,16 @@
+<app-custom-tabs>
+    <app-tab title="Dados Gerais" [active]="true">
+        <app-laudo-pericial [laudo]="laudo" (valueChange)="changeLaudo($event)"></app-laudo-pericial>
+    </app-tab>
+
+    <app-tab title="Exames" *ngIf="laudo?.id" (action)="resetForms()">
+        <app-exame-list *ngIf="!exibirFormExame" [laudo]="laudo.exameDaMateria!"></app-exame-list>
+        <app-exame-form *ngIf="exibirFormExame" [laudo]="laudo.exameDaMateria!"></app-exame-form>
+    </app-tab>
+
+    <app-tab title="Quesitos" *ngIf="laudo?.id" (action)="resetForms()">
+        <app-quesito-list *ngIf="!exibirFormQuesitos" [laudo]="laudo"></app-quesito-list>
+        <app-quesito-form *ngIf="exibirFormQuesitos" [laudo]="laudo"></app-quesito-form>
+    </app-tab>
+    
+</app-custom-tabs>

@@ -1,50 +1,136 @@
-<form [formGroup]="formGroup" (ngSubmit)="submitForm()">
-  <p-card header="Novo Processo">
-    <p-toast></p-toast>
+<form [formGroup]="resourceForm" (ngSubmit)="submitForm()">
+  <p-toast></p-toast>
 
-    <div class="grid">
-      <div class="col-12">
-        <b>Vara: </b>
-        <input placeholder="Vara" pInputText type="text" formControlName="vara" />
+  <div class="container">
+    <p-card header="Cadastro de Processo">
+      <div>
+        <div class="col-12">
+          <app-input-text
+            title="Vara:"
+            formControlName="vara" 
+            placeholder="Tipo da Vara Judicial"
+            >
+          </app-input-text>
+        </div>
+    
+        <div class="col-12">
+          <app-input-text
+            title="Comarca:"
+            formControlName="comarca" 
+            placeholder="Comarca"
+            >
+          </app-input-text>
+        </div>
+    
+        <div class="col-12">
+          <app-input-text
+            title="Assunto:"
+            formControlName="assunto" 
+            placeholder="Assunto"
+            >
+          </app-input-text>
+        </div>
+    
+        <div class="col-12">
+          <b>Número: </b>
+          <div>
+            <input 
+              mask="0000000-00.0000.0.00.0000"
+              placeholder="0000000-00.0000.0.00.0000" 
+              [dropSpecialCharacters]="false"
+              pInputText type="text" 
+              formControlName="numero" />
+          </div>
+        </div>
+    
+        <div class="row">
+          <div class="col-4 md:col-4">
+            <app-dropdown 
+              label="Processante:"
+              class="mr-3" 
+              name="label" 
+              [options]="tiposDeAutor()" 
+              placeholder="Selecione"
+              formControlName="parteAutora">
+            </app-dropdown>
+          </div>
+          <div class="col-4 md:col-4">
+            <app-input-text
+              title="Nome:"
+              formControlName="nomeAutor" 
+              placeholder="Nome"
+              >
+            </app-input-text>
+            <div class="mr-5">
+              <app-advogado-autocomplete
+                formControlName="advogadoAutor"
+                >
+              </app-advogado-autocomplete>
+            </div>
+          </div>
+
+        </div>
+    
+        <div class="row">
+          <div class="col-4 md:col-4">
+            <app-dropdown 
+              label="Processado:"
+              class="mr-3" 
+              name="label" 
+              [options]="tiposDeReu()" 
+              placeholder="Selecione"
+              formControlName="parteReu"
+              >
+            </app-dropdown>
+            
+            <div class="mt-2">
+              <app-input-text
+                title="Nome:"
+                formControlName="nomeReu" 
+                placeholder="Nome"
+                >
+              </app-input-text>
+            </div>
+            <app-advogado-autocomplete
+              formControlName="advogadoReu"
+              >
+            </app-advogado-autocomplete>
+          </div>
+
+        </div>
       </div>
-
-      <div class="col-12">
-        <b>Comarca: </b>
-        <input placeholder="Comarca" pInputText type="text" formControlName="comarca" />
-      </div>
-
-      <div class="col-12">
-        <b>Assunto: </b>
-        <input placeholder="Assunto" pInputText type="text" formControlName="assunto" />
-      </div>
-
-      <div class="col-12">
-        <b>Número: </b>
-        <input placeholder="Informe o número do processo" pInputText type="text" formControlName="numero" />
-      </div>
-
-      <div class="col-12 md:col-12">
-        <app-dropdown class="mr-3" name="label" [options]="tiposDeAutor()" placeholder="Selecione"
-          formControlName="parteAutora">
-        </app-dropdown>
-        <input placeholder="Nome" pInputText type="text" formControlName="nomeAutor" />
-      </div>
-
-      <div class="col-12 md:col-12">
-        <app-dropdown class="mr-3" name="label" [options]="tiposDeReu()" placeholder="Selecione"
-          formControlName="parteReu">
-        </app-dropdown>
-        <input placeholder="Nome" pInputText type="text" formControlName="nomeReu" />
-      </div>
-
-      <p-button type="submit" pRipple label="Salvar" [disabled]="!formGroup.valid">
-      </p-button>
-      <p-button pRipple label="Cancelar" [outlined]="false" [disabled]="!formGroup.valid"
-        (onClick)="cancelar()">
-      </p-button>
+      <div class="btn-submit-cancelar">
+        <div class="col-12 md:col-12">
+          <app-button 
+          class="mr-2"
+          type="submit" 
+            label="Salvar" 
+            [disabled]="!resourceForm.valid"
+            icon="pi pi-save"
+            >
+          </app-button>
+          <app-button 
+          label="Cancelar" 
+          [outlined]="true" 
+          [disabled]="!resourceForm.valid"
+          (onClick)="cancelar()">
+        </app-button>
+        <app-button 
+        class="ml-2"
+        label="Advogado" 
+        [raised]="true"
+        routerLink="/advogados/novo"
+        icon="pi pi-plus"
+        severity="info"
+        >
+      </app-button>
     </div>
+    
     <a href="/processos" style="text-decoration: none;"><p>Consultar processos</p></a>
+    
+  </div>
+    </p-card>
 
-  </p-card>
+  </div>
 
 </form>

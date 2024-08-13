@@ -1,0 +1,134 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.main-row {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+}
+
+.honorarios, .nomeacoes {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+}
+
+.trend-laudos {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 2;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+p-card {
+    width: 100%;
+    min-width: 200px;
+}
+
+.honorarios {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex: 1;
+}
+
+.honorarios p-card, .nomeacoes p-card {
+    min-width: 200px;
+}
+
+.trend-laudos {
+    width: 100%;
+}
+
+.laudos, .performance, .processos-recentes {
+    width: 100%;
+}
+
+/* Media Queries para diferentes tamanhos de tela */
+@media (max-width: 1200px) {
+    .main-row {
+        flex-direction: column;
+    }
+
+    
+
+    .nomeacoes {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        flex: 1;
+    }
+    
+    .trend-laudos {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        flex: 2;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 10px;
+    }
+
+    .main-row, .section {
+        gap: 10px;
+    }
+
+    .card-content h2 {
+        font-size: 1.5em;
+    }
+
+    .card-content span {
+        font-size: 1em;
+    }
+
+    p-card {
+        min-width: 150px;
+    }
+
+    .trend-laudos, .laudos, .performance, .processos-recentes {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-content h2 {
+        font-size: 1.2em;
+    }
+
+    .card-content span {
+        font-size: 0.9em;
+    }
+
+    p-card {
+        min-width: 120px;
+    }
+}

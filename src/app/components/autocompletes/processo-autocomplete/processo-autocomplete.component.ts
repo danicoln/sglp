@@ -14,7 +14,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from 
 
             <div class="autocomplete">
               <div class="title">
-                <b >{{ title }}</b>
+                <b >Número do Processo:</b>
               </div>
                 <p-autoComplete
                   [(ngModel)]="value"
@@ -26,22 +26,30 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from 
                   (onBlur)="onTouch()"
                   >
                 </p-autoComplete>
-                <div *ngIf="valorInvalido">
-                  <small class="text-danger">Insira um número de processo válido</small>
+                <div *ngIf="!numeroValido">
+                  <small class="text-info">Insira um número de processo válido</small>
                 </div>
             </div>
 
-            <div class="col-6 btn-confirmar">
+            <div class="col-6 row btn-confirmar">
               <div class="mt-2">
 
-                <button
-                  pButton
-                  class="pi pi-check"
+                <app-button
+                  title="Confirmar"
+                  class="mr-2"
+                  icon="pi pi-check"
                   (click)="confirmar()"
+                  [disabled]="!numeroValido" 
                   >
-                </button>
-
-              </div>
+                </app-button>
+                <app-button
+                  title="Novo Processo"
+                  icon="pi pi-plus"
+                  routerLink="/processos/novo"
+                  >
+                </app-button>
+                </div>
+                
             </div>
           </div>
 
@@ -51,27 +59,49 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from 
         <div class="col-12 md:col-6 mb-2" *ngIf="value && processoConfirmado">
           <div class="dadosProcesso-r">
             <div class="elemento" style="display: flex;">
-              <p class="n-processo ml-2"><strong>Processo: </strong>{{value.numero}}</p>
+              <app-input-text 
+                [(ngModel)]="value.numero"
+                [disabled]="true"
+                title="Processo:"
+                >
+              </app-input-text>
             </div>
-            <div class="elemento" style="display: flex;">
-              <h4></h4>
-              <p class="assunto ml-2"><strong>Assunto: </strong>{{value.assunto}}</p>
+
+            <div class="mt-2 elemento" style="display: flex;">
+              <app-input-text 
+                [(ngModel)]="value.assunto"
+                [disabled]="true"
+                title="Assunto:"
+                >
+              </app-input-text>
             </div>
-            <div class="elemento" style="display: flex;">
-              <p class="nomeAutor ml-2"><strong>Autor: </strong>{{value.nomeAutor}}</p>
+            
+            <div class="mt-2 elemento" style="display: flex;">
+              <app-input-text 
+                [(ngModel)]="value.nomeAutor"
+                [disabled]="true"
+                title="Autor:"
+                >
+              </app-input-text>
             </div>
-            <div class="elemento" style="display: flex;">
-              <p class="nomeReu ml-2"><strong>Réu: </strong>{{value.nomeReu}}</p>
+
+            <div class="mt-2 elemento" style="display: flex;">
+              <app-input-text 
+                [(ngModel)]="value.nomeReu"
+                [disabled]="true"
+                title="Réu:"
+                >
+              </app-input-text>
             </div>
+
           </div>
 
-          <div class="btn-alterar">
-            <button
-              pButton
-              class="pi pi-angle-double-left"
+          <div class="mt-2 btn-alterar">
+            <app-button
+              icon="pi pi-angle-double-left"
               (click)="alterarProcesso()"
               >
-            </button>
+            </app-button>
           </div>
 
         </div>
@@ -119,12 +149,14 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormBuilder, FormGroup } from 
 })
 export class ProcessoAutocompleteComponent implements ControlValueAccessor, OnDestroy, OnInit {
 
+  @Input() tooltip!: "Novo Processo";
   @Input() title!: string;
   @Input() displayField!: string;
-  @Input() valorInvalido: boolean = false;
   @Input() processoConfirmado: boolean = false;
   @Input() processo!: Processo;
   @Output() processoSelecionado = new EventEmitter<string>();
+  
+  @Input() numeroValido: boolean = false;
 
   processos!: Processo[];
   filtroProcessos!: Processo[];
@@ -197,9 +229,18 @@ export class ProcessoAutocompleteComponent implements ControlValueAccessor, OnDe
 
 
   onProcessoChange(value: any) {
-    this.processoConfirmado = false;
-    this.processo = value;
-    this.formGroup.get('processo')?.setValue(value)
+    if(value !== null) {
+      this.processoConfirmado = false;
+      this.processo = value;
+      this.formGroup.get('processo')?.setValue(value);
+      this.validarNumeroProcesso(value);
+    } else {
+      this.formGroup.get('processo')?.setValue(null);
+    }
+  }
+
+  validarNumeroProcesso(value: any) {
+    this.numeroValido = !!value && value.numero && value.numero.trim().length > 0;
   }
 
   get value() {
@@ -212,21 +253,23 @@ export class ProcessoAutocompleteComponent implements ControlValueAccessor, OnDe
       this.onChange = value;
     }
   }
-
   confirmar() {
     const processo = this.formGroup.get('processo')?.value;
 
-    if (!processo) {
-      return;
-    }
-    this.valorInvalido = true;
-    this.processoConfirmado = true;
-    this.processoSelecionado.emit(processo);
+    if (processo) {
+      this.numeroValido = true;
+      this.processoConfirmado = true;
+      this.processoSelecionado.emit(processo);
+      } else {
+        this.numeroValido = false;
+      }
   }
 
+
   alterarProcesso() {
-    this.valorInvalido = false;
+    this.numeroValido = true;
     this.processoConfirmado = false;
+    window.location.reload();
   }
 
 

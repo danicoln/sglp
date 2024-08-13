@@ -1,0 +1,66 @@
+<p-sidebar [(visible)]="sidebarVisible" position="right" styleClass="custom-sidebar">
+    <div class="content">
+        <h2>Assistência da IA</h2>
+        <span>Escolha uma opção:</span>
+        <div class="button-container mt-2" *ngIf="!chat">
+            <app-button *ngFor="let field of fields" 
+                        [label]="field.label" 
+                        [text]="true" 
+                        [raised]="true" 
+                        severity="info"
+                        (click)="setPromptAndFetchResponse(field)"
+                        (ngModelChange)="onPromptChange($event)"
+                        >
+            </app-button>
+        </div>
+        <div class="field" *ngIf="chat">
+            <app-input-textarea 
+                rows="10" 
+                cols="25" 
+                id="prompt"
+                placeholder="Como posso te ajudar?" 
+                [(ngModel)]="prompt"
+                (ngModelChange)="onPromptChange($event)" 
+                (blur)="onTouched()">
+            </app-input-textarea>
+            <app-button 
+                label="Enviar" 
+                icon="pi pi-check" 
+                [outlined]="true" 
+                severity="info"
+                (click)="fetchResponse(prompt)">
+            </app-button>
+        </div>
+        <div *ngIf="response" class="panel-resposta">
+            <p-panel header="Resposta">
+                <app-input-textarea 
+                    rows="10" cols="23" 
+                    [disabled]="campoRespostaIA" 
+                    id="response" 
+                    [(ngModel)]="response"
+                    readonly>
+                </app-input-textarea>
+                <app-button 
+                    severity="info" 
+                    type="button" 
+                    icon="pi pi-copy" 
+                    tooltip="Copiar Resposta" 
+                    tooltipPosition="top" 
+                    (click)="copyResponse()" 
+                    label="Copiar"
+                    />
+            </p-panel>
+        </div>
+    </div>
+</p-sidebar>
+
+<app-button 
+    type="button" 
+    class="m-2" 
+    (click)="sidebarVisible = true" 
+    severity="info" 
+    icon="pi pi-globe" 
+    label="Abrir IA"
+    [disabled]="isDisabled"
+    >
+</app-button>

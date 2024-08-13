@@ -1,3 +1,16 @@
-.label{
+.body{
+  margin: 15px;
+  padding: 20px;
+}
+
+.label {
   display: block;
+}
+
+.btn-submit-cancelar {
+  display: contents;
+}
+
+.container {
+  margin: 20px;
 }
